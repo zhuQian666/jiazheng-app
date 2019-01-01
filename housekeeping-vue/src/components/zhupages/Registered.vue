@@ -7,21 +7,30 @@
         <input type="text" v-model="phoneval" class="enyet-cont-item-input" placeholder="输入手机号">
       </div>
       <div class="enyet-cont-item">
-        <img src="../../assets/images/icon-code.png" alt class="enyet-cont-item-icon">
-        <input type="text" v-model="codeval" class="enyet-cont-item-input" placeholder="输入密码">
+        <img src="../../assets/images/icon-code.png" alt class="enyet-cont-item-icon big_icon">
+        <input type="text" v-model="codeval" class="enyet-cont-item-input" placeholder="验证码">
+        <div class="getcode">获取验证码</div>
+      </div>
+      <div class="enyet-cont-item">
+        <img src="../../assets/images/pass-icon.png" alt class="enyet-cont-item-icon big_icon">
+        <input type="text" v-model="passwordval" class="enyet-cont-item-input" placeholder="登录密码">
+      </div>
+      <div class="enyet-cont-item">
+        <img src="../../assets/images/yaoqing-icon.png" alt class="enyet-cont-item-icon big_icon">
+        <input type="text" v-model="invitationCode" class="enyet-cont-item-input" placeholder="邀请码">
       </div>
       <div class="enyet-cont-item">
         <input
           type="checkbox"
-          :checked="selectbol"
+          :checked="agreebol"
           class="enyet-cont-item-checkbox"
           id="checkbox-item"
         >
-        <label for="checkbox-item" class="enyet-cont-item-label">记住帐号</label>
+        <label for="checkbox-item" class="enyet-cont-item-label">同意《注册与使用协议》</label>
       </div>
-      <div class="login_btn">登陆</div>
+      <div class="login_btn">注册</div>
       <div class="index-info">
-        <span @click="goRegistered">注册帐号</span> l
+        <span @click="gologin">登录帐号</span> l
         <span>忘记密码</span>
       </div>
     </div>
@@ -34,15 +43,17 @@ export default {
   data() {
     return {
       phoneval: "", //电话好吗
-      codeval: "", //密码
-      selectbol: false //是否记住帐号
+      codeval: "", //验证码
+      passwordval: "", //密码
+      invitationCode: "", //邀请码
+      agreebol: false //是否记住帐号
     };
   },
   created() {},
   methods: {
-    goRegistered() {
+    gologin() {
       this.$router.push({
-        path: "/Registered"
+        path: "/Login"
       });
     }
   }
@@ -69,13 +80,13 @@ export default {
 }
 .enter-cont {
   width: 100%;
-  margin-top: 3.2rem;
+  margin-top: 3rem;
   box-sizing: border-box;
   padding: 0 0.93rem;
 }
 .enyet-cont-item {
   width: 100%;
-  height: 1.813333rem;
+  height: 1.413333rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -138,5 +149,18 @@ export default {
   position: absolute;
   left: 0;
   bottom: 0;
+}
+.getcode {
+  width: 1.866667rem;
+  height: 0.64rem;
+  text-align: center;
+  line-height: 0.64rem;
+  font-size: 0.293333rem;
+  color: #999;
+  background-color: #ebebeb;
+  border-radius: 0.16rem;
+}
+.big_icon {
+  width: 0.42rem;
 }
 </style>
