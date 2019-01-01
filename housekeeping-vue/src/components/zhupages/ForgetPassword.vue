@@ -14,25 +14,12 @@
       </div>
       <div class="enyet-cont-item">
         <img src="../../assets/images/pass-icon.png" alt class="enyet-cont-item-icon big_icon">
-        <input type="text" v-model="passwordval" class="enyet-cont-item-input" placeholder="登录密码">
+        <input type="text" v-model="passwordval" class="enyet-cont-item-input" placeholder="输入新密码">
       </div>
-      <div class="enyet-cont-item">
-        <img src="../../assets/images/yaoqing-icon.png" alt class="enyet-cont-item-icon big_icon">
-        <input type="text" v-model="invitationCode" class="enyet-cont-item-input" placeholder="邀请码">
-      </div>
-      <div class="enyet-cont-item">
-        <input
-          type="checkbox"
-          :checked="agreebol"
-          class="enyet-cont-item-checkbox"
-          id="checkbox-item"
-        >
-        <label for="checkbox-item" class="enyet-cont-item-label">同意《注册与使用协议》</label>
-      </div>
-      <div class="login_btn">注册</div>
+      <div class="login_btn">确定</div>
       <div class="index-info">
         <span @click="gologin">登录帐号</span> l
-        <span @click="goForgetPassword">忘记密码</span>
+        <span>忘记密码</span>
       </div>
     </div>
     <div class="trademark">苏州保时科技有限公司</div>
@@ -46,22 +33,16 @@ export default {
       phoneval: "", //电话好吗
       codeval: "", //验证码
       passwordval: "", //密码
-      invitationCode: "", //邀请码
-      agreebol: false, //是否记住帐号
       downTime: 60, //倒计时
       btnBol: true
     };
   },
   created() {},
   methods: {
+    //   到登陆页面
     gologin() {
       this.$router.push({
         path: "/Login"
-      });
-    },
-    goForgetPassword() {
-      this.$router.push({
-        path: "/ForgetPassword"
       });
     },
     // 验证码倒计时
@@ -107,7 +88,7 @@ export default {
 }
 .enyet-cont-item {
   width: 100%;
-  height: 1.413333rem;
+  height: 1.813333rem;
   display: flex;
   align-items: center;
   justify-content: space-between;

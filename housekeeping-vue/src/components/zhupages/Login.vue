@@ -22,7 +22,7 @@
       <div class="login_btn">登陆</div>
       <div class="index-info">
         <span @click="goRegistered">注册帐号</span> l
-        <span>忘记密码</span>
+        <span @click="goForgetPassword">忘记密码</span>
       </div>
     </div>
     <div class="trademark">苏州保时科技有限公司</div>
@@ -43,6 +43,11 @@ export default {
     goRegistered() {
       this.$router.push({
         path: "/Registered"
+      });
+    },
+    goForgetPassword() {
+      this.$router.push({
+        path: "/ForgetPassword"
       });
     }
   }
