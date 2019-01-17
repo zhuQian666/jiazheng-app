@@ -106,6 +106,7 @@
           </div>
       </div> -->
       <div @click="bottomPopups">dddd</div>
+      <div @click="aaa">dddd</div>
   </div>
 </template>
 
@@ -131,6 +132,11 @@ export default {
           hideOnBlur: true,
           maskZIndex: 100
         })
+    },
+    aaa(){
+      this.$router.push({
+        path: "/postOrder"
+      });
     }
   },
   created() {}

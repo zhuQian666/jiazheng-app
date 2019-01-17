@@ -1,6 +1,6 @@
 *{ margin:0px; padding:0px; -webkit-box-sizing: border-box;	-moz-box-sizing: border-box; box-sizing: border-box;}
 *:before, *:after {	-webkit-box-sizing: border-box;	-moz-box-sizing: border-box; box-sizing: border-box;}
-
+body{font-size: .373333rem}
 ul,li{ list-style:none;}
 h1,h2,h3,h4,h5,h6,input,select,textarea,option,button{ font-weight:normal;}
 
@@ -56,8 +56,15 @@ dl,dd,dt{ text-align: left; }
  	-webkit-line-clamp: 2;
  	-webkit-box-orient: vertical;
 }
+.ellipsis3{
+	overflow: hidden;
+ 	text-overflow: ellipsis;
+ 	display: -webkit-box;
+ 	-webkit-line-clamp: 3;
+ 	-webkit-box-orient: vertical;
+}
 
-
+.fs32{font-size: .426667rem}
 .fs30{font-size: .4rem}
 .fs28{font-size: .373333rem}
 .fs26{font-size: .346667rem}
@@ -81,7 +88,7 @@ dl,dd,dt{ text-align: left; }
 .cur{cursor: default;}
 .blue{color: #0062CC;}
 .green{color: #19bb1d;}
-.red{color: #ff010b!important;}
+.red{color: #f00!important;}
 .home{color: #1e80d3;}
 .orange{color: #f7740a;}
 
