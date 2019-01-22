@@ -3,23 +3,26 @@
     <div class="logo"></div>
     <div class="enter-cont">
       <div class="enyet-cont-item">
-        <img src="../../assets/images/icon-phone.png" alt class="enyet-cont-item-icon">
+        <img src="../../../assets/images/icon-phone.png" alt class="enyet-cont-item-icon">
         <input type="text" v-model="phoneval" class="enyet-cont-item-input" placeholder="输入手机号">
       </div>
       <div class="enyet-cont-item">
-        <img src="../../assets/images/icon-code.png" alt class="enyet-cont-item-icon big_icon">
-        <input type="text" v-model="codeval" class="enyet-cont-item-input" placeholder="验证码">
-        <div class="getcode" @click="downTimeFn(60)" v-if="btnBol">获取验证码</div>
-        <div class="getcode" v-else>{{downTime}}秒</div>
+        <img src="../../../assets/images/icon-code.png" alt class="enyet-cont-item-icon">
+        <input type="text" v-model="codeval" class="enyet-cont-item-input" placeholder="输入密码">
       </div>
       <div class="enyet-cont-item">
-        <img src="../../assets/images/pass-icon.png" alt class="enyet-cont-item-icon big_icon">
-        <input type="text" v-model="passwordval" class="enyet-cont-item-input" placeholder="输入新密码">
+        <input
+          type="checkbox"
+          :checked="selectbol"
+          class="enyet-cont-item-checkbox"
+          id="checkbox-item"
+        >
+        <label for="checkbox-item" class="enyet-cont-item-label">记住帐号</label>
       </div>
-      <div class="login_btn">确定</div>
+      <div class="login_btn" @click="loginFn">登陆</div>
       <div class="index-info">
-        <span @click="gologin">登录帐号</span> l
-        <span>忘记密码</span>
+        <span @click="goRegistered">注册帐号</span> l
+        <span @click="goForgetPassword">忘记密码</span>
       </div>
     </div>
     <div class="trademark">苏州保时科技有限公司</div>
@@ -31,32 +34,36 @@ export default {
   data() {
     return {
       phoneval: "", //电话好吗
-      codeval: "", //验证码
-      passwordval: "", //密码
-      downTime: 60, //倒计时
-      btnBol: true
+      codeval: "", //密码
+      selectbol: false //是否记住帐号
     };
   },
-  created() {},
+  created() {
+    this.phoneval = this.$cookie.get("USERNAME") || "";
+    this.codeval = this.$cookie.get("PASSOWRD") || "";
+  },
   methods: {
-    //   到登陆页面
-    gologin() {
+    // 注册帐号
+    goRegistered() {
       this.$router.push({
-        path: "/Login"
+        path: "/Registered"
       });
     },
-    // 验证码倒计时
-    downTimeFn(val) {
-      this.btnBol = false;
-      setTimeout(() => {
-        val--;
-        this.downTime = val;
-        if (val > 0) {
-          this.downTimeFn(val);
-        } else {
-          this.btnBol = true;
-        }
-      }, 1000);
+    //忘记密码
+    goForgetPassword() {
+      this.$router.push({
+        path: "/ForgetPassword"
+      });
+    },
+    //点击登录
+    loginFn() {
+      if (this.selectbol) {
+        this.$cookie.set("USERNAME", this.phoneval, 7);
+        this.$cookie.set("PASSOWRD", this.codeval, 7);
+      } else {
+        this.$cookie.delete("USERNAME");
+        this.$cookie.delete("PASSOWRD");
+      }
     }
   }
 };
@@ -66,7 +73,7 @@ export default {
 .index {
   width: 100%;
   min-height: 100vh;
-  background: url("../../assets/images/login-bg.png") no-repeat;
+  background: url("../../../assets/images/login-bg.png") no-repeat;
   background-size: 100% 100%;
   box-sizing: border-box;
   padding: 1.33rem 0 0.933333rem;
@@ -77,12 +84,12 @@ export default {
   height: 2.48rem;
   border-radius: 50%;
   margin: 0 auto;
-  background: url("../../assets/images/logo.png") no-repeat;
+  background: url("../../../assets/images/logo.png") no-repeat;
   background-size: 100% 100%;
 }
 .enter-cont {
   width: 100%;
-  margin-top: 3rem;
+  margin-top: 3.2rem;
   box-sizing: border-box;
   padding: 0 0.93rem;
 }
@@ -124,7 +131,7 @@ export default {
   width: 5.973333rem;
   height: 1.173333rem;
   margin: 0.533333rem auto 0;
-  background: url("../../assets/images/login-btn.png") no-repeat;
+  background: url("../../../assets/images/login-btn.png") no-repeat;
   background-size: 100% auto;
   border-radius: 1.173333rem;
   overflow: hidden;
@@ -151,18 +158,5 @@ export default {
   position: absolute;
   left: 0;
   bottom: 0;
-}
-.getcode {
-  width: 1.866667rem;
-  height: 0.64rem;
-  text-align: center;
-  line-height: 0.64rem;
-  font-size: 0.293333rem;
-  color: #999;
-  background-color: #ebebeb;
-  border-radius: 0.16rem;
-}
-.big_icon {
-  width: 0.42rem;
 }
 </style>

@@ -3,6 +3,10 @@
  import FastClick from 'fastclick';
  import router from './router/index';
  import App from './App';
+ import VueCookie from 'vue-cookie';
+ Vue.use(VueCookie);
+
+
 
  FastClick.attach(document.body);
 

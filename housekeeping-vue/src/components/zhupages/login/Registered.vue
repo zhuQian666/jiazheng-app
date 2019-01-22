@@ -3,21 +3,25 @@
     <div class="logo"></div>
     <div class="enter-cont">
       <div class="enyet-cont-item">
-        <img src="../../assets/images/icon-phone.png" alt class="enyet-cont-item-icon">
+        <img src="../../../assets/images/icon-phone.png" alt class="enyet-cont-item-icon">
         <input type="text" v-model="phoneval" class="enyet-cont-item-input" placeholder="输入手机号">
       </div>
       <div class="enyet-cont-item">
-        <img src="../../assets/images/icon-code.png" alt class="enyet-cont-item-icon big_icon">
+        <img src="../../../assets/images/icon-code.png" alt class="enyet-cont-item-icon big_icon">
         <input type="text" v-model="codeval" class="enyet-cont-item-input" placeholder="验证码">
         <div class="getcode" @click="downTimeFn(60)" v-if="btnBol">获取验证码</div>
         <div class="getcode" v-else>{{downTime}}秒</div>
       </div>
       <div class="enyet-cont-item">
-        <img src="../../assets/images/pass-icon.png" alt class="enyet-cont-item-icon big_icon">
+        <img src="../../../assets/images/pass-icon.png" alt class="enyet-cont-item-icon big_icon">
         <input type="text" v-model="passwordval" class="enyet-cont-item-input" placeholder="登录密码">
       </div>
       <div class="enyet-cont-item">
-        <img src="../../assets/images/yaoqing-icon.png" alt class="enyet-cont-item-icon big_icon">
+        <img
+          src="../../../assets/images/yaoqing-icon.png"
+          alt
+          class="enyet-cont-item-icon big_icon"
+        >
         <input type="text" v-model="invitationCode" class="enyet-cont-item-input" placeholder="邀请码">
       </div>
       <div class="enyet-cont-item">
@@ -85,7 +89,7 @@ export default {
 .index {
   width: 100%;
   min-height: 100vh;
-  background: url("../../assets/images/login-bg.png") no-repeat;
+  background: url("../../../assets/images/login-bg.png") no-repeat;
   background-size: 100% 100%;
   box-sizing: border-box;
   padding: 1.33rem 0 0.933333rem;
@@ -96,7 +100,7 @@ export default {
   height: 2.48rem;
   border-radius: 50%;
   margin: 0 auto;
-  background: url("../../assets/images/logo.png") no-repeat;
+  background: url("../../../assets/images/logo.png") no-repeat;
   background-size: 100% 100%;
 }
 .enter-cont {
@@ -143,7 +147,7 @@ export default {
   width: 5.973333rem;
   height: 1.173333rem;
   margin: 0.533333rem auto 0;
-  background: url("../../assets/images/login-btn.png") no-repeat;
+  background: url("../../../assets/images/login-btn.png") no-repeat;
   background-size: 100% auto;
   border-radius: 1.173333rem;
   overflow: hidden;
