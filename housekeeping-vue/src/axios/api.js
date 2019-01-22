@@ -2,11 +2,11 @@
  import {
    fetch
  } from './fetch';
- const BASEURL = 'api';
+ const BASEURL = '/apis';
  export function login(data) {
    return fetch({
-     url: BASEURL + '/postLogin',
-     method: 'post',
+     url: BASEURL + '/api/User/Login',
+     method: 'POST',
      data: data
    });
  }

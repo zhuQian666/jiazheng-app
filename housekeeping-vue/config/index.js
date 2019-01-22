@@ -7,17 +7,15 @@
 
  module.exports = {
    dev: {
-
      // Paths
      assetsSubDirectory: 'static',
      assetsPublicPath: '/',
      proxyTable: {
-       '/api': {
-         target: '', // 通过本地服务器将你的请求转发到这个地址
-         //target: 'http://pmb.zmcms.cn',
+       '/apis': {
+         target: 'http://182.61.21.61:8077', // 通过本地服务器将你的请求转发到这个地址
          changeOrigin: true, // 设置这个参数可以避免跨域
          pathRewrite: {
-           '/api': '/'
+           '^/apis': ''
          }
        }
      },

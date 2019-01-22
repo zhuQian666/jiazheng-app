@@ -8,7 +8,7 @@
       </div>
       <div class="enyet-cont-item">
         <img src="../../../assets/images/icon-code.png" alt class="enyet-cont-item-icon">
-        <input type="text" v-model="codeval" class="enyet-cont-item-input" placeholder="输入密码">
+        <input type="password" v-model="codeval" class="enyet-cont-item-input" placeholder="输入密码">
       </div>
       <div class="enyet-cont-item">
         <input
@@ -30,6 +30,7 @@
 </template>
 
 <script>
+import { login } from "../../../axios/api.js";
 export default {
   data() {
     return {
@@ -57,6 +58,11 @@ export default {
     },
     //点击登录
     loginFn() {
+      let data = {
+        Tel: this.phoneval,
+        Pwd: this.codeval,
+        AppType: 1
+      };
       if (this.selectbol) {
         this.$cookie.set("USERNAME", this.phoneval, 7);
         this.$cookie.set("PASSOWRD", this.codeval, 7);
@@ -64,6 +70,9 @@ export default {
         this.$cookie.delete("USERNAME");
         this.$cookie.delete("PASSOWRD");
       }
+      login(data).then(res => {
+        console.log(res);
+      });
     }
   }
 };
@@ -112,6 +121,7 @@ export default {
   color: #999;
   font-family: "黑体";
   outline: none;
+  border: none;
 }
 .enyet-cont-item-label {
   flex: 1;
