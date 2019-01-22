@@ -1,0 +1,165 @@
+*{ margin:0px; padding:0px; -webkit-box-sizing: border-box;	-moz-box-sizing: border-box; box-sizing: border-box;}
+*:before, *:after {	-webkit-box-sizing: border-box;	-moz-box-sizing: border-box; box-sizing: border-box;}
+body{font-size: .373333rem}
+ul,li{ list-style:none;}
+h1,h2,h3,h4,h5,h6,input,select,textarea,option,button{ font-weight:normal;}
+
+a{ text-decoration:none; outline:none; color: inherit; font-size: inherit;}
+a:hover{ text-decoration:none;}
+*,a,button,input,select,option,img,dl,dd,div,label,textarea{ -webkit-tap-highlight-color:rgba(255,0,0,0);}
+input[type="button"], input[type="submit"], input[type="text"],input[type="tel"],input[type="email"],input[type="number"],textarea,button{ -webkit-appearance: none; border-radius: 0; -webkit-box-sizing: border-box; border-box: box-sizing; -moz-box-sizing: box-sizing; color: ##A70F04; outline:none; border: none;}
+input:focus{ outline:none; }
+
+em,i{ font-style:normal;} 
+textarea{ resize:none;}
+img{width: 100%;height: 100%;vertical-align: middle}
+
+input[type="reset"]::-moz-focus-inner,
+input[type="button"]::-moz-focus-inner,
+input[type="submit"]::-moz-focus-inner,
+input[type="file"] > input[type="button"]::-moz-focus-inner{ border:none;padding:0;}
+input,textarea,select,option,button,form,fieldset{margin:0;padding:0;border-width:1px;outline:none; font-family: "Helvetica Neue", Helvetica, STHeiTi, "Microsoft YaHei", "微软雅黑", SimSun, sans-serif;}
+/*placeholder*/
+:-moz-placeholder { color: #a0a0a0; }
+::-moz-placeholder {color: #a0a0a0;}
+input:-ms-input-placeholder,textarea:-ms-input-placeholder {color: #a0a0a0;}
+input::-webkit-input-placeholder,textarea::-webkit-input-placeholder {color: #a0a0a0;}
+
+.page{
+    min-height: 100vh;
+    background: #f0eff5;
+    width: 100%;
+  }
+.tl{ text-align:left;}
+.tc{ text-align:center;}
+.tr{ text-align:right;}
+.tj{text-align: justify;}
+
+dl,dd,dt{ text-align: left; }
+
+.ml0{ margin-left: 0 ! important; }
+.mt0{ margin-top: 0 ! important; }
+
+.clearfix{zoom:1; }
+.clearfix:before,.clearfix:after{display:table;line-height:0;content:"";}
+.clearfix:after{clear:both;}
+
+.fl{ float:left; display:inline;}
+.fr{ float:right; display:inline;}
+.clear{ clear:both;}
+
+.ellipsis{ display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;} 
+.ellipsis2{
+	overflow: hidden;
+ 	text-overflow: ellipsis;
+ 	display: -webkit-box;
+ 	-webkit-line-clamp: 2;
+ 	-webkit-box-orient: vertical;
+}
+.ellipsis3{
+	overflow: hidden;
+ 	text-overflow: ellipsis;
+ 	display: -webkit-box;
+ 	-webkit-line-clamp: 3;
+ 	-webkit-box-orient: vertical;
+}
+
+.fs32{font-size: .426667rem}
+.fs30{font-size: .4rem}
+.fs28{font-size: .373333rem}
+.fs26{font-size: .346667rem}
+.fs24{font-size: .32rem}
+
+.ml30{margin-left: .4rem}
+.ml20{margin-left: .266667rem}
+.ml15{margin-left: .2rem}
+
+.mt30{margin-top: .4rem}
+.mt20{margin-top: .266667rem}
+.mt15{margin-top: .2rem}
+
+.line15{line-height: .4rem}
+
+
+.white{color: #fff!important;}
+.color3{color: #333!important;}
+.color6{color: #666;}
+.color9{color: #999;}
+.cur{cursor: default;}
+.blue{color: #0062CC;}
+.green{color: #19bb1d;}
+.red{color: #f00!important;}
+.home{color: #1e80d3;}
+.orange{color: #f7740a;}
+
+
+.forlove{
+	height: 100%;
+	width: 100%;
+	position: fixed;
+	left: 0;
+	top: 0;
+	background-color: rgba(0,0,0,.3);
+	z-index: 99;
+}
+
+
+.flex{
+	display: flex;
+	display: -webkit-box; 
+	display: -webkit-flex;
+}
+.flex_row{
+	flex-direction: row;
+}
+.flex_column{
+	flex-direction: column;
+}
+.flex_wrap{flex-wrap: wrap;}
+/*body 主轴位置*/
+.flex_left{
+	justify-content: flex-start;
+}
+.flex_right{
+	justify-content: flex-end;
+}
+.flex_sa{
+	justify-content: space-around;
+}
+.flex_sb{
+	justify-content: space-between;
+}
+.flex_c{justify-content: center;}
+
+
+.flex1{flex: 1;}
+/*body,纵轴位置*/
+.aic{align-items: center;}
+.ait{align-items: flex-start;}
+.aib{align-items: flex-end;}
+.aif{align-items: stretch;}
+
+/*item,纵轴方向位置*/
+.asc{align-self: center;}
+.ast{align-self: flex-start;}
+.asb{align-self: flex-end;}
+.ass{align-self: stretch;}
+
+.flexs{
+	justify-content: flex-start;
+}
+/*item放大 ,default:0*/
+.fg1{flex-grow: 1;}
+.fg2{flex-grow: 2;}
+.fg3{flex-grow: 3;}
+.fg4{flex-grow: 4;}
+.fg5{flex-grow: 5;}
+/*item缩小 ,default1如果所有项目的flex-shrink属性都为1，当空间不足时，都将等比例缩小。如果一个项目的flex-shrink属性为0，其他项目都为1，则空间不足时，为0缩小*/
+.fs0{flex-shrink: 0;}
+
+.weui-btn_primary{
+	background-color: #35acff!important;
+}
+button.weui-btn, input.weui-btn{
+	border-radius: 20px;
+}
