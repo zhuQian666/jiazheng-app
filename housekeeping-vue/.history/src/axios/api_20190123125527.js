@@ -22,8 +22,7 @@ export function Register(data) {
 // 获取验证码
 export function Sms(data) {
   return fetch({
-    url: BASEURL + '/api/User/Sms',
-    method: 'GET',
-    params: data
+    url: BASEURL + '/api/User/Sms?'+data,
+    method: 'GET'
   });
 }

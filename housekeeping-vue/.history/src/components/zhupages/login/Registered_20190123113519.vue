@@ -9,12 +9,12 @@
       <div class="enyet-cont-item">
         <img src="../../../assets/images/icon-code.png" alt class="enyet-cont-item-icon big_icon">
         <input type="text" v-model="codeval" class="enyet-cont-item-input" placeholder="验证码">
-        <div class="getcode" @click="getCode" v-if="btnBol">获取验证码</div>
+        <div class="getcode" @click="downTimeFn(60)" v-if="btnBol">获取验证码</div>
         <div class="getcode" v-else>{{downTime}}秒</div>
       </div>
       <div class="enyet-cont-item">
         <img src="../../../assets/images/pass-icon.png" alt class="enyet-cont-item-icon big_icon">
-        <input type="password" v-model="passwordval" class="enyet-cont-item-input" placeholder="登录密码">
+        <input type="text" v-model="passwordval" class="enyet-cont-item-input" placeholder="登录密码">
       </div>
       <div class="enyet-cont-item">
         <img
@@ -33,7 +33,7 @@
         >
         <label for="checkbox-item" class="enyet-cont-item-label">同意《注册与使用协议》</label>
       </div>
-      <div class="login_btn" @click="registerFn">注册</div>
+      <div class="login_btn">注册</div>
       <div class="index-info">
         <span @click="gologin">登录帐号</span> l
         <span @click="goForgetPassword">忘记密码</span>
@@ -44,8 +44,6 @@
 </template>
 
 <script>
-import { Register,Sms } from "../../../axios/api.js";
-import { setTimeout } from 'timers';
 export default {
   data() {
     return {
@@ -53,20 +51,18 @@ export default {
       codeval: "", //验证码
       passwordval: "", //密码
       invitationCode: "", //邀请码
-      agreebol: true, //是否记住帐号
+      agreebol: false, //是否记住帐号
       downTime: 60, //倒计时
       btnBol: true
     };
   },
   created() {},
   methods: {
-    // 到登录页面
     gologin() {
       this.$router.push({
         path: "/Login"
       });
     },
-    // 忘记密码
     goForgetPassword() {
       this.$router.push({
         path: "/ForgetPassword"
@@ -84,72 +80,6 @@ export default {
           this.btnBol = true;
         }
       }, 1000);
-    },
-    // 获取验证码
-    getCode(){
-       if(!!!this.phoneval){
-         this.$vux.loading.show({
-            text: '请输入手机号码'
-          })
-        setTimeout(()=>{
-           this.$vux.loading.hide()
-            },1000)
-            return;
-          }
-        this.downTimeFn(60) 
-        let data = {
-          tel:this.phoneval
-        }
-        Sms(data).then(res=>{
-          console.log(res)
-        })
-    },
-    // 注册
-    registerFn(){
-      if(!!!this.phoneval){
-        this.$vux.loading.show({
-        text: '请输入手机号码'
-        })
-        setTimeout(()=>{
-          this.$vux.loading.hide()
-        },1000)
-        return;
-      }
-       if(!!!this.codeval){
-        this.$vux.loading.show({
-        text: '请输入验证码'
-        })
-        setTimeout(()=>{
-          this.$vux.loading.hide()
-        },1000)
-        return;
-      }
-       if(!!!this.passwordval){
-          this.$vux.loading.show({
-            text: '请输入密码'
-          })
-        setTimeout(()=>{
-          this.$vux.loading.hide()
-        },1000)
-         return;
-      }
-      if(!agreebol){
-         this.$vux.alert.show({
-          title: '温馨提示',
-          content: '请同意注册与使用协议',
-        })
-         return;
-      }
-       let data = {
-          "Tel": this.phoneval,
-          "Pwd": this.passwordval,
-          "YZM": this.codeval,
-          "Code": this.invitationCode
-        }
-       Register(data).then(res=>{
-         console.log(res)
-       })
-
     }
   }
 };
@@ -198,7 +128,6 @@ export default {
   color: #999;
   font-family: "黑体";
   outline: none;
-  border: none;
 }
 .enyet-cont-item-label {
   flex: 1;

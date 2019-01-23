@@ -45,7 +45,6 @@
 
 <script>
 import { Register,Sms } from "../../../axios/api.js";
-import { setTimeout } from 'timers';
 export default {
   data() {
     return {
@@ -53,7 +52,7 @@ export default {
       codeval: "", //验证码
       passwordval: "", //密码
       invitationCode: "", //邀请码
-      agreebol: true, //是否记住帐号
+      agreebol: false, //是否记住帐号
       downTime: 60, //倒计时
       btnBol: true
     };
@@ -88,55 +87,40 @@ export default {
     // 获取验证码
     getCode(){
        if(!!!this.phoneval){
-         this.$vux.loading.show({
-            text: '请输入手机号码'
-          })
-        setTimeout(()=>{
-           this.$vux.loading.hide()
-            },1000)
-            return;
-          }
-        this.downTimeFn(60) 
-        let data = {
-          tel:this.phoneval
-        }
-        Sms(data).then(res=>{
-          console.log(res)
+        this.$vux.alert.show({
+          title: '温馨提示',
+          content: '请输入手机号码',
         })
+        return;
+      }
+      this.downTimeFn(60) 
+       let data = {
+        tel:this.phoneval
+      }
+      Sms(data).then(res=>{
+        console.log(res)
+      })
     },
     // 注册
     registerFn(){
       if(!!!this.phoneval){
-        this.$vux.loading.show({
-        text: '请输入手机号码'
+        this.$vux.alert.show({
+          title: '温馨提示',
+          content: '请输入手机号码',
         })
-        setTimeout(()=>{
-          this.$vux.loading.hide()
-        },1000)
         return;
       }
        if(!!!this.codeval){
-        this.$vux.loading.show({
-        text: '请输入验证码'
+        this.$vux.alert.show({
+          title: '温馨提示',
+          content: '请输入验证码',
         })
-        setTimeout(()=>{
-          this.$vux.loading.hide()
-        },1000)
         return;
       }
        if(!!!this.passwordval){
-          this.$vux.loading.show({
-            text: '请输入密码'
-          })
-        setTimeout(()=>{
-          this.$vux.loading.hide()
-        },1000)
-         return;
-      }
-      if(!agreebol){
-         this.$vux.alert.show({
+        this.$vux.alert.show({
           title: '温馨提示',
-          content: '请同意注册与使用协议',
+          content: '请输入密码',
         })
          return;
       }

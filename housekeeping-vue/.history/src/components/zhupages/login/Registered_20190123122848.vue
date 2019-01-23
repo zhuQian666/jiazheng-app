@@ -9,12 +9,12 @@
       <div class="enyet-cont-item">
         <img src="../../../assets/images/icon-code.png" alt class="enyet-cont-item-icon big_icon">
         <input type="text" v-model="codeval" class="enyet-cont-item-input" placeholder="验证码">
-        <div class="getcode" @click="getCode" v-if="btnBol">获取验证码</div>
+        <div class="getcode" @click="downTimeFn(60)" v-if="btnBol">获取验证码</div>
         <div class="getcode" v-else>{{downTime}}秒</div>
       </div>
       <div class="enyet-cont-item">
         <img src="../../../assets/images/pass-icon.png" alt class="enyet-cont-item-icon big_icon">
-        <input type="password" v-model="passwordval" class="enyet-cont-item-input" placeholder="登录密码">
+        <input type="text" v-model="passwordval" class="enyet-cont-item-input" placeholder="登录密码">
       </div>
       <div class="enyet-cont-item">
         <img
@@ -44,8 +44,7 @@
 </template>
 
 <script>
-import { Register,Sms } from "../../../axios/api.js";
-import { setTimeout } from 'timers';
+import { Register } from "../../../axios/api.js";
 export default {
   data() {
     return {
@@ -53,7 +52,7 @@ export default {
       codeval: "", //验证码
       passwordval: "", //密码
       invitationCode: "", //邀请码
-      agreebol: true, //是否记住帐号
+      agreebol: false, //是否记住帐号
       downTime: 60, //倒计时
       btnBol: true
     };
@@ -85,60 +84,14 @@ export default {
         }
       }, 1000);
     },
-    // 获取验证码
-    getCode(){
-       if(!!!this.phoneval){
-         this.$vux.loading.show({
-            text: '请输入手机号码'
-          })
-        setTimeout(()=>{
-           this.$vux.loading.hide()
-            },1000)
-            return;
-          }
-        this.downTimeFn(60) 
-        let data = {
-          tel:this.phoneval
-        }
-        Sms(data).then(res=>{
-          console.log(res)
-        })
-    },
     // 注册
     registerFn(){
-      if(!!!this.phoneval){
-        this.$vux.loading.show({
-        text: '请输入手机号码'
-        })
-        setTimeout(()=>{
-          this.$vux.loading.hide()
-        },1000)
-        return;
-      }
-       if(!!!this.codeval){
-        this.$vux.loading.show({
-        text: '请输入验证码'
-        })
-        setTimeout(()=>{
-          this.$vux.loading.hide()
-        },1000)
-        return;
-      }
-       if(!!!this.passwordval){
-          this.$vux.loading.show({
-            text: '请输入密码'
-          })
-        setTimeout(()=>{
-          this.$vux.loading.hide()
-        },1000)
-         return;
-      }
-      if(!agreebol){
-         this.$vux.alert.show({
+      console.log('0000')
+      if(!!this.phoneval){
+        this.$vux.alert.show({
           title: '温馨提示',
-          content: '请同意注册与使用协议',
+          content: '请输入手机号码',
         })
-         return;
       }
        let data = {
           "Tel": this.phoneval,
@@ -146,10 +99,6 @@ export default {
           "YZM": this.codeval,
           "Code": this.invitationCode
         }
-       Register(data).then(res=>{
-         console.log(res)
-       })
-
     }
   }
 };
@@ -198,7 +147,6 @@ export default {
   color: #999;
   font-family: "黑体";
   outline: none;
-  border: none;
 }
 .enyet-cont-item-label {
   flex: 1;

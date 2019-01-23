@@ -92,17 +92,17 @@ export default {
             text: '请输入手机号码'
           })
         setTimeout(()=>{
-           this.$vux.loading.hide()
-            },1000)
-            return;
-          }
-        this.downTimeFn(60) 
-        let data = {
-          tel:this.phoneval
-        }
-        Sms(data).then(res=>{
-          console.log(res)
-        })
+          this.$vux.loading.hide()
+        },1000)
+        return;
+      }
+      this.downTimeFn(60) 
+       let data = {
+        tel:this.phoneval
+      }
+      Sms(data).then(res=>{
+        console.log(res)
+      })
     },
     // 注册
     registerFn(){

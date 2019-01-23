@@ -5,10 +5,6 @@
  import App from './App';
  import VueCookie from 'vue-cookie';
  Vue.use(VueCookie);
- import  { AlertPlugin } from 'vux'
- Vue.use(AlertPlugin)
- import  { LoadingPlugin } from 'vux'
- Vue.use(LoadingPlugin)
  import '../static/css/common.css';
  import {
    XButton,

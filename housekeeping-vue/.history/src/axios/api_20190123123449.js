@@ -24,6 +24,6 @@ export function Sms(data) {
   return fetch({
     url: BASEURL + '/api/User/Sms',
     method: 'GET',
-    params: data
+    data: data
   });
 }
