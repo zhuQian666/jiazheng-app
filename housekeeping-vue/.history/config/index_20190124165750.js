@@ -12,14 +12,15 @@
      assetsSubDirectory: 'static',
      assetsPublicPath: '/',
      proxyTable: {
-      '/apis': {
-        target: 'http://182.61.21.61:8077', // 通过本地服务器将你的请求转发到这个地址
-        changeOrigin: true, // 设置这个参数可以避免跨域
-        pathRewrite: {
-          '^/apis': ''
-        }
-      }
-    },
+       '/api': {
+         target: '', // 通过本地服务器将你的请求转发到这个地址
+         //target: 'http://pmb.zmcms.cn',
+         changeOrigin: true, // 设置这个参数可以避免跨域
+         pathRewrite: {
+           '/api': '/'
+         }
+       }
+     },
 
      // Various Dev Server settings
      host: 'localhost', // can be overwritten by process.env.HOST

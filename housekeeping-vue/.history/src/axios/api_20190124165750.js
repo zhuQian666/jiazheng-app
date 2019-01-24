@@ -2,7 +2,7 @@
  import {
    fetch
  } from './fetch';
- const BASEURL = '/apis';
+ const BASEURL = 'apis';
 
  export function GetCommoditySeries(data) {
    return fetch({
