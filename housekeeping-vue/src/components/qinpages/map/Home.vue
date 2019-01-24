@@ -2,15 +2,15 @@
     <div class="page">
         <div class="home-head">
             <div class="home-top flex flex_sb aic mt2">
-                <div class="go-my">
-                    <img src="../../assets/images/my.png" alt="">
+                <div class="go-my" @click="aaa">
+                    <img src="../../../assets/images/my.png" alt="">
                 </div>
                 <div class="chsoe-city">
                     <span class="city-name">{{clickCity}}</span>
                     <x-icon type="ios-arrow-down" class="icon-white" size="10"></x-icon>
                 </div>
                 <div class="go-overview">
-                    <img src="../../assets/images/overview.png" alt="">
+                    <img src="../../../assets/images/overview.png" alt="">
                 </div>
             </div>
             <div class="home-tit flex flex_sa aic">
@@ -23,18 +23,18 @@
             </div>
         </div>
         <div class="home-body">
-            <!-- <template>
+            <template>
                 <baidu-map class="map" center="北京" :zoom="zoom" @ready="handler">
                     <bm-geolocation anchor="BMAP_ANCHOR_BOTTOM_RIGHT" :showAddressBar="true" :autoLocation="true"></bm-geolocation>
                 </baidu-map>
-            </template> -->
+            </template>
             <template>
                 <baidu-map class="map bm-view" @ready="handler" ak="z5tYi3doukTrHxSlaWOHcM5cFuzXkpy2">
                     <bm-geolocation anchor="BMAP_ANCHOR_BOTTOM_RIGHT" :showAddressBar="true" :autoLocation="true"
-                    :locationIcon="{url: require('../../assets/images/local.png'), size: {width: 27, height: 38}}" >
+                    :locationIcon="{url: require('../../../assets/images/local.png'), size: {width: 27, height: 38}}" >
                     </bm-geolocation>
                     <!-- 自定义定位图标覆盖物 -->
-                    <bm-marker :position="autoLocationPoint" :icon="{url: require('../../assets/images/local.png'), size: {width: 27, height: 38}}" v-if="initLocation">
+                    <bm-marker :position="autoLocationPoint" :icon="{url: require('../../../assets/images/local.png'), size: {width: 27, height: 38}}" v-if="initLocation">
                     </bm-marker>
                 </baidu-map>
             </template>
@@ -42,7 +42,7 @@
 
             <div class="noserver" v-if="ishasServer">
                 <div class="noserver-img">
-                    <img src="../../assets/images/no-server.png" alt="">
+                    <img src="../../../assets/images/no-server.png" alt="">
                 </div>
                 <p class="tc color9 fs32">地区未开放，敬请期待</p>
             </div>
@@ -55,24 +55,25 @@
 </template>
 
 <script>
-// import { Tab, TabItem } from 'vux';
-// import BaiduMap from 'vue-baidu-map/components/map/Map.vue'
+import { Tab, TabItem } from 'vux';
+import BaiduMap from 'vue-baidu-map/components/map/Map.vue';
+import { Register,Sms } from "../../../axios/api.js";
 export default {
     data() {
         return {
             msg: "Hello World!",
             clickCity: '北京市',
             headitem: [{
-                images: require('../../assets/images/clear-keeping.png'),
+                images: require('../../../assets/images/clear-keeping.png'),
                 text: "保洁"
             },{
-                images: require("../../assets/images/alarm-keeping.png"),  
+                images: require("../../../assets/images/alarm-keeping.png"),  
                 text: "小时工"
             },{
-                images: require("../../assets/images/lock-keeping.png"),
+                images: require("../../../assets/images/lock-keeping.png"),
                 text: "开锁"
             },{
-                images: require("../../assets/images/maintain-keeping.png"),
+                images: require("../../../assets/images/maintain-keeping.png"),
                 text: "维修"
             }],
             ishasServer: false,
@@ -84,6 +85,13 @@ export default {
         BaiduMap
     },
     methods: {
+        aaa(){
+            let data = {name: '常州市'}
+            GetCommoditySeries(data).then(res=>{
+                console.log(res)
+            })
+        },
+
         handler ({BMap, map}) {
             let _this = this;  // 设置一个临时变量指向vue实例，因为在百度地图回调里使用this，指向的不是vue实例；
             var geolocation = new BMap.Geolocation();

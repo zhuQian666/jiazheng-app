@@ -16,7 +16,7 @@
     <!-- 选择地址 -->
     <div class="chose-address flex aic flex_sb">
       <div class="flex aic ml15">
-        <img class="local" src="../../assets/images/local.png" alt>
+        <img class="local" src="../../../assets/images/local.png" alt>
         <div class="fs28 color3 ml15" v-if="haslocal">请选择服务地址</div>
         <div class="accepter ml20" v-else>
           <div class="flex flex_left">
@@ -28,7 +28,7 @@
       </div>
       <x-icon type="ios-arrow-right" size="20"></x-icon>
     </div>
-    <img class="lineBar" src="../../assets/images/lineBar.jpg" alt>
+    <img class="lineBar" src="../../../assets/images/lineBar.jpg" alt>
     <!-- 订单 -->
     <div class="order">
       <!-- 一个服务 -->
@@ -38,7 +38,7 @@
           <!-- 单个订单 -->
           <div class="order-cell-list flex flex_sb aic">
             <div class="order-cell-list-img fg1">
-              <img src="../../assets/images/serverDemo.jpg" alt>
+              <img src="../../../assets/images/serverDemo.jpg" alt>
             </div>
             <div class="order-cell-list-txt fg2">
               <div class="order-cell-list-head">油烟机清洗</div>
@@ -103,7 +103,7 @@
           <div class="commend-header">服务结束</div>
           <div class="commend-body">
             <div class="server-img">
-              <img src="../../assets/images/demo.jpg" alt>
+              <img src="../../../assets/images/demo.jpg" alt>
             </div>
             <div class="server-type">
               <divider>{{ '保洁服务' }}</divider>
@@ -210,43 +210,43 @@ export default {
       ],
       detailStatus: [
         {
-          images: require("../../assets/images/wait-server.png"),
+          images: require("../../../assets/images/wait-server.png"),
           time: "23:59:59",
           name: "待服务",
           status: true
         },
         {
-          images: require("../../assets/images/wait-pay.png"),
+          images: require("../../../assets/images/wait-pay.png"),
           name: "待付款",
           time: "",
           status: false
         },
         {
-          images: require("../../assets/images/wait-order.png"),
+          images: require("../../../assets/images/wait-order.png"),
           name: "待接单",
           time: "",
           status: false
         },
         {
-          images: require("../../assets/images/wait-comment.png"),
+          images: require("../../../assets/images/wait-comment.png"),
           name: "待评价",
           time: "",
           status: false
         },
         {
-          images: require("../../assets/images/servering.png"),
+          images: require("../../../assets/images/servering.png"),
           name: "服务中",
           time: "",
           status: false
         },
         {
-          images: require("../../assets/images/refunded.png"),
+          images: require("../../../assets/images/refunded.png"),
           name: "已退款",
           time: "",
           status: false
         },
         {
-          images: require("../../assets/images/order-complete.png"),
+          images: require("../../../assets/images/order-complete.png"),
           name: "已完成",
           time: "",
           status: false

@@ -4,7 +4,7 @@
  export function fetch(options) {
    return new Promise((resovle, reject) => {
      const instance = axios.create({
-       timeout: 1000,
+       timeout: 30 * 1000,
        headers: {
          'Content-Type': 'application/json'
        }

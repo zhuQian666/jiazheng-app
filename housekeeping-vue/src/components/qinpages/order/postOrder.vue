@@ -3,7 +3,7 @@
         <!-- 选择地址 -->
         <div class="chose-address flex aic flex_sb">
             <div class="flex aic ml15">
-                <img class="local" src="../../assets/images/local.png" alt="">
+                <img class="local" src="../../../assets/images/local.png" alt="">
                 <div class="fs28 color3 ml15" v-if="haslocal">请选择服务地址</div>
                 <div class="accepter ml20" v-else>
                     <div class="flex flex_left"><span class="accepter-name">{{acceptername}}</span><span class="accepter-tel ml30">{{accepttel}}</span></div>
@@ -12,7 +12,7 @@
             </div>
             <x-icon type="ios-arrow-right" size="20"></x-icon>
         </div>
-        <img class="lineBar" src="../../assets/images/lineBar.jpg" alt="">
+        <img class="lineBar" src="../../../assets/images/lineBar.jpg" alt="">
         <!-- 订单 -->
         <div class="order">
             <!-- 一个服务 -->
@@ -22,7 +22,7 @@
                     <!-- 单个订单 -->
                     <div class="order-cell-list flex flex_sb aic">
                         <div class="order-cell-list-img fg1">
-                            <img src="../../assets/images/serverDemo.jpg" alt="">
+                            <img src="../../../assets/images/serverDemo.jpg" alt="">
                         </div>
                         <div class="order-cell-list-txt fg2">
                             <div class="order-cell-list-head">油烟机清洗</div>

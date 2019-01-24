@@ -2,11 +2,12 @@
  import {
    fetch
  } from './fetch';
- const BASEURL = 'api';
- export function login(data) {
+ const BASEURL = 'apis';
+
+ export function GetCommoditySeries(data) {
    return fetch({
-     url: BASEURL + '/postLogin',
-     method: 'post',
-     data: data
+     url: BASEURL + '/api/User/GetCommoditySeries',
+     method: 'get',
+     params: data
    });
  }
