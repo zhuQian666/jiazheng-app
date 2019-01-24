@@ -2,7 +2,7 @@
   <div class="page">
     <div class="index-tip flex aic">
       <div class="index-tip-img">
-        <img src="../../assets/images/index-top.jpg" alt>
+        <img src="../../../assets/images/index-top.jpg" alt>
       </div>
       <div class="ml20">
         <h4 class="fs30">保洁服务</h4>
@@ -19,7 +19,35 @@
     <div class="index-body flex flex_sb flex_wrap">
       <div class="index-body-cell">
         <div class="index-body-img">
-          <img src="../../assets/images/demo.jpg" alt>
+          <img src="../../../assets/images/demo.jpg" alt>
+        </div>
+        <div class="index-body-content">
+          <h3 class="color3 fs30 ellipsis">油烟机清洁</h3>
+          <p class="color6 fs24 ellipsis">清洗擦拭除胶除漆重点清洁</p>
+          <div class="flex flex_sb aic mt20">
+            <div class="select-mum">
+              <span class="red fs24">￥118元/台</span>
+            </div>
+            <!-- <div class="cheose-mum flex flex_sb aic">
+              <span class="addmum">-</span>
+              <input type="tel" value="10">
+              <span class="mum">+</span>
+            </div> -->
+            <div class="cheose-num">
+                <x-number
+                  v-model="roundValue"
+                  button-style="round"
+                  :min="0"
+                  :max="9"
+                  width="30px"
+                ></x-number>
+              </div>
+          </div>
+        </div>
+      </div>
+      <div class="index-body-cell">
+        <div class="index-body-img">
+          <img src="../../../assets/images/demo.jpg" alt>
         </div>
         <div class="index-body-content">
           <h3 class="color3 fs30 ellipsis">油烟机清洁</h3>
@@ -38,26 +66,7 @@
       </div>
       <div class="index-body-cell">
         <div class="index-body-img">
-          <img src="../../assets/images/demo.jpg" alt>
-        </div>
-        <div class="index-body-content">
-          <h3 class="color3 fs30 ellipsis">油烟机清洁</h3>
-          <p class="color6 fs24 ellipsis">清洗擦拭除胶除漆重点清洁</p>
-          <div class="flex flex_sb aic mt20">
-            <div class="select-mum">
-              <span class="red fs24">￥118元/台</span>
-            </div>
-            <div class="cheose-mum flex flex_sb aic">
-              <span class="addmum">-</span>
-              <input type="tel" value="10">
-              <span class="mum">+</span>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="index-body-cell">
-        <div class="index-body-img">
-          <img src="../../assets/images/demo.jpg" alt>
+          <img src="../../../assets/images/demo.jpg" alt>
         </div>
         <div class="index-body-content">
           <h3 class="color3 fs30 ellipsis">油烟机清洁</h3>
@@ -110,8 +119,6 @@
                   :max="10"
                 ></x-number>
               </div>
-
-                
             </div>
             <div class="hr"></div>
             <div class="bottom-popupo-item">
@@ -127,7 +134,7 @@
       <x-dialog v-model="showHideOnBlur" class="dialog-demo" hide-on-blur>
         <div class="got-real-name">
           <div class="image-box">
-            <img src="../../assets/images/index-zindex.png" alt>
+            <img src="../../../assets/images/index-zindex.png" alt>
           </div>
           <div style="background:#fff; padding:20px 15px">
             <p class="fs32 color9 tc mt30">请先完成实名认证流程哦！</p>
@@ -155,6 +162,7 @@
 
 
 <script>
+import { Register,Sms } from "../../../axios/api.js";
 import {
   Alert,
   Popup,
@@ -197,10 +205,12 @@ export default {
       });
     },
     aaa() {
+      
       this.$router.push({
         path: "/postOrder"
       });
-    }
+    },
+    
   },
   created() {}
 };
@@ -303,7 +313,7 @@ export default {
   width: 0.586667rem;
   height: 0.586667rem;
   border-radius: 50%;
-  background: url("../../assets/images/home.png") no-repeat center center;
+  background: url("../../../assets/images/home.png") no-repeat center center;
   background-size: 100% 100%;
 }
 .index-server span {
@@ -311,7 +321,7 @@ export default {
   width: 0.586667rem;
   height: 0.586667rem;
   border-radius: 50%;
-  background: url("../../assets/images/line-server.png") no-repeat center center;
+  background: url("../../../assets/images/line-server.png") no-repeat center center;
   background-size: 100% 100%;
 }
 .addcar {
@@ -362,14 +372,15 @@ export default {
   padding: 0!important;
   background: #4478fd!important;
   border-color: #2674fb!important;
+  border:none!important;
 }
 .vux-number-selector svg{
   fill: #fff!important;
   font-size: 10px;
 }
 .vux-number-selector{
-  height: .666667rem!important;
-  width: .666667rem!important;
+  height: .533333rem!important;
+  width: .533333rem!important;
 }
 .weui-cell{
   padding: 0!important;

@@ -2,6 +2,7 @@
  import {
    fetch
  } from './fetch';
+<<<<<<< HEAD
  const BASEURL = '/apis';
 //  登录
  export function login(data) {
@@ -9,6 +10,15 @@
      url: BASEURL + '/api/User/Login',
      method: 'POST',
      data: data
+=======
+ const BASEURL = 'apis';
+
+ export function GetCommoditySeries(data) {
+   return fetch({
+     url: BASEURL + '/api/User/GetCommoditySeries',
+     method: 'get',
+     params: data
+>>>>>>> origin/featrue/20190101-view
    });
  }
 //注册

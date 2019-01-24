@@ -1,4 +1,5 @@
 <template>
+<<<<<<< HEAD:housekeeping-vue/src/components/qinpages/Home.vue
   <div class="page">
     <div class="home-head">
       <div class="home-top flex flex_sb aic mt2">
@@ -49,6 +50,56 @@
       <div class="noserver" v-if="ishasServer">
         <div class="noserver-img">
           <img src="../../assets/images/no-server.png" alt>
+=======
+    <div class="page">
+        <div class="home-head">
+            <div class="home-top flex flex_sb aic mt2">
+                <div class="go-my" @click="aaa">
+                    <img src="../../../assets/images/my.png" alt="">
+                </div>
+                <div class="chsoe-city">
+                    <span class="city-name">{{clickCity}}</span>
+                    <x-icon type="ios-arrow-down" class="icon-white" size="10"></x-icon>
+                </div>
+                <div class="go-overview">
+                    <img src="../../../assets/images/overview.png" alt="">
+                </div>
+            </div>
+            <div class="home-tit flex flex_sa aic">
+                <div class="home-head-item" v-for="(item, index) in headitem" :key="index">
+                    <div class="home-head-item-img">
+                        <img v-bind:src="item.images" alt="">
+                    </div>
+                    <p class="tc color9 ">{{item.text}}</p>
+                </div>
+            </div>
+        </div>
+        <div class="home-body">
+            <template>
+                <baidu-map class="map" center="北京" :zoom="zoom" @ready="handler">
+                    <bm-geolocation anchor="BMAP_ANCHOR_BOTTOM_RIGHT" :showAddressBar="true" :autoLocation="true"></bm-geolocation>
+                </baidu-map>
+            </template>
+            <template>
+                <baidu-map class="map bm-view" @ready="handler" ak="z5tYi3doukTrHxSlaWOHcM5cFuzXkpy2">
+                    <bm-geolocation anchor="BMAP_ANCHOR_BOTTOM_RIGHT" :showAddressBar="true" :autoLocation="true"
+                    :locationIcon="{url: require('../../../assets/images/local.png'), size: {width: 27, height: 38}}" >
+                    </bm-geolocation>
+                    <!-- 自定义定位图标覆盖物 -->
+                    <bm-marker :position="autoLocationPoint" :icon="{url: require('../../../assets/images/local.png'), size: {width: 27, height: 38}}" v-if="initLocation">
+                    </bm-marker>
+                </baidu-map>
+            </template>
+            <div class="chose-server">选择服务</div>
+
+            <div class="noserver" v-if="ishasServer">
+                <div class="noserver-img">
+                    <img src="../../../assets/images/no-server.png" alt="">
+                </div>
+                <p class="tc color9 fs32">地区未开放，敬请期待</p>
+            </div>
+            
+>>>>>>> origin/featrue/20190101-view:housekeeping-vue/src/components/qinpages/map/Home.vue
         </div>
         <p class="tc color9 fs32">地区未开放，敬请期待</p>
       </div>
@@ -60,6 +111,7 @@
 </template>
 
 <script>
+<<<<<<< HEAD:housekeeping-vue/src/components/qinpages/Home.vue
 // import { Tab, TabItem } from 'vux';
 // import BaiduMap from 'vue-baidu-map/components/map/Map.vue'
 import BaiduMap from "vue-baidu-map";
@@ -76,6 +128,56 @@ export default {
         {
           images: require("../../assets/images/clear-keeping.png"),
           text: "保洁"
+=======
+import { Tab, TabItem } from 'vux';
+import BaiduMap from 'vue-baidu-map/components/map/Map.vue';
+import { Register,Sms } from "../../../axios/api.js";
+export default {
+    data() {
+        return {
+            msg: "Hello World!",
+            clickCity: '北京市',
+            headitem: [{
+                images: require('../../../assets/images/clear-keeping.png'),
+                text: "保洁"
+            },{
+                images: require("../../../assets/images/alarm-keeping.png"),  
+                text: "小时工"
+            },{
+                images: require("../../../assets/images/lock-keeping.png"),
+                text: "开锁"
+            },{
+                images: require("../../../assets/images/maintain-keeping.png"),
+                text: "维修"
+            }],
+            ishasServer: false,
+            center: {lng: 0, lat: 0},
+            initLocation: false,
+        };
+    },
+    components: {
+        BaiduMap
+    },
+    methods: {
+        aaa(){
+            let data = {name: '常州市'}
+            GetCommoditySeries(data).then(res=>{
+                console.log(res)
+            })
+        },
+
+        handler ({BMap, map}) {
+            let _this = this;  // 设置一个临时变量指向vue实例，因为在百度地图回调里使用this，指向的不是vue实例；
+            var geolocation = new BMap.Geolocation();
+            geolocation.getCurrentPosition(function(r){
+                console.log(r);
+                _this.clickCity = r.address.city;
+                _this.center = {lng: r.longitude, lat: r.latitude};   // 设置center属性值
+                _this.autoLocationPoint = {lng: r.longitude, lat: r.latitude};   // 自定义覆盖物
+                _this.initLocation = true; 
+                console.log('center:', _this.center)  // 如果这里直接使用this是不行的
+            },{enableHighAccuracy: true})
+>>>>>>> origin/featrue/20190101-view:housekeeping-vue/src/components/qinpages/map/Home.vue
         },
         {
           images: require("../../assets/images/alarm-keeping.png"),

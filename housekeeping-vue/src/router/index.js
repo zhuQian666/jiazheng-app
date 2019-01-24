@@ -8,14 +8,14 @@
 
 
  const test = () => import('@/components/qinpages/test');
- const Index = () => import('@/components/qinpages/Index');
- const postOrder = () => import('@/components/qinpages/postOrder');
- const Home = () => import('@/components/qinpages/Home');
- const Myorder = () => import('@/components/qinpages/Myorder');
- const orderDetail = () => import('@/components/qinpages/orderDetail');
- const choseAddress = () => import('@/components/qinpages/choseAddress');
- const controlAddress = () => import('@/components/qinpages/controlAddress');
- const editAddress = () => import('@/components/qinpages/editAddress');
+ const Index = () => import('@/components/qinpages/order/Index');
+ const postOrder = () => import('@/components/qinpages/order/postOrder');
+ const Home = () => import('@/components/qinpages/map/Home');
+ const Myorder = () => import('@/components/qinpages/order/Myorder');
+ const orderDetail = () => import('@/components/qinpages/order/orderDetail');
+ const choseAddress = () => import('@/components/qinpages/address/choseAddress');
+ const controlAddress = () => import('@/components/qinpages/address/controlAddress');
+ const editAddress = () => import('@/components/qinpages/address/editAddress');
 
  Vue.use(Router);
 

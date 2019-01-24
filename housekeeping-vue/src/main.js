@@ -10,6 +10,7 @@
  import  { LoadingPlugin } from 'vux'
  Vue.use(LoadingPlugin)
  import '../static/css/common.css';
+<<<<<<< HEAD
  import {
    XButton,
    CheckIcon,
@@ -31,15 +32,25 @@
  Vue.component('check-icon', CheckIcon);
  Vue.component('group', Group)
  Vue.component('popup-radio', PopupRadio)
+=======
+//  import { XButton, CheckIcon, Group, PopupRadio, Divider, Rater , XNumber , Actionsheet, Alert, InlineLoading, Loading, XDialog  } from 'vux';
+ import vuei18n from 'vuex-i18n';
+ 
+//  收货人地址
+//  Vue.component('x-button', XButton);
+//  Vue.component('check-icon', CheckIcon);
+//  Vue.component('group', Group)
+//  Vue.component('popup-radio', PopupRadio)
+>>>>>>> origin/featrue/20190101-view
 
- Vue.component('actionsheet', Actionsheet);
- Vue.component('alert', Alert);
- Vue.component('inline-loading', InlineLoading);
- Vue.component('loading', Loading);
- Vue.component('x-dialog', XDialog);
- Vue.component('divider', Divider);
- Vue.component('rater', Rater);
- Vue.component('x-number', XNumber)
+//  Vue.component('actionsheet', Actionsheet);
+//  Vue.component('alert', Alert);
+//  Vue.component('inline-loading', InlineLoading);
+//  Vue.component('loading', Loading);
+//  Vue.component('x-dialog', XDialog);
+//  Vue.component('divider', Divider);
+//  Vue.component('rater', Rater);
+//  Vue.component('x-number', XNumber)
 
  Vue.use(vuei18n)
 
