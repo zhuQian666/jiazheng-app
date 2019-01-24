@@ -14,7 +14,7 @@
       </div>
       <div class="enyet-cont-item">
         <img src="../../../assets/images/pass-icon.png" alt class="enyet-cont-item-icon big_icon">
-        <input type="password" v-model="passwordval" class="enyet-cont-item-input" placeholder="输入新密码">
+        <input type="text" v-model="passwordval" class="enyet-cont-item-input" placeholder="输入新密码">
       </div>
       <div class="login_btn" @click="resetPasswordFn">确定</div>
       <div class="index-info">
@@ -118,12 +118,7 @@ export default {
         "YZM": this.codeval
       }
       UserReset(data).then(res=>{
-        this.$vux.loading.show({
-            text: res.Msg
-          })
-        setTimeout(()=>{
-          this.$vux.loading.hide()
-        },1000)
+        console.log(res)
       })
     }
   }
@@ -173,7 +168,6 @@ export default {
   color: #999;
   font-family: "黑体";
   outline: none;
-  border: none;
 }
 .enyet-cont-item-label {
   flex: 1;

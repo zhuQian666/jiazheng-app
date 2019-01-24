@@ -173,7 +173,6 @@ export default {
   color: #999;
   font-family: "黑体";
   outline: none;
-  border: none;
 }
 .enyet-cont-item-label {
   flex: 1;

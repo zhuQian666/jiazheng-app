@@ -71,18 +71,7 @@ export default {
         this.$cookie.delete("PASSOWRD");
       }
       login(data).then(res => {
-           this.$vux.loading.show({
-                 text: res.Msg
-              })
-            setTimeout(()=>{
-              this.$vux.loading.hide();
-                if(Object.keys(res.Data).length){
-                  localStorage.setItem('STORAGE_TOKEN',res.Data.Token);
-                this.$router.push({
-                  path:'/'
-                })
-                }
-            },1000)
+        console.log(res);
       });
     }
   }

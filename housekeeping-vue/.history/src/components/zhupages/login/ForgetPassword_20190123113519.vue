@@ -9,14 +9,14 @@
       <div class="enyet-cont-item">
         <img src="../../../assets/images/icon-code.png" alt class="enyet-cont-item-icon big_icon">
         <input type="text" v-model="codeval" class="enyet-cont-item-input" placeholder="验证码">
-        <div class="getcode" @click="getCode" v-if="btnBol">获取验证码</div>
+        <div class="getcode" @click="downTimeFn(60)" v-if="btnBol">获取验证码</div>
         <div class="getcode" v-else>{{downTime}}秒</div>
       </div>
       <div class="enyet-cont-item">
         <img src="../../../assets/images/pass-icon.png" alt class="enyet-cont-item-icon big_icon">
-        <input type="password" v-model="passwordval" class="enyet-cont-item-input" placeholder="输入新密码">
+        <input type="text" v-model="passwordval" class="enyet-cont-item-input" placeholder="输入新密码">
       </div>
-      <div class="login_btn" @click="resetPasswordFn">确定</div>
+      <div class="login_btn">确定</div>
       <div class="index-info">
         <span @click="gologin">登录帐号</span> l
         <span>忘记密码</span>
@@ -27,7 +27,6 @@
 </template>
 
 <script>
-import { UserReset,Sms } from "../../../axios/api.js";
 export default {
   data() {
     return {
@@ -58,73 +57,6 @@ export default {
           this.btnBol = true;
         }
       }, 1000);
-    },
-     // 获取验证码
-    getCode(){
-       if(!!!this.phoneval){
-         this.$vux.loading.show({
-            text: '请输入手机号码'
-          })
-        setTimeout(()=>{
-           this.$vux.loading.hide()
-            },1000)
-            return;
-          }
-        this.downTimeFn(60) 
-        let data = {
-          tel:this.phoneval
-        }
-        Sms(data).then(res=>{
-           this.$vux.loading.show({
-            text: res.Msg
-            })
-            setTimeout(()=>{
-              this.$vux.loading.hide()
-            },1000)
-        })
-    },
-    // 重设密码
-    resetPasswordFn(){
-       if(!!!this.phoneval){
-        this.$vux.loading.show({
-        text: '请输入手机号码'
-        })
-        setTimeout(()=>{
-          this.$vux.loading.hide()
-        },1000)
-        return;
-      }
-       if(!!!this.codeval){
-        this.$vux.loading.show({
-        text: '请输入验证码'
-        })
-        setTimeout(()=>{
-          this.$vux.loading.hide()
-        },1000)
-        return;
-      }
-       if(!!!this.passwordval){
-          this.$vux.loading.show({
-            text: '请输入密码'
-          })
-        setTimeout(()=>{
-          this.$vux.loading.hide()
-        },1000)
-         return;
-      }
-      let data = {
-        "Tel": this.phoneval,
-        "Pwd": this.passwordval,
-        "YZM": this.codeval
-      }
-      UserReset(data).then(res=>{
-        this.$vux.loading.show({
-            text: res.Msg
-          })
-        setTimeout(()=>{
-          this.$vux.loading.hide()
-        },1000)
-      })
     }
   }
 };
@@ -173,7 +105,6 @@ export default {
   color: #999;
   font-family: "黑体";
   outline: none;
-  border: none;
 }
 .enyet-cont-item-label {
   flex: 1;

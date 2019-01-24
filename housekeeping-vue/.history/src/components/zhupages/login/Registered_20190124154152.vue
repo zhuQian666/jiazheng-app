@@ -14,12 +14,29 @@
       </div>
       <div class="enyet-cont-item">
         <img src="../../../assets/images/pass-icon.png" alt class="enyet-cont-item-icon big_icon">
-        <input type="password" v-model="passwordval" class="enyet-cont-item-input" placeholder="输入新密码">
+        <input type="password" v-model="passwordval" class="enyet-cont-item-input" placeholder="登录密码">
       </div>
-      <div class="login_btn" @click="resetPasswordFn">确定</div>
+      <div class="enyet-cont-item">
+        <img
+          src="../../../assets/images/yaoqing-icon.png"
+          alt
+          class="enyet-cont-item-icon big_icon"
+        >
+        <input type="text" v-model="invitationCode" class="enyet-cont-item-input" placeholder="邀请码">
+      </div>
+      <div class="enyet-cont-item">
+        <input
+          type="checkbox"
+          :checked="agreebol"
+          class="enyet-cont-item-checkbox"
+          id="checkbox-item"
+        >
+        <label for="checkbox-item" class="enyet-cont-item-label">同意《注册与使用协议》</label>
+      </div>
+      <div class="login_btn" @click="registerFn">注册</div>
       <div class="index-info">
         <span @click="gologin">登录帐号</span> l
-        <span>忘记密码</span>
+        <span @click="goForgetPassword">忘记密码</span>
       </div>
     </div>
     <div class="trademark">苏州保时科技有限公司</div>
@@ -27,23 +44,32 @@
 </template>
 
 <script>
-import { UserReset,Sms } from "../../../axios/api.js";
+import { Register,Sms } from "../../../axios/api.js";
+import { setTimeout } from 'timers';
 export default {
   data() {
     return {
       phoneval: "", //电话好吗
       codeval: "", //验证码
       passwordval: "", //密码
+      invitationCode: "", //邀请码
+      agreebol: true, //是否记住帐号
       downTime: 60, //倒计时
       btnBol: true
     };
   },
   created() {},
   methods: {
-    //   到登陆页面
+    // 到登录页面
     gologin() {
       this.$router.push({
         path: "/Login"
+      });
+    },
+    // 忘记密码
+    goForgetPassword() {
+      this.$router.push({
+        path: "/ForgetPassword"
       });
     },
     // 验证码倒计时
@@ -59,7 +85,7 @@ export default {
         }
       }, 1000);
     },
-     // 获取验证码
+    // 获取验证码
     getCode(){
        if(!!!this.phoneval){
          this.$vux.loading.show({
@@ -75,17 +101,12 @@ export default {
           tel:this.phoneval
         }
         Sms(data).then(res=>{
-           this.$vux.loading.show({
-            text: res.Msg
-            })
-            setTimeout(()=>{
-              this.$vux.loading.hide()
-            },1000)
+          console.log(res)
         })
     },
-    // 重设密码
-    resetPasswordFn(){
-       if(!!!this.phoneval){
+    // 注册
+    registerFn(){
+      if(!!!this.phoneval){
         this.$vux.loading.show({
         text: '请输入手机号码'
         })
@@ -112,19 +133,23 @@ export default {
         },1000)
          return;
       }
-      let data = {
-        "Tel": this.phoneval,
-        "Pwd": this.passwordval,
-        "YZM": this.codeval
+      if(!this.agreebol){
+         this.$vux.alert.show({
+          title: '温馨提示',
+          content: '请同意注册与使用协议',
+        })
+         return;
       }
-      UserReset(data).then(res=>{
-        this.$vux.loading.show({
-            text: res.Msg
-          })
-        setTimeout(()=>{
-          this.$vux.loading.hide()
-        },1000)
-      })
+       let data = {
+          "Tel": this.phoneval,
+          "Pwd": this.passwordval,
+          "YZM": this.codeval,
+          "Code": this.invitationCode
+        }
+       Register(data).then(res=>{
+         console.log(res)
+       })
+
     }
   }
 };
@@ -156,7 +181,7 @@ export default {
 }
 .enyet-cont-item {
   width: 100%;
-  height: 1.813333rem;
+  height: 1.413333rem;
   display: flex;
   align-items: center;
   justify-content: space-between;

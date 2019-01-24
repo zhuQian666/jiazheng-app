@@ -75,14 +75,15 @@ export default {
                  text: res.Msg
               })
             setTimeout(()=>{
-              this.$vux.loading.hide();
-                if(Object.keys(res.Data).length){
-                  localStorage.setItem('STORAGE_TOKEN',res.Data.Token);
-                this.$router.push({
-                  path:'/'
-                })
-                }
+              this.$vux.loading.hide()
             },1000)
+            console.log(Object.keys(res.Data).length)
+            if(Object.keys(res.Data).lengths){
+               localStorage.setItem('STORAGE_TOKEN',res.Data.Token);
+             this.$router.push({
+               path:'/'
+            })
+            }
       });
     }
   }

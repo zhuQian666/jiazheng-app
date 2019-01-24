@@ -34,11 +34,3 @@ export function Sms(data) {
     params: data
   });
 }
-//忘记密码
-export function UserReset(data) {
-  return fetch({
-    url: BASEURL + '/api/User/UserReset',
-    method: 'POST',
-    data: data
-  });
-}

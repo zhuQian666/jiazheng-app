@@ -21,8 +21,9 @@
      });
      // 响应拦截
      instance.interceptors.response.use((response) => {
-       if (response.status === 200) {
-         return response.data;
+       console.log(response)
+       if (response.data.status) {
+         return response;
        } else {
          if (response.data.code === 1) {
            localStorage.removeItem('STORAGE_TOKEN');
