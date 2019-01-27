@@ -74,11 +74,3 @@ export function PDUploadImage(data) {
     data: data
   });
 }
-//添加更新地址
-export function ChangeAddress(data) {
-  return fetch({
-    url: BASEURL + '/api/User/ChangeAddress',
-    method: 'POST',
-    data: data
-  });
-}

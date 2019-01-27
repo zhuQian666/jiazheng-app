@@ -6,7 +6,7 @@
          <div class="border"></div>
           <group label-width="2.67rem" label-align="left" class="group-item">
             <x-input class="cell" title="真实姓名" v-model="valuename" placeholder="请输入真实姓名"></x-input>
-            <popup-radio title="性别" :options="options" v-model="optionVl"></popup-radio>
+             <popup-radio title="性别" :options="options" v-model="optionVl"></popup-radio>
             <x-input class="cell" title="身份证" v-model="orderNum" placeholder="请输入您的身份证号码"></x-input>
          </group>
          <div class="border"></div>
@@ -49,7 +49,7 @@
     
 </template>
 <script>
-import { GroupTitle, Group, Cell, PopupRadio, XInput, Selector, PopupPicker,  Grid, GridItem } from 'vux'
+import { GroupTitle, Group, Cell, PopupRadio,CheckIcon, XInput, Selector, PopupPicker, ChinaAddressData, XAddress, XTextarea,Grid, GridItem } from 'vux'
 import {PDUploadImage} from "../../../axios/api.js"
  export default {
     data(){
@@ -65,12 +65,15 @@ import {PDUploadImage} from "../../../axios/api.js"
             }
         },
         components: {
+            CheckIcon,
             Group,
             GroupTitle,
             Cell,
             XInput,
             Selector,
             PopupPicker,
+            XAddress,
+            XTextarea,
             Grid,
             GridItem
         },
@@ -81,6 +84,9 @@ import {PDUploadImage} from "../../../axios/api.js"
                  case 1:
                     var form1 = document.getElementById("form1");
                     var imgdata = new FormData(form1);
+                    let data = {
+                        img:imgdata
+                    }
                     PDUploadImage(data).then(res=>{
                         console.log(res)
                     })
@@ -88,7 +94,7 @@ import {PDUploadImage} from "../../../axios/api.js"
                  case 2:
                     var form2 = document.getElementById("form2");
                     var imgdata = new FormData(form2);
-                    var data = {
+                    let data = {
                         img:imgdata
                     }
                     PDUploadImage(data).then(res=>{
@@ -98,7 +104,7 @@ import {PDUploadImage} from "../../../axios/api.js"
                  case 3:
                     var form3 = document.getElementById("form3");
                     var imgdata = new FormData(form3);
-                    var data = {
+                    let data = {
                         img:imgdata
                     }
                     PDUploadImage(data).then(res=>{
@@ -108,7 +114,7 @@ import {PDUploadImage} from "../../../axios/api.js"
                  case 4:
                     var form4 = document.getElementById("form4");
                     var imgdata = new FormData(form4);
-                    var data = {
+                    let data = {
                         img:imgdata
                     }
                     PDUploadImage(data).then(res=>{

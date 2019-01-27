@@ -69,15 +69,7 @@ export function PostDispute(data) {
 // 图片上传
 export function PDUploadImage(data) {
   return fetch({
-    url: BASEURL + '/api/Upload/PDUploadImage',
-    method: 'POST',
-    data: data
-  });
-}
-//添加更新地址
-export function ChangeAddress(data) {
-  return fetch({
-    url: BASEURL + '/api/User/ChangeAddress',
+    url: BASEURL + '/api/Upload/SetImg',
     method: 'POST',
     data: data
   });

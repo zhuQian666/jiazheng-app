@@ -6,7 +6,7 @@
          <div class="border"></div>
           <group label-width="2.67rem" label-align="left" class="group-item">
             <x-input class="cell" title="真实姓名" v-model="valuename" placeholder="请输入真实姓名"></x-input>
-            <popup-radio title="性别" :options="options" v-model="optionVl"></popup-radio>
+             <popup-radio title="性别" :options="options" v-model="optionVl"></popup-radio>
             <x-input class="cell" title="身份证" v-model="orderNum" placeholder="请输入您的身份证号码"></x-input>
          </group>
          <div class="border"></div>
@@ -81,6 +81,9 @@ import {PDUploadImage} from "../../../axios/api.js"
                  case 1:
                     var form1 = document.getElementById("form1");
                     var imgdata = new FormData(form1);
+                    var data = {
+                        img:imgdata
+                    }
                     PDUploadImage(data).then(res=>{
                         console.log(res)
                     })

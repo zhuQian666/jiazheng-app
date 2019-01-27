@@ -81,6 +81,9 @@ import {PDUploadImage} from "../../../axios/api.js"
                  case 1:
                     var form1 = document.getElementById("form1");
                     var imgdata = new FormData(form1);
+                    var data = {
+                        img:imgdata
+                    }
                     PDUploadImage(data).then(res=>{
                         console.log(res)
                     })

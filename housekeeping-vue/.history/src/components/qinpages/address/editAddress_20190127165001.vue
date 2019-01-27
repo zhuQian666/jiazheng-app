@@ -51,7 +51,7 @@
     },
     methods: {
       submitFn(){
-        console.log(this.addressValue)
+        console.log('this.addressValue')
         let data = {
           "Id": this.id,
           "CityIdOne":this.addressValue[0],

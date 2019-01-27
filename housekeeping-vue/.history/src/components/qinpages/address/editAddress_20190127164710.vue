@@ -51,7 +51,6 @@
     },
     methods: {
       submitFn(){
-        console.log(this.addressValue)
         let data = {
           "Id": this.id,
           "CityIdOne":this.addressValue[0],
@@ -64,12 +63,7 @@
           "Token": localStorage.getItem('STORAGE_TOKEN')
         }
         ChangeAddress(data).then(res=>{
-           this.$vux.loading.show({
-              text: res.Msg
-              })
-              setTimeout(()=>{
-                this.$vux.loading.hide()
-              },1000)
+          console.log(res)
         })
       }
     },

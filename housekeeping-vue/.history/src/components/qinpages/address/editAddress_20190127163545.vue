@@ -7,13 +7,13 @@
         </div>
       <x-input class="cell" title="联系方式" v-model="valuetel" aria-placeholder="请输入联系人的联系方式"></x-input>
       <x-address class="cell" title="服务地址" v-model="addressValue" raw-value :list="addressData" value-text-align="left"></x-address>
-      <x-textarea class="cell" placeholder="请输入详细地址" :show-counter="false" :rows="3" v-model="textVal"></x-textarea>
+      <x-textarea class="cell" placeholder="请输入详细地址" :show-counter="false" :rows="3"></x-textarea>
     </group>
      <group>
-      <check-icon :value.sync="selectBol"> {{ '设为默认地址' }}</check-icon>
+      <check-icon :value.sync="option"> {{ '设为默认地址' }}</check-icon>
     </group>
     <div class="addaddress">
-            <x-button type="primary" @click.native="submitFn">确定</x-button>
+            <x-button type="primary">确定</x-button>
         </div>
   </div>
   
@@ -40,43 +40,20 @@
         agreeTxt: true,
         addressData: ChinaAddressData,
         addressValue: ['广东省', '深圳市', '南山区'],
-        valuename: '',
+        valuename: '张三',
         valuetel: '',
         option: '男',
         options: ['男', '女'],
         id:0,//地址Id
-        selectBol:true,
-        textVal:'',//详细地址
       }
     },
     methods: {
-      submitFn(){
-        console.log(this.addressValue)
-        let data = {
-          "Id": this.id,
-          "CityIdOne":this.addressValue[0],
-          "CityIdTwo": this.addressValue[1],
-          "CityIdThree":this.addressValue[2],
-          "AddressDetail": this.textVal,
-          "Contacts": this.valuename,
-          "ContactsTel": this.valuetel,
-          "IsDefault": this.selectBol,
-          "Token": localStorage.getItem('STORAGE_TOKEN')
-        }
-        ChangeAddress(data).then(res=>{
-           this.$vux.loading.show({
-              text: res.Msg
-              })
-              setTimeout(()=>{
-                this.$vux.loading.hide()
-              },1000)
-        })
+      bind(){
+        this.demo2=!demo1;
       }
     },
     created() {
-      if(Object.keys(this.$route.query)){
-          this.id = this.$route.query.id 
-       }
+      console.log(this.$route.params)
     },
   }
 </script>
