@@ -5,14 +5,14 @@
             :class="index === 0 ?'mar-bot':''" 
             v-for="(item, index) in address" 
             :key="index"
-            @click="editAdress(item.Id)"
+            @click="editAdress"
             >
                 <div class="control-left">
                     <div class="address-master flex flex_sb">
-                        <div class="user-name">{{item.Contacts}}</div>
-                        <div class="user-tel">{{item.ContactsTel}}</div>
+                        <div class="user-name">{{item.uername}}</div>
+                        <div class="user-tel">{{item.uertel}}</div>
                     </div>
-                    <div class="address-name ellipsis2">{{item.AddressDetail}}</div>
+                    <div class="address-name ellipsis2">{{item.address}}</div>
                 </div>
                 <div class="control-right flex flex_right">
                    <img src="../../../assets/images/address_right.png" alt="" class="control-right-icon">
@@ -31,7 +31,22 @@ import {UserAddress} from "../../../axios/api.js"
 export default {
     data(){
         return {
-            address: []
+            address: [{
+                uername: '张三',
+                uertel: '18225868037',
+                address: '常州市武进去科教城大学城旁边1号楼软件园C座1号楼110室内',
+                check: true
+            },{
+                uername: '张三',
+                uertel: '18225868037',
+                address: '常州市武进去科教城大学城旁边1号楼软件园C座1号楼110室内',
+                check: false
+            },{
+                uername: '张三',
+                uertel: '18225868037',
+                address: '常州市武进去科教城大学城旁边1号楼软件园C座1号楼110室内',
+                check: false
+            }]
         }
     },
     components: {
@@ -47,16 +62,13 @@ export default {
             "Token": localStorage.getItem('STORAGE_TOKEN')
           }
           UserAddress(data).then(res=>{
-              this.address = res.Data
+              console.log(res)
           })
         },
         // 编辑地址
-        editAdress(id){
+        editAdress(){
           this.$router.push({
-              path:'/editAddress',
-               query: {
-                id: id
-             }
+              path:'/editAddress'
           })
         },
         //新建地址

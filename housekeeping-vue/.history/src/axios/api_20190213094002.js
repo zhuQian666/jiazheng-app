@@ -90,11 +90,3 @@ export function UserAddress(data) {
     params: data
   });
 }
-// 删除地址
-export function DeleteAddress(data) {
-  return fetch({
-    url: BASEURL + '/api/User/DeleteAddress',
-    method: 'GET',
-    params: data
-  });
-}
