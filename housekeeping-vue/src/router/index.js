@@ -12,6 +12,7 @@
  const choseAddress = () => import('@/components/qinpages/address/choseAddress');
  const controlAddress = () => import('@/components/qinpages/address/controlAddress');
  const editAddress = () => import('@/components/qinpages/address/editAddress');
+ const local = () => import('@/components/qinpages/address/local');
 
  Vue.use(Router);
  Vue.use(BaiduMap, {
@@ -44,6 +45,9 @@
    },{
     path: '/editAddress',
     component: editAddress
+   },{
+    path: '/local',
+    component: local
    }];
 
  export default new Router({

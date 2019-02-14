@@ -2,7 +2,7 @@
     <div class="page">
         <div class="home-head">
             <div class="home-top flex flex_sb aic mt2">
-                <div class="go-my" @click="aaa">
+                <div class="go-my">
                     <img src="../../../assets/images/my.png" alt="">
                 </div>
                 <div class="chsoe-city">
@@ -13,32 +13,32 @@
                     <img src="../../../assets/images/overview.png" alt="">
                 </div>
             </div>
-            <div class="home-tit flex flex_sa aic">
-                <div class="home-head-item" v-for="(item, index) in headitem" :key="index">
+            <!-- 头部导航 -->
+            <div class="home-tit flex flex_sa aif">
+                <div v-for="(item, index) in headitem" :key="index" @click="tab(index)" class="home-head-item flex flex_sb aic flex_column" :class="{active:index == num}">
                     <div class="home-head-item-img">
-                        <img v-bind:src="item.images" alt="">
+                        <img v-bind:src="item.Img" alt="">
                     </div>
-                    <p class="tc color9 ">{{item.text}}</p>
+                    <p class="tc color9 ">{{item.Name}}</p>
                 </div>
             </div>
         </div>
         <div class="home-body">
-            <template>
-                <baidu-map class="map" center="北京" :zoom="zoom" @ready="handler">
+            <!-- <template>
+                <baidu-map class="map" center="北京" @ready="handler">
                     <bm-geolocation anchor="BMAP_ANCHOR_BOTTOM_RIGHT" :showAddressBar="true" :autoLocation="true"></bm-geolocation>
                 </baidu-map>
-            </template>
-            <template>
+            </template> -->
+            <!-- <template> -->
                 <baidu-map class="map bm-view" @ready="handler" ak="z5tYi3doukTrHxSlaWOHcM5cFuzXkpy2">
                     <bm-geolocation anchor="BMAP_ANCHOR_BOTTOM_RIGHT" :showAddressBar="true" :autoLocation="true"
                     :locationIcon="{url: require('../../../assets/images/local.png'), size: {width: 27, height: 38}}" >
                     </bm-geolocation>
-                    <!-- 自定义定位图标覆盖物 -->
                     <bm-marker :position="autoLocationPoint" :icon="{url: require('../../../assets/images/local.png'), size: {width: 27, height: 38}}" v-if="initLocation">
                     </bm-marker>
                 </baidu-map>
-            </template>
-            <div class="chose-server">选择服务</div>
+            <!-- </template> -->
+            <div class="chose-server" @click="goshop">选择服务</div>
 
             <div class="noserver" v-if="ishasServer">
                 <div class="noserver-img">
@@ -57,41 +57,42 @@
 <script>
 import { Tab, TabItem } from 'vux';
 import BaiduMap from 'vue-baidu-map/components/map/Map.vue';
-import { Register,Sms } from "../../../axios/api.js";
+// import BaiduMap from 'vue-baidu-map';
+import { GetCommoditySeries } from "../../../axios/api.js";
 export default {
+    components: {
+        BaiduMap
+    },
     data() {
         return {
             msg: "Hello World!",
             clickCity: '北京市',
-            headitem: [{
-                images: require('../../../assets/images/clear-keeping.png'),
-                text: "保洁"
-            },{
-                images: require("../../../assets/images/alarm-keeping.png"),  
-                text: "小时工"
-            },{
-                images: require("../../../assets/images/lock-keeping.png"),
-                text: "开锁"
-            },{
-                images: require("../../../assets/images/maintain-keeping.png"),
-                text: "维修"
-            }],
+            headitem: null,
             ishasServer: false,
             center: {lng: 0, lat: 0},
             initLocation: false,
+            num: 0, //tab切换序号
         };
     },
-    components: {
-        BaiduMap
-    },
     methods: {
-        aaa(){
+        showtitle(){
             let data = {name: '常州市'}
             GetCommoditySeries(data).then(res=>{
-                console.log(res)
+                console.log(res.Data)
+                this.headitem  = res.Data
             })
         },
-
+        //tab切换
+        tab(index){
+            this.num = index;
+        },
+        //跳转到购物页面
+        goshop(){
+            let s = this.num;
+            this.$router.push({
+                path: "/Index?id="+s
+            });
+        },
         handler ({BMap, map}) {
             let _this = this;  // 设置一个临时变量指向vue实例，因为在百度地图回调里使用this，指向的不是vue实例；
             var geolocation = new BMap.Geolocation();
@@ -107,9 +108,13 @@ export default {
         // getLoctionSuccess(){
         //     this.clickCity = 
         // }
+    },
+    created:function() {
+        this.showtitle()
     }
 
 }
+
 </script>
 <style scope>
     .chose-server{
@@ -156,7 +161,7 @@ export default {
         color: #fff;
     }
     .home-top{
-        height: 1.333333rem;
+        height: 35%;
         width: 100%;
         padding: 0 .266667rem;
     }
@@ -164,7 +169,7 @@ export default {
         vertical-align: top
     }
     .home-tit{
-        height: 2rem;
+        height: 63%;
         width: 100%;
 
     }
@@ -179,29 +184,44 @@ export default {
         height: .666667rem;
         display: block;
         margin: 0 auto;
+        margin-top: .48rem
     }
     .home-tit .home-head-item-img:nth-of-type(2){
         width: .666667rem;
         height: .666667rem;
         display: block;
         margin: 0 auto;
+        margin-top: .48rem
     }
     .home-tit .home-head-item-img:nth-of-type(3){
         width: .48rem;
         height: .666667rem;
         display: block;
         margin: 0 auto;
+        margin-top: .48rem
     }
     .home-tit .home-head-item-img:nth-of-type(4){
         width: .666667rem;
         height: .666667rem;
         display: block;
         margin: 0 auto;
+        margin-top: .48rem
     }
     .home-tit .home-head-item p{
         color: #fffafa;
-        font-size: .32rem;
-        margin-top: .4rem;
+        font-size: .32rem; 
+        padding-bottom: 5px;
+        /* margin-top: .4rem; */
+    }
+    .home-tit .home-head-item{
+        border-bottom-width: 2px;
+        border-bottom-style: solid;
+        border-bottom-color: transparent;
+        width: 20%;
+        /* padding-bottom: 20px; */
+    }
+    .home-tit .home-head-item.active{
+        border-bottom-color: #FFF;
     }
     .noserver-img{
         width: 4.16rem;

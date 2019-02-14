@@ -12,6 +12,7 @@
   "dependencies": {
     "amfe-flexible": "^2.2.1",
     "fastclick": "^1.0.6",
+    "mescroll.js": "^1.4.0",
     "vue": "^2.5.2",
     "vue-baidu-map": "^0.21.16",
     "vue-router": "^3.0.1",

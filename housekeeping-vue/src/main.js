@@ -5,7 +5,7 @@
  import App from './App';
  import '../static/css/common.css';
 //  import { XButton, CheckIcon, Group, PopupRadio, Divider, Rater , XNumber , Actionsheet, Alert, InlineLoading, Loading, XDialog  } from 'vux';
- import vuei18n from 'vuex-i18n';
+//  import vuei18n from 'vuex-i18n';
  
 //  收货人地址
 //  Vue.component('x-button', XButton);
@@ -22,7 +22,7 @@
 //  Vue.component('rater', Rater);
 //  Vue.component('x-number', XNumber)
 
-Vue.use(vuei18n)
+// Vue.use(vuei18n)
 
 
  FastClick.attach(document.body);
