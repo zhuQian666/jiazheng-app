@@ -10,21 +10,30 @@
  import  { LoadingPlugin } from 'vux'
  Vue.use(LoadingPlugin)
  import '../static/css/common.css';
- import router from './router/index'
- 
- //全局路由守卫
-router.beforeEach((to,from,next)=>{
-  let tokenVlaue = localStorage.getItem('STORAGE_TOKEN');
-  if(!tokenVlaue){
-      if(to.name == 'Login'||to.name == 'Registered'||to.name == 'ForgetPassword'){
-          next();
-      }else{
-          next({ path: '/Login' })
-      }
-  }else{
-       next();
-  }
-})
+ import {
+   XButton,
+   CheckIcon,
+   Group,
+   PopupRadio,
+   Divider,
+   Rater,
+   XNumber,
+   Actionsheet,
+   Alert,
+   InlineLoading,
+   Loading,
+   XDialog
+ } from 'vux';
+ import vuei18n from 'vuex-i18n';
+
+ //  收货人地址
+ Vue.component('x-button', XButton);
+ Vue.component('check-icon', CheckIcon);
+ Vue.component('group', Group)
+ Vue.component('popup-radio', PopupRadio)
+
+
+ Vue.use(vuei18n)
 
 
  FastClick.attach(document.body);
