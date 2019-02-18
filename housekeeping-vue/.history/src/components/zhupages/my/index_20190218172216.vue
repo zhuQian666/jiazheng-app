@@ -103,7 +103,6 @@ signOut(){
   this.$router.push({
     path:'/Login'
     })
-  }
 },
 components: {
   Cell,

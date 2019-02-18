@@ -14,6 +14,7 @@
  //全局路由守卫
 router.beforeEach((to,from,next)=>{
   let tokenVlaue = localStorage.getItem('STORAGE_TOKEN');
+  console.log(tokenVlaue)
   if(!tokenVlaue){
       if(to.name == 'Login'||to.name == 'Registered'||to.name == 'ForgetPassword'){
           next();

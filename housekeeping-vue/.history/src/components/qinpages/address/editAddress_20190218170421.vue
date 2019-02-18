@@ -1,11 +1,11 @@
 <template>
   <div clas="bgwhite">
     <group label-width="4.5em" label-margin-right="2em" label-align="right">
-      <x-input class="cell" title="联系人员" v-model="valuename" placeholder="请输入联系人称呼"></x-input>
+      <x-input class="cell" title="联系人员" v-model="valuename" aria-placeholder="请输入联系人称呼"></x-input>
       <div class="cell">
           <popup-radio title="性别" :options="options" v-model="option"> </popup-radio>
         </div>
-      <x-input class="cell" title="联系方式" v-model="valuetel" placeholder="请输入联系人的联系方式"></x-input>
+      <x-input class="cell" title="联系方式" v-model="valuetel" aria-placeholder="请输入联系人的联系方式"></x-input>
       <x-address class="cell" title="服务地址" v-model="addressValue" raw-value :list="addressData" value-text-align="left"></x-address>
       <x-textarea class="cell" placeholder="请输入详细地址" :show-counter="false" :rows="3" v-model="textVal"></x-textarea>
     </group>
@@ -55,33 +55,7 @@
     },
     methods: {
       submitFn(){
-           if(!!!this.valuename){
-                this.$vux.loading.show({
-                  text: '请输入联系人称呼'
-                })
-              setTimeout(()=>{
-                this.$vux.loading.hide()
-              },1000)
-              return;
-          }
-           if(!!!this.valuetel){
-              this.$vux.loading.show({
-                text: '请输入联系人的联系方式'
-              })
-            setTimeout(()=>{
-              this.$vux.loading.hide()
-            },1000)
-            return;
-          }
-          if(!!!this.textVal){
-              this.$vux.loading.show({
-                text: '请输入详细地址'
-              })
-            setTimeout(()=>{
-              this.$vux.loading.hide()
-            },1000)
-            return;
-        }
+        console.log(this.addressValue)
         let data = {
           "Id": this.id,
           "CityIdOne":this.addressValue[0],
@@ -98,8 +72,7 @@
               text: res.Msg
               })
               setTimeout(()=>{
-                this.$vux.loading.hide();
-                this.$router.back();
+                this.$vux.loading.hide()
               },1000)
         })
       }
@@ -107,7 +80,6 @@
     created() {
       if(Object.keys(this.$route.query)){
           this.id = this.$route.query.id;
-          if(this.id === 0) return;
           let data = {
             token:localStorage.getItem('STORAGE_TOKEN'),
             id:this.id

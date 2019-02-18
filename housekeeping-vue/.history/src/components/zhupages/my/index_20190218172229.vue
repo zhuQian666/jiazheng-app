@@ -100,9 +100,9 @@ methods: {
 // 退出登录
 signOut(){
   localStorage.removeItem('STORAGE_TOKEN');
-  this.$router.push({
-    path:'/Login'
-    })
+  // this.$router.push({
+  //   path:'/Login'
+  //   })
   }
 },
 components: {
