@@ -1,20 +1,20 @@
 ﻿{
     "@platforms": ["android", "iPhone", "iPad"],
     "id": "H5F2E9FD7",/*应用的标识，创建应用时自动生成，勿手动修改*/
-    "name": "jiazheng-app",/*应用名称，程序桌面图标名称*/
+    "name": "小时帮",/*应用名称，程序桌面图标名称*/
     "version": {
         "name": "1.0",/*应用版本名称*/
         "code": ""
     },
-    "description": "小时帮",/*应用描述信息*/
+    "description": "在线家政服务平台",/*应用描述信息*/
     "icons": {
         "72": "icon.png"
     },
     "launch_path": "housekeeping-vue/dist/index.html",/*应用的入口页面，默认为根目录下的index.html；支持网络地址，必须以http://或https://开头*/
     "developer": {
-        "name": "",/*开发者名称*/
-        "email": "",/*开发者邮箱地址*/
-        "url": ""/*开发者个人主页地址*/
+        "name": "qinhuansky",/*开发者名称*/
+        "email": "chuanqin.yeh@foxmail.com",/*开发者邮箱地址*/
+        "url": "https://github.com/cucurbitboy"/*开发者个人主页地址*/
     },
     "permissions": {
         "Messaging":{

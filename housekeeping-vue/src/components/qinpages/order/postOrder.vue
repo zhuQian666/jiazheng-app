@@ -41,7 +41,29 @@
                 </div>
             </div>
         </div>
-
+        <div class="order-cell">
+                <div class="order-cell-tit">支付方式</div>
+                <div class="order-cell-box">
+                   <div class="flex flex_sb aic zhifu">
+                       <div class="zhifu-icon">
+                           <img src="../../../assets/images/weixin.png" alt="">
+                           微信支付
+                       </div>
+                       <div>
+                            <color-picker :colors="colors1" v-model="color1" size="small"></color-picker>
+                       </div>
+                   </div>
+                   <div class="flex flex_sb aic zhifu">
+                       <div class="zhifu-icon">
+                           <img src="../../../assets/images/zhifubao.png" alt="">
+                           支付宝支付
+                       </div>
+                       <div>
+                            <color-picker :colors="colors1" v-model="color1" size="small"></color-picker>
+                       </div>
+                   </div>
+                </div>
+            </div>
     <!-- 提交订单 -->
         <div class="pay-moeny flex flex_sb aif">
             <div class="pay-total fg1 red">
@@ -53,9 +75,17 @@
 </template>
 <script>
 import { postOrderList, CreatOrder } from "../../../axios/api.js";
+import { ColorPicker, Group, Cell } from 'vux';
 export default {
+     components: {
+    ColorPicker,
+    Group,
+    Cell
+  },
   data() {
     return {
+      color1: '#8AEEB1',
+      colors1: ['#8AEEB1'],
       haslocal: false,      //是否显示收货人
       acceptername: 'qinhuansky',   //收货人姓名
       accepttel: '111111',          //收货人手机号
@@ -76,6 +106,9 @@ export default {
             }
         })
       },
+      change (val, label) {
+      console.log('change', val, label)
+    },
 
     //   创建订单
     postOrder(){
@@ -94,11 +127,52 @@ export default {
             "Type": 3,
             "token": "071690289151821091qy"
         }
+        let channel=null; 
+        // 获取支付通道  
+        plus.payment.getChannels(function(channels){  
+            let channel = channels[i]
+        },function(e){  
+            alert("获取支付通道失败："+e.message);  
+        });  
+        document.addEventListener('plusready',plusReady,false); 
+        var ALIPAYSERVER='http://demo.dcloud.net.cn/helloh5/payment/alipay.php?total=';
+        var WXPAYSERVER='http://demo.dcloud.net.cn/helloh5/payment/wxpay.php?total=';
         CreatOrder(data).then(res => {
             console.log(res);
-            const div = document.createElement('div')
-            div.innerHTML = res.Data;
-            document.body.appendChild(div)
+            let sdata = res.Data;
+            // 从服务器请求支付订单  
+            var PAYSERVER='';  
+            if(id=='alipay'){  
+                PAYSERVER=ALIPAYSERVER;  
+            }else if(id=='wxpay'){  
+                PAYSERVER=WXPAYSERVER;  
+            }else{  
+                plus.nativeUI.alert("不支持此支付通道！",null,"捐赠");  
+                return;  
+            }  
+            var xhr=new XMLHttpRequest();  
+            xhr.onreadystatechange=function(){  
+                switch(xhr.readyState){  
+                    case 4:  
+                    if(xhr.status==200){  
+                        plus.payment.request(channel, sdata,function(result){  
+                            plus.nativeUI.alert("支付成功！",function(){  
+                                back();  
+                            });  
+                        },function(error){  
+                            plus.nativeUI.alert("支付失败：" + error.code);  
+                        });  
+                    }else{  
+                        alert("获取订单信息失败！");  
+                    }  
+                    break;  
+                    default:  
+                    break;  
+                }  
+            }  
+            xhr.open('GET',PAYSERVER);  
+            xhr.send();  
+            // window.location = 'https://m.alipay.com/Gk8NF23?'+res.Data
         })
     }
   },
@@ -110,6 +184,22 @@ export default {
 </script>
 <style scope>
     /* @import '../static/css/common.css'; */
+    .zhifu-icon{
+        font-size: .4rem;
+    }
+    .zhifu-icon img{
+        width: .533333rem;
+        height: .533333rem;
+        margin-right: 10px;
+    }
+    .order-cell-box .zhifu{
+        margin: 0 .266667rem;
+        margin-bottom: .266667rem;
+    }
+    .order-cell-box .zhifu:last-child{
+        padding: .266667rem 0;
+        border-top: 1px solid #eee;
+    }
     .pay-moeny{
         height: 1.2rem;
         width: 100%;

@@ -122,7 +122,6 @@ export default {
         width: 6rem;
         height: 1.2rem;
         bottom: 2.266667rem;
-        left: 2rem;
         background: -moz-linear-gradient(left, #34acff 0%, #142af5 100%);
         background: -webkit-linear-gradient(left, #34acff 0%,#142af5 100%);
         background: -o-linear-gradient(left, #34acff 0%,#142af5 100%);
@@ -134,6 +133,8 @@ export default {
         text-align: center;
         line-height: 1.2rem;
         cursor: pointer;
+        left: 50%;
+        margin-left: -3rem;
     }
     .home-body{
         height: 80vh;
