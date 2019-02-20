@@ -1,127 +1,95 @@
 <template>
   <div class="page">
-    <div class="index-tip flex aic">
+    <div class="index-tip flex aic" v-show="!bottomBol">
       <div class="index-tip-img">
-        <img src="../../../assets/images/index-top.jpg" alt>
+        <img v-bind:src="headtit.Img">
       </div>
       <div class="ml20">
-        <h4 class="fs30">保洁服务</h4>
-        <p class="line15 fs24 tj color6">日常家庭住宅室内保洁。为了保证服务的质量，本服务不适用于办公室、群租房、集体宿舍等类型的房间保洁。</p>
+        <h4 class="fs30">{{headtit.Name}}</h4>
+        <p class="line15 fs24 tj color6">{{headtit.Content}}</p>
       </div>
     </div>
     <!-- 切换 -->
     <div class="index-title flex flex_sa aic">
-      <div class="index-title-cell">家庭保洁</div>
-      <div class="index-title-cell">家电保洁</div>
-      <div class="index-title-cell">企业保洁</div>
-      <div class="index-title-cell">家电清洁</div>
+      <div class="index-title-cell" v-for="(item, index) in headtit.List" :class="{active:index == num}" @click="tab(index)" :data-id="item.Id">{{item.Name}}</div>
     </div>
-    <div class="index-body flex flex_sb flex_wrap">
-      <div class="index-body-cell">
-        <div class="index-body-img">
-          <img src="../../../assets/images/demo.jpg" alt>
-        </div>
-        <div class="index-body-content">
-          <h3 class="color3 fs30 ellipsis">油烟机清洁</h3>
-          <p class="color6 fs24 ellipsis">清洗擦拭除胶除漆重点清洁</p>
-          <div class="flex flex_sb aic mt20">
-            <div class="select-mum">
-              <span class="red fs24">￥118元/台</span>
-            </div>
-            <!-- <div class="cheose-mum flex flex_sb aic">
+    <mescroll-vue ref="mescroll" :up="mescrollUp" @init="mescrollInit" :down="mescrollDown">
+      <div class="index-body flex flex_sb flex_wrap">
+        <div class="index-body-cell" v-for="(item, index) in goodsList" v-bind:data-id="item.Id">
+          <div class="index-body-img">
+            <img v-bind:src="item.Img" alt>
+          </div>
+          <div class="index-body-content">
+            <h3 class="color3 fs30 ellipsis">{{item.Name}}</h3>
+            <p class="color6 fs24 ellipsis">{{item.SubTitle}}</p>
+            <div class="flex flex_sb aic mt20">
+              <div class="select-mum">
+                <span class="red fs24">￥{{item.Price}}元/{{item.UnitName}}</span>
+              </div>
+              <!-- <div class="cheose-mum flex flex_sb aic">
               <span class="addmum">-</span>
               <input type="tel" value="10">
               <span class="mum">+</span>
-            </div> -->
-            <div class="cheose-num">
+              </div>-->
+              <div class="cheose-num">
                 <x-number
-                  v-model="roundValue"
+                  v-model="siginValue"
                   button-style="round"
                   :min="0"
-                  :max="9"
-                  width="30px"
+                  :max="10"
+                  @on-change="siginChange"
                 ></x-number>
               </div>
-          </div>
-        </div>
-      </div>
-      <div class="index-body-cell">
-        <div class="index-body-img">
-          <img src="../../../assets/images/demo.jpg" alt>
-        </div>
-        <div class="index-body-content">
-          <h3 class="color3 fs30 ellipsis">油烟机清洁</h3>
-          <p class="color6 fs24 ellipsis">清洗擦拭除胶除漆重点清洁</p>
-          <div class="flex flex_sb aic mt20">
-            <div class="select-mum">
-              <span class="red fs24">￥118元/台</span>
-            </div>
-            <div class="cheose-mum flex flex_sb aic">
-              <span class="addmum">-</span>
-              <input type="tel" value="10">
-              <span class="mum">+</span>
             </div>
           </div>
         </div>
       </div>
-      <div class="index-body-cell">
-        <div class="index-body-img">
-          <img src="../../../assets/images/demo.jpg" alt>
-        </div>
-        <div class="index-body-content">
-          <h3 class="color3 fs30 ellipsis">油烟机清洁</h3>
-          <p class="color6 fs24 ellipsis">清洗擦拭除胶除漆重点清洁</p>
-          <div class="flex flex_sb aic mt20">
-            <div class="select-mum">
-              <span class="red fs24">￥118元/台</span>
-            </div>
-            <div class="cheose-mum flex flex_sb aic">
-              <span class="addmum">-</span>
-              <input type="tel" value="10">
-              <span class="mum">+</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    </mescroll-vue>
+    <div style="height:1.3rem"></div>
     <div class="index-foot flex flex_sb">
       <div class="flex flex_sa fg1">
-        <div class="index-home">
+        <div class="index-home flex flex_column flex_sa" @click="goUrlhome">
           <span></span>
           <p class="home fs24 tc">首页</p>
         </div>
-        <div class="index-server">
+        <div class="index-server flex flex_column flex_sa">
           <span></span>
           <p class="home fs24 tc">客服</p>
         </div>
       </div>
-      <div class="addcar tc fg1">加入购物车</div>
+      <div class="addcar tc fg1" @click="nowUpost">加入购物车</div>
     </div>
     <!-- 底部弹出层 -->
     <div v-transfer-dom>
-      <popup v-model="show" @on-hide="log('hide')" @on-show="log('show')">
+      <popup v-model="show">
         <div class="popup0">
           <div class="bottom-popups">
             <div class="bottom-popups-item flex flex_sb">
               <span class="bottom-popups-item-tit">合计:</span>
-              <span class="bottom-popups-mum">￥2020.00</span>
+              <span class="bottom-popups-mum">￥{{totalShopCar}}</span>
               <div class="cheose-num" style="width:10px"></div>
             </div>
             <div class="hr"></div>
-            <div class="bottom-popups-item flex flex_sb">
-              <span class="bottom-popups-item-tit">双开门冰箱清洗</span>
-              <span class="bottom-popups-mum">￥2020.00</span>
-              <div class="cheose-num">
+            <!-- 购物车列表 -->
+            <div
+              class="bottom-popups-item flex flex_sb"
+              v-for="(item, index) in shopCarList"
+              data-id="item.Id"
+            >
+              <span class="bottom-popups-item-tit">{{item.Name}}</span>
+              <span class="bottom-popups-mum">￥{{item.Price}}/{{item.UnitName}}</span>
+              <div class="cheose-num" style="margin-top:4px">
                 <x-number
-                  v-model="roundValue"
+                  v-model="item.ShopCount"
                   button-style="round"
                   :min="0"
-                  :max="10"
+                  :max="1000"
+                  @on-change="change"
                 ></x-number>
               </div>
             </div>
             <div class="hr"></div>
-            <div class="bottom-popupo-item">
+            <div class="bottom-popupo-item" @click="goPostPage">
               <x-button type="primary">立即下单</x-button>
             </div>
           </div>
@@ -156,13 +124,12 @@
         </div>
       </x-dialog>
     </div>
-    <div @click="aaa">dddd</div>
   </div>
 </template>
 
 
 <script>
-import { Register,Sms } from "../../../axios/api.js";
+import MescrollVue from "mescroll.js/mescroll.vue";
 import {
   Alert,
   Popup,
@@ -174,15 +141,53 @@ import {
   Divider,
   XNumber
 } from "vux";
+import {
+  getGoodTitle,
+  getGoodsList,
+  changeGoodsNum,
+  getshopCar
+} from "../../../axios/api.js";
 export default {
   directives: {
     TransferDom
   },
+  props: {
+    parentPullUpState: {
+      default: 0
+    },
+    onInfiniteLoad: {
+      type: Function,
+      require: false
+    }
+  },
   data() {
     return {
+      name: "", //功能名称
+      bottomBol: false, //是否滚动的底部
       showHideOnBlur: false,
-      show: true,
-      msg: "Hello World!"
+      show: false,
+      headtit: null, //头部导航
+      roundValue: 0,
+      siginValue: 0,
+      goodsList: null, //商品列表
+      shopCarList: null, //购物车列表
+      totalShopCar: 0, //购物车总价
+      num: 0,
+      mescrollDown: {
+        auto: true
+      },
+      // 上拉加载的配置.
+      mescrollUp: {
+        callback: this.upCallback,
+        page: {
+          num: 0, //当前页 默认0,回调之前会加1; 即callback(page)会从1开始
+          size: 10 //每页数据条数,默认20
+        },
+        noMoreSize: 5,
+        auto: true,
+        htmlNodata: '<p class="upwarp-nodata">-- 暂无更多数据 --</p>',
+        onScroll: this.scrollHandel
+      }
     };
   },
   components: {
@@ -192,27 +197,168 @@ export default {
     XDialog,
     XButton,
     Group,
-    XNumber
+    XNumber,
+    MescrollVue
   },
   methods: {
-    bottomPopups() {
-      this.$vux.alert.show({
-        title: "温馨提示",
-        content: "此桌已被预定！",
-        buttonText: "好的",
-        hideOnBlur: true,
-        maskZIndex: 100
-      });
-    },
-    aaa() {
-      
+    // 返回主页
+    goUrlhome() {
       this.$router.push({
-        path: "/postOrder"
+        path: "/"
       });
     },
-    
+    // 立即下单
+    goPostPage() {
+      this.$router.push({
+        path: "postOrder"
+      });
+    },
+    // 拨打客服
+    tellServer() {},
+    // 立即下单
+    nowUpost() {
+      let _this = this;
+      if (!_this.headtit.IsReal) {
+        //如果认证了
+        _this.show = true;
+        this.getShopCargoods();
+      } else {
+        _this.showHideOnBlur = true;
+      }
+    },
+
+    // 获取购物车列表
+    getShopCargoods() {
+      let _this = this;
+      let tempTotalshop = new Number();
+      let data = { token: "071690289151821091qy" };
+      getshopCar(data).then(res => {
+        console.log(res);
+        for (let i = 0; i < res.Data.length; i++) {
+          tempTotalshop += res.Data[i].Price * res.Data[i].ShopCount;
+        }
+        _this.totalShopCar = tempTotalshop;
+        this.shopCarList = res.Data;
+      });
+    },
+
+    // 单个订单改变
+    siginChange(val) {
+      let CommodityId = 1;
+      console.log(val);
+      let sval = 0;
+      let Type = "";
+      if (val > sval) {
+        sval = val;
+        Type = 1;
+      } else {
+        sval = val;
+        Type = 2;
+      }
+      // let totalMong = this.goodsList[CommodityId -1].Price;
+      // this.goodsList[CommodityId -1].Price = val * totalMong;
+      let data = { CommodityId, Type, token: "071690289151821091qy" };
+      changeGoodsNum(data).then(res => {
+        console.log(res);
+        // this.goodsList
+      });
+    },
+    getitemid(e) {
+      console.log(e.target.getAttribute("data-id"));
+      console.log(e);
+    },
+    //订单总量改变
+    change(val) {
+      let _this = this;
+      let CommodityId = 1;
+      let sval = 0;
+      let Type = "";
+      if (val > sval) {
+        sval = val;
+        Type = 1;
+      } else {
+        sval = val;
+        Type = 2;
+      }
+      _this.totalShopCar = _this.shopCarList[CommodityId - 1].Price * val;
+      // this.getShopCargoods();
+      let data = { CommodityId, Type, token: "071690289151821091qy" };
+      changeGoodsNum(data).then(res => {
+        console.log(res);
+      });
+      console.log("change", val);
+    },
+    showtitle() {
+      let data = { commoditySeriesId: "1", token: "071690289151821091qy" };
+      getGoodTitle(data).then(res => {
+        console.log(res.Data);
+        this.headtit = res.Data;
+      });
+    },
+    // 获取商品列表
+    getGoodsLists(sindex) {
+      let data = { commodityTypeId: sindex, page: 1, pageSize: 10 };
+      getGoodsList(data).then(res => {
+        console.log(res.Data);
+        this.goodsList = res.Data;
+      });
+    },
+    //tab切换
+    tab(index) {
+      this.num = index;
+      this.goodsList.splice(0, this.goodsList.length);
+      this.getGoodsLists(index + 1);
+    },
+    // mescroll组件初始化的回调,可获取到mescroll对象
+    mescrollInit(mescroll) {
+      this.mescroll = mescroll;
+    },
+    //滑动列表
+    scrollHandel(mescroll, y, isUp) {
+      // let root = document.getElementsByClassName('index-title')[0];
+      this.$nextTick(function() {
+        if (y > 10) {
+          this.bottomBol = true;
+          // root.style.cssText="position:fixed;top:0;left:0";
+        } else {
+          this.bottomBol = false;
+          // root.style.cssText="position:relative;top:0;left:0";
+        }
+      });
+    },
+    //上拉加载更多
+    upCallback(page, mescroll) {
+      let data = {
+        commodityTypeId: this.num + 1,
+        page: page.num,
+        pageSize: page.size
+      };
+      getGoodsList(data)
+        .then(response => {
+          // 请求的列表数据
+          let arr = response.Data;
+          // 如果是第一页需手动制空列表
+          if (page.num === 1) this.goodsList = [];
+          // 把请求到的数据添加到列表
+          this.goodsList = this.goodsList.concat(arr);
+          // 数据渲染成功后,隐藏下拉刷新的状态
+          this.$nextTick(() => {
+            mescroll.endSuccess(arr.length);
+          });
+          console.log(res.Data);
+        })
+        .catch(e => {
+          // 联网失败的回调,隐藏下拉刷新和上拉加载的状态;
+          mescroll.endErr();
+        });
+    }
   },
-  created() {}
+  created: function() {
+    let that = this;
+    this.showtitle();
+    // 初始化加载第一页数据
+    // this.getGoodsLists(that.num + 1)
+  }
 };
 </script>
 
@@ -245,6 +391,17 @@ export default {
 .index-title .index-title-cell {
   font-size: 0.32rem;
   color: #fff;
+  position: relative;
+}
+.index-title .index-title-cell.active::after {
+  content: "";
+  display: block;
+  position: absolute;
+  bottom: -10px;
+  left: -10%;
+  width: 120%;
+  height: 2px;
+  background: #fff;
 }
 .index-body {
   width: 100%;
@@ -304,10 +461,6 @@ export default {
   background: #f0eff5;
   box-shadow: 5px 0 10px #afafbc;
 }
-.index-home p,
-.index-server p {
-  margin-top: -0.266667rem;
-}
 .index-home span {
   display: inline-block;
   width: 0.586667rem;
@@ -321,7 +474,8 @@ export default {
   width: 0.586667rem;
   height: 0.586667rem;
   border-radius: 50%;
-  background: url("../../../assets/images/line-server.png") no-repeat center center;
+  background: url("../../../assets/images/line-server.png") no-repeat center
+    center;
   background-size: 100% 100%;
 }
 .addcar {
@@ -354,7 +508,7 @@ export default {
   color: #ff3333;
 }
 .bottom-popups-item {
-  padding: 0.233333rem 0.533333rem;
+  padding: 0.233333rem 0.266667rem;
 }
 .no-got-real-name,
 .nowget-got-real-name {
@@ -368,21 +522,22 @@ export default {
   width: 90%;
   margin: 0.266667rem auto;
 }
-.vux-number-round .vux-number-selector-sub, .vux-number-round .vux-number-selector-plus{
-  padding: 0!important;
-  background: #4478fd!important;
-  border-color: #2674fb!important;
-  border:none!important;
+.vux-number-round .vux-number-selector-sub,
+.vux-number-round .vux-number-selector-plus {
+  padding: 0 !important;
+  background: #4478fd !important;
+  border-color: #2674fb !important;
+  border: none !important;
 }
-.vux-number-selector svg{
-  fill: #fff!important;
+.vux-number-selector svg {
+  fill: #fff !important;
   font-size: 10px;
 }
-.vux-number-selector{
-  height: .533333rem!important;
-  width: .533333rem!important;
+.vux-number-selector {
+  height: 0.533333rem !important;
+  width: 0.533333rem !important;
 }
-.weui-cell{
-  padding: 0!important;
+.weui-cell {
+  padding: 0 !important;
 }
 </style>

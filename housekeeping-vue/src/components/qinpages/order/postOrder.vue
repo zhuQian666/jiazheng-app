@@ -16,24 +16,24 @@
         <!-- 订单 -->
         <div class="order">
             <!-- 一个服务 -->
-            <div class="order-cell">
-                <div class="order-cell-tit">保洁服务</div>
+            <div class="order-cell" v-for="(item, index) in serverKind" :key="index">
+                <div class="order-cell-tit">{{item.TypeName}}</div>
                 <div class="order-cell-box">
                     <!-- 单个订单 -->
-                    <div class="order-cell-list flex flex_sb aic">
+                    <div class="order-cell-list flex flex_sb ait" v-for="sitem in item.Detail" data-id="sitem.Id">
                         <div class="order-cell-list-img fg1">
-                            <img src="../../../assets/images/serverDemo.jpg" alt="">
+                            <img v-bind:src="sitem.ImgUrl" alt="">
                         </div>
                         <div class="order-cell-list-txt fg2">
-                            <div class="order-cell-list-head">油烟机清洗</div>
-                            <div class="order-cell-list-info ellipsis3">4小时/次/人，含擦玻璃和保洁。为了保障服务人员的生命安全，其中高层玻璃住...</div>
+                            <div class="order-cell-list-head">{{sitem.Name}}</div>
+                            <div class="order-cell-list-info ellipsis3">{{sitem.SubTitle}}</div>
                         </div>
                         <div class="order-cell-list-price fg1 flex flex_column flex_sb aib fs28 ml15 ass">
-                            <div class="order-cell-list-unitprice tr red">￥89.00</div>
-                            <div class="order-cell-list-times tr red">X1</div>
+                            <div class="order-cell-list-unitprice tr red">￥{{sitem.Price}}</div>
+                            <div class="order-cell-list-times tr red">X{{sitem.Count}}</div>
                         </div>
                     </div>
-                    <div class="unitprice tr">合计：￥178.00</div>
+                    <div class="unitprice tr">合计：￥{{item.Amount}}</div>
                     <div class="unittips">
                         <div class="unittips-tit fs30">服务备注</div>
                         <textarea class="unitarea" name="" id="" cols="30" rows="10" placeholder="请填写您需要留言的内容,请填写您需要留言的内容请填写您需要留言的内容请填写您需要留言的内容"></textarea>
@@ -47,11 +47,12 @@
             <div class="pay-total fg1 red">
                 合计：<span class="ml2">￥{{paytotal}}</span>
             </div>
-            <div class="post-order fg1">提交订单</div>
+            <div class="post-order fg1" @click="postOrder">提交订单</div>
         </div>
     </div>
 </template>
 <script>
+import { postOrderList, CreatOrder } from "../../../axios/api.js";
 export default {
   data() {
     return {
@@ -59,9 +60,51 @@ export default {
       acceptername: 'qinhuansky',   //收货人姓名
       accepttel: '111111',          //收货人手机号
       accepteraddress: '安徽身合肥市',  //收货人地址
-      paytotal: 170                     //总金额
+      paytotal: 0,                    //总金额
+      serverKind: null,                 //服务类型
     };
   },
+  methods: {
+    //   获取订单列表
+      getOrderList(){
+        let data = {ShopCartIds:16, token: "071690289151821091qy"}
+        postOrderList(data).then(res => {
+            console.log(res);
+            this.serverKind = res.Data;
+            for(let i=0; i<res.Data.length; i++){
+                this.paytotal += res.Data[i].Amount;
+            }
+        })
+      },
+
+    //   创建订单
+    postOrder(){
+        let datarr = new Array();
+        let dataDom = document.getElementsByClassName('order')[0];
+        for(let i=0; i>dataDom.length; i++){
+            
+        }
+        let data = {
+            "UserAddressId": 9,
+            "CreateOrderDetail": [{
+                "ShopSeriesId": 1,
+                "ShopCartId": [16],
+                "Remark": "sample string 2"
+                }],
+            "Type": 3,
+            "token": "071690289151821091qy"
+        }
+        CreatOrder(data).then(res => {
+            console.log(res);
+            const div = document.createElement('div')
+            div.innerHTML = res.Data;
+            document.body.appendChild(div)
+        })
+    }
+  },
+  created: function (){
+    this.getOrderList()
+  }
 
 };
 </script>
