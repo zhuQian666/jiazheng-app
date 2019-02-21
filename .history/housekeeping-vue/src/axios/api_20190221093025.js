@@ -2,6 +2,7 @@
  import {
    fetch
  } from './fetch';
+<<<<<<< HEAD
  const BASEURL = '/apis';
 //  登录
  export function login(data) {
@@ -11,6 +12,9 @@
      data: data
    })
   }
+=======
+ const BASEURL = 'http://182.61.21.61:8077';
+>>>>>>> origin/featrue/20190101-view
 
 //  地址列表
 export function getaddress(){

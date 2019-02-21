@@ -13,7 +13,7 @@
     <div class="index-title flex flex_sa aic">
       <div class="index-title-cell" v-for="(item, index) in headtit.List" :class="{active:index == num}" @click="tab(index)" :data-id="item.Id">{{item.Name}}</div>
     </div>
-    <!-- <mescroll-vue ref="mescroll" :up="mescrollUp" @init="mescrollInit" :down="mescrollDown">
+    <mescroll-vue ref="mescroll" :up="mescrollUp" @init="mescrollInit" :down="mescrollDown">
       <div class="index-body flex flex_sb flex_wrap">
         <div class="index-body-cell" v-for="(item, index) in goodsList" v-bind:data-id="item.Id">
           <div class="index-body-img">
@@ -26,6 +26,11 @@
               <div class="select-mum">
                 <span class="red fs24">￥{{item.Price}}元/{{item.UnitName}}</span>
               </div>
+              <!-- <div class="cheose-mum flex flex_sb aic">
+              <span class="addmum">-</span>
+              <input type="tel" value="10">
+              <span class="mum">+</span>
+              </div>-->
               <div class="cheose-num">
                 <x-number
                   v-model="siginValue"
@@ -39,7 +44,7 @@
           </div>
         </div>
       </div>
-    </mescroll-vue> -->
+    </mescroll-vue>
     <div style="height:1.3rem"></div>
     <div class="index-foot flex flex_sb">
       <div class="flex flex_sa fg1">
@@ -124,7 +129,7 @@
 
 
 <script>
-// import MescrollVue from "mescroll.js/mescroll.vue";
+import MescrollVue from "mescroll.js";
 import {
   Alert,
   Popup,
@@ -193,7 +198,7 @@ export default {
     XButton,
     Group,
     XNumber,
-    // MescrollVue
+    MescrollVue
   },
   methods: {
     // 返回主页
