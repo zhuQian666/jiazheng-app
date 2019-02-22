@@ -1,6 +1,6 @@
 <template>
     <div class="page">
-        <myHd  :tit="tit" :titOther="titOther"  ></myHd>
+        <myHd   :tit="tit" :titOther="titOther"  ></myHd>
         <div class="home-head">
             <div class="home-top flex flex_sb aic mt2">
                 <div class="go-my">

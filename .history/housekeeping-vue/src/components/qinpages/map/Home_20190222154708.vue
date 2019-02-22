@@ -1,6 +1,6 @@
 <template>
     <div class="page">
-        <myHd  :tit="tit" :titOther="titOther"  ></myHd>
+        <my-header></my-header>
         <div class="home-head">
             <div class="home-top flex flex_sb aic mt2">
                 <div class="go-my">
@@ -57,7 +57,7 @@
 
 <script>
 import { Tab, TabItem } from 'vux';
-import myHd from "../header"
+import myHeard from "../header"
 // import BaiduMap from 'vue-baidu-map/components/map/Map.vue';
 // import BaiduMap from 'vue-baidu-map';
 import { GetCommoditySeries } from "../../../axios/api.js";
@@ -74,12 +74,10 @@ export default {
             center: {lng: 0, lat: 0},
             initLocation: false,
             num: 0, //tab切换序号
-            tit:"我是父组件传递的值",
-            titOther:"管理"
         };
     },
     components: {
-        myHd
+        myHeard
     },
     methods: {
         showtitle(){

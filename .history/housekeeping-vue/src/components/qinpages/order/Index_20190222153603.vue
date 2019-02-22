@@ -221,7 +221,7 @@ export default {
     getShopCargoods() {
       let _this = this;
       let tempTotalshop = new Number();
-      let data = { token: localStorage.getItem('STORAGE_TOKEN') };
+      let data = { token: "071690289151821091qy" };
       getshopCar(data).then(res => {
         console.log(res);
         if(res.Data.length>0){
@@ -254,7 +254,7 @@ export default {
         sval = val;
         Type = 2;
       }
-      let data = { CommodityId: id, Type, token: localStorage.getItem('STORAGE_TOKEN') };
+      let data = { CommodityId: id, Type, token: "071690289151821091qy" };
       changeGoodsNum(data).then(res => {
         console.log(res);
         // this.goodsList
@@ -304,14 +304,14 @@ export default {
         initval += ele.ShopCount * ele.Price
       })
       _this.totalShopCar = initval.toFixed(2);
-      let data = { CommodityId: id, Type, token: localStorage.getItem('STORAGE_TOKEN') };
+      let data = { CommodityId: id, Type, token: "071690289151821091qy" };
       changeGoodsNum(data).then(res => {
         console.log(res);
       });
       console.log("change", val);
     },
     showtitle() {
-      let data = { commoditySeriesId: "1", token:localStorage.getItem('STORAGE_TOKEN') };
+      let data = { commoditySeriesId: "1", token: "071690289151821091qy" };
       getGoodTitle(data).then(res => {
         console.log(res.Data);
         this.headtit = res.Data;

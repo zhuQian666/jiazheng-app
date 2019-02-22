@@ -1,6 +1,5 @@
 <template>
     <div class="page">
-        <myHd  :tit="tit" :titOther="titOther"  ></myHd>
         <div class="home-head">
             <div class="home-top flex flex_sb aic mt2">
                 <div class="go-my">
@@ -15,14 +14,14 @@
                 </div>
             </div>
             <!-- 头部导航 -->
-            <div class="home-tit flex flex_sa aif">
+            <!-- <div class="home-tit flex flex_sa aif">
                 <div v-for="(item, index) in headitem" :key="index" @click="tab(index)" class="home-head-item flex flex_sb aic flex_column" :class="{active:index == num}">
                     <div class="home-head-item-img">
                         <img v-bind:src="item.Img" alt="">
                     </div>
                     <p class="tc color9 ">{{item.Name}}</p>
                 </div>
-            </div>
+            </div> -->
         </div>
         <div class="home-body">
             <!-- <template>
@@ -57,7 +56,6 @@
 
 <script>
 import { Tab, TabItem } from 'vux';
-import myHd from "../header"
 // import BaiduMap from 'vue-baidu-map/components/map/Map.vue';
 // import BaiduMap from 'vue-baidu-map';
 import { GetCommoditySeries } from "../../../axios/api.js";
@@ -74,12 +72,7 @@ export default {
             center: {lng: 0, lat: 0},
             initLocation: false,
             num: 0, //tab切换序号
-            tit:"我是父组件传递的值",
-            titOther:"管理"
         };
-    },
-    components: {
-        myHd
     },
     methods: {
         showtitle(){

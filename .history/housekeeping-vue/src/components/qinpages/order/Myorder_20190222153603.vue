@@ -129,7 +129,7 @@ export default {
     // 获取订单
     getorderlistshow(sindex){
       let _this = this;
-      let data = {token: localStorage.getItem('STORAGE_TOKEN'),state: '', page:1, pageSize: 10}
+      let data = {token: '071690289151821091qy',state: '', page:1, pageSize: 10}
       getorderlist(data).then(res => {
           console.log(res);
           if(res.Data.length > 0){
@@ -165,7 +165,7 @@ export default {
     //上拉加载更多
     upCallback(page, mescroll) {
       let data = {
-        token: localStorage.getItem('STORAGE_TOKEN'),
+        token: '071690289151821091qy',
         state: '',
         page: page.num,
         pageSize: page.size

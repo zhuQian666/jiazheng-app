@@ -11,6 +11,7 @@
  Vue.use(LoadingPlugin)
  import '../static/css/common.css'
  import amfeFlexible from 'amfe-flexible'
+ import sheader from './components/qinpages/header.vue'
  
  //全局路由守卫
 router.beforeEach((to,from,next)=>{
@@ -33,6 +34,8 @@ router.beforeEach((to,from,next)=>{
  Vue.config.productionTip = false;
 
  /* eslint-disable no-new */
+
+ Vue.component('my-header', sheader)
  new Vue({
    router,
    render: h => h(App)

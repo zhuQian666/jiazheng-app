@@ -99,7 +99,7 @@ export default {
     //   获取订单列表
       getOrderList(){
         // 购物车id，跳过来时弹出框里的id
-        let data = {ShopCartIds:'39,40', token: localStorage.getItem('STORAGE_TOKEN')}
+        let data = {ShopCartIds:'39,40', token: "071690289151821091qy"}
         postOrderList(data).then(res => {
             console.log(res);
             this.serverKind = res.Data;
@@ -158,7 +158,7 @@ export default {
                 "Remark": ""
                 }],
             "Type": 3,
-            "token": localStorage.getItem('STORAGE_TOKEN')
+            "token": "071690289151821091qy"
         }
         CreatOrder(data).then(res => {
             let channel=null; 

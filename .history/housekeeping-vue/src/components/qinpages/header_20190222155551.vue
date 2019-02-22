@@ -12,8 +12,7 @@ export default {
         return {
 
         }
-    },
-    props: ['tit','titOther']
+    }
 }
 </script>
     
