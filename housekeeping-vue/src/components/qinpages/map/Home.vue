@@ -30,13 +30,13 @@
                 </baidu-map>
             </template> -->
             <!-- <template> -->
-                <baidu-map class="map bm-view" @ready="handler" ak="z5tYi3doukTrHxSlaWOHcM5cFuzXkpy2">
+                <!-- <baidu-map class="map bm-view" @ready="handler" ak="z5tYi3doukTrHxSlaWOHcM5cFuzXkpy2">
                     <bm-geolocation anchor="BMAP_ANCHOR_BOTTOM_RIGHT" :showAddressBar="true" :autoLocation="true"
                     :locationIcon="{url: require('../../../assets/images/local.png'), size: {width: 27, height: 38}}" >
                     </bm-geolocation>
                     <bm-marker :position="autoLocationPoint" :icon="{url: require('../../../assets/images/local.png'), size: {width: 27, height: 38}}" v-if="initLocation">
                     </bm-marker>
-                </baidu-map>
+                </baidu-map> -->
             <!-- </template> -->
             <div class="chose-server" @click="goshop">选择服务</div>
 
@@ -56,13 +56,13 @@
 
 <script>
 import { Tab, TabItem } from 'vux';
-import BaiduMap from 'vue-baidu-map/components/map/Map.vue';
+// import BaiduMap from 'vue-baidu-map/components/map/Map.vue';
 // import BaiduMap from 'vue-baidu-map';
 import { GetCommoditySeries } from "../../../axios/api.js";
 export default {
-    components: {
-        BaiduMap
-    },
+    // components: {
+    //     BaiduMap
+    // },
     data() {
         return {
             msg: "Hello World!",

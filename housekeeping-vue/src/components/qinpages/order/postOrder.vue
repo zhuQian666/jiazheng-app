@@ -45,21 +45,21 @@
                 <div class="order-cell-tit">支付方式</div>
                 <div class="order-cell-box">
                    <div class="flex flex_sb aic zhifu">
-                       <div class="zhifu-icon">
+                       <label for="radioone" class="zhifu-icon fg1">
                            <img src="../../../assets/images/weixin.png" alt="">
                            微信支付
-                       </div>
+                       </label>
                        <div>
-                            <color-picker :colors="colors1" v-model="color1" size="small"></color-picker>
+                           <check-icon @click="clickradio" id="radioone" :value.sync="demo1"></check-icon>
                        </div>
                    </div>
                    <div class="flex flex_sb aic zhifu">
-                       <div class="zhifu-icon">
+                       <label for="radiotwo" class="zhifu-icon fg1">
                            <img src="../../../assets/images/zhifubao.png" alt="">
-                           支付宝支付
-                       </div>
+                           支付宝支付</label>
+                       </label>
                        <div>
-                            <color-picker :colors="colors1" v-model="color1" size="small"></color-picker>
+                           <check-icon @click="clickradio" id="radiotwo" :value.sync="demo2"></check-icon>
                        </div>
                    </div>
                 </div>
@@ -75,17 +75,18 @@
 </template>
 <script>
 import { postOrderList, CreatOrder } from "../../../axios/api.js";
-import { ColorPicker, Group, Cell } from 'vux';
+import { ColorPicker, Group, Cell, CheckIcon  } from 'vux';
 export default {
-     components: {
+ components: {
     ColorPicker,
     Group,
-    Cell
+    Cell,
+    CheckIcon 
   },
   data() {
     return {
-      color1: '#8AEEB1',
-      colors1: ['#8AEEB1'],
+      demo1: true,
+      demo2: false,
       haslocal: false,      //是否显示收货人
       acceptername: 'qinhuansky',   //收货人姓名
       accepttel: '111111',          //收货人手机号
@@ -97,7 +98,8 @@ export default {
   methods: {
     //   获取订单列表
       getOrderList(){
-        let data = {ShopCartIds:16, token: "071690289151821091qy"}
+        // 购物车id，跳过来时弹出框里的id
+        let data = {ShopCartIds:'39,40', token: "071690289151821091qy"}
         postOrderList(data).then(res => {
             console.log(res);
             this.serverKind = res.Data;
@@ -109,71 +111,79 @@ export default {
       change (val, label) {
       console.log('change', val, label)
     },
+    //点击判断是否有plus环境
+    isplush(){
+        let _this =this;
+        if (window.plus) {  
+            setTimeout(function() { //解决callback与plusready事件的执行时机问题(典型案例:showWaiting,closeWaiting)  
+                _this.postOrder()
+            }, 0);  
+        } else {  
+            document.addEventListener("plusready", function() {  
+                _this.postOrder()
+            }, false);  
+        } 
+    },
+    clickradio(){
+        this.demo1 = !this.demo2
+    },
 
     //   创建订单
     postOrder(){
+        let _this = this;
         let datarr = new Array();
         let dataDom = document.getElementsByClassName('order')[0];
         for(let i=0; i>dataDom.length; i++){
             
         }
+        if(!_this.demo1 && !_this.demo2){
+            this.$vux.loading.show({
+            text: '请选择支付方式'
+          })
+          setTimeout(()=>{
+            _this.$vux.loading.hide()
+          },1000)
+          return
+        }else if(_this.demo1){
+            var Type = 1
+        }else if(_demo2){
+            var Type = 3
+        }
+         
         let data = {
             "UserAddressId": 9,
             "CreateOrderDetail": [{
-                "ShopSeriesId": 1,
-                "ShopCartId": [16],
-                "Remark": "sample string 2"
+                "ShopSeriesId": 1,  //保洁系列tab切换
+                "ShopCartId": [39,40],
+                "Remark": ""
                 }],
             "Type": 3,
             "token": "071690289151821091qy"
         }
-        let channel=null; 
-        // 获取支付通道  
-        plus.payment.getChannels(function(channels){  
-            let channel = channels[i]
-        },function(e){  
-            alert("获取支付通道失败："+e.message);  
-        });  
-        document.addEventListener('plusready',plusReady,false); 
-        var ALIPAYSERVER='http://demo.dcloud.net.cn/helloh5/payment/alipay.php?total=';
-        var WXPAYSERVER='http://demo.dcloud.net.cn/helloh5/payment/wxpay.php?total=';
         CreatOrder(data).then(res => {
-            console.log(res);
+            let channel=null; 
+            let iap ='';
             let sdata = res.Data;
-            // 从服务器请求支付订单  
-            var PAYSERVER='';  
-            if(id=='alipay'){  
-                PAYSERVER=ALIPAYSERVER;  
-            }else if(id=='wxpay'){  
-                PAYSERVER=WXPAYSERVER;  
-            }else{  
-                plus.nativeUI.alert("不支持此支付通道！",null,"捐赠");  
-                return;  
-            }  
-            var xhr=new XMLHttpRequest();  
-            xhr.onreadystatechange=function(){  
-                switch(xhr.readyState){  
-                    case 4:  
-                    if(xhr.status==200){  
-                        plus.payment.request(channel, sdata,function(result){  
-                            plus.nativeUI.alert("支付成功！",function(){  
-                                back();  
-                            });  
-                        },function(error){  
-                            plus.nativeUI.alert("支付失败：" + error.code);  
-                        });  
-                    }else{  
-                        alert("获取订单信息失败！");  
-                    }  
-                    break;  
-                    default:  
-                    break;  
-                }  
-            }  
-            xhr.open('GET',PAYSERVER);  
-            xhr.send();  
-            // window.location = 'https://m.alipay.com/Gk8NF23?'+res.Data
-        })
+            // 获取支付通道  
+            plus.payment.getChannels(function(channels){  
+                for (let i in channels) {
+                    let channell = channels[i]
+                    if (channell.id === 'alipay') { 
+                        iap = channell
+                    }
+                }
+                plus.payment.request(iap, sdata,function(result){  
+                    plus.nativeUI.alert("支付成功！",function(){  
+                        // back();  
+                    });  
+                },function(error){  
+                    plus.nativeUI.alert("支付失败：" + error.code);  
+                });      
+                
+            },function(e){
+                alert("获取支付通道失败："+e.message);  
+            });       
+        })        
     }
   },
   created: function (){

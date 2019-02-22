@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <my-header></my-header>
     <router-view></router-view>
   </div>
 </template>
@@ -16,5 +17,8 @@ export default {
 
 body {
   background-color: #fbf9fe;
+}
+.page{
+  margin-top: 1.173333rem;
 }
 </style>

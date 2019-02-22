@@ -152,6 +152,7 @@ import {
   TransferDomDirective as TransferDom,
   Divider
 } from "vux";
+import {orderdetail} from "../../../axios/api.js";
 export default {
   directives: {
     TransferDom

@@ -15,7 +15,7 @@
     </div>
     <mescroll-vue ref="mescroll" :up="mescrollUp" @init="mescrollInit" :down="mescrollDown">
       <div class="index-body flex flex_sb flex_wrap">
-        <div class="index-body-cell" v-for="(item, index) in goodsList" v-bind:data-id="item.Id">
+        <div class="index-body-cell" v-for="(item, index) in goodsList" :id="item.Id" ref="dataInfo">
           <div class="index-body-img">
             <img v-bind:src="item.Img" alt>
           </div>
@@ -26,18 +26,13 @@
               <div class="select-mum">
                 <span class="red fs24">￥{{item.Price}}元/{{item.UnitName}}</span>
               </div>
-              <!-- <div class="cheose-mum flex flex_sb aic">
-              <span class="addmum">-</span>
-              <input type="tel" value="10">
-              <span class="mum">+</span>
-              </div>-->
               <div class="cheose-num">
                 <x-number
-                  v-model="siginValue"
+                  v-model="item.siginValue"
                   button-style="round"
                   :min="0"
                   :max="10"
-                  @on-change="siginChange"
+                  @on-change="siginChange(item.siginValue,item.Id)"
                 ></x-number>
               </div>
             </div>
@@ -71,11 +66,7 @@
             </div>
             <div class="hr"></div>
             <!-- 购物车列表 -->
-            <div
-              class="bottom-popups-item flex flex_sb"
-              v-for="(item, index) in shopCarList"
-              data-id="item.Id"
-            >
+            <div class="bottom-popups-item flex flex_sb" v-for="(item, index) in shopCarList" :id="item.Id" :data-CommodityId ="item.CommodityId">
               <span class="bottom-popups-item-tit">{{item.Name}}</span>
               <span class="bottom-popups-mum">￥{{item.Price}}/{{item.UnitName}}</span>
               <div class="cheose-num" style="margin-top:4px">
@@ -83,8 +74,8 @@
                   v-model="item.ShopCount"
                   button-style="round"
                   :min="0"
-                  :max="1000"
-                  @on-change="change"
+                  :max="99"
+                  @on-change="change(item.ShopCount, item.Id, item.CommodityId)"
                 ></x-number>
               </div>
             </div>
@@ -168,7 +159,7 @@ export default {
       show: false,
       headtit: null, //头部导航
       roundValue: 0,
-      siginValue: 0,
+      // siginValue: 0,
       goodsList: null, //商品列表
       shopCarList: null, //购物车列表
       totalShopCar: 0, //购物车总价
@@ -220,7 +211,6 @@ export default {
       let _this = this;
       if (!_this.headtit.IsReal) {
         //如果认证了
-        _this.show = true;
         this.getShopCargoods();
       } else {
         _this.showHideOnBlur = true;
@@ -234,18 +224,27 @@ export default {
       let data = { token: "071690289151821091qy" };
       getshopCar(data).then(res => {
         console.log(res);
-        for (let i = 0; i < res.Data.length; i++) {
-          tempTotalshop += res.Data[i].Price * res.Data[i].ShopCount;
+        if(res.Data.length>0){
+          _this.show = true;
+          for (let i = 0; i < res.Data.length; i++) {
+            tempTotalshop += res.Data[i].Price * res.Data[i].ShopCount;
+          }
+          _this.totalShopCar = tempTotalshop.toFixed(2);
+          this.shopCarList = res.Data;
+        }else{
+          this.$vux.loading.show({
+            text: '尚未选择商品'
+          })
+          setTimeout(()=>{
+            this.$vux.loading.hide()
+          },1000)
         }
-        _this.totalShopCar = tempTotalshop;
-        this.shopCarList = res.Data;
+        
       });
     },
 
     // 单个订单改变
-    siginChange(val) {
-      let CommodityId = 1;
-      console.log(val);
+    siginChange(val, id) {
       let sval = 0;
       let Type = "";
       if (val > sval) {
@@ -255,22 +254,38 @@ export default {
         sval = val;
         Type = 2;
       }
-      // let totalMong = this.goodsList[CommodityId -1].Price;
-      // this.goodsList[CommodityId -1].Price = val * totalMong;
-      let data = { CommodityId, Type, token: "071690289151821091qy" };
+      let data = { CommodityId: id, Type, token: "071690289151821091qy" };
       changeGoodsNum(data).then(res => {
         console.log(res);
         // this.goodsList
       });
     },
-    getitemid(e) {
-      console.log(e.target.getAttribute("data-id"));
-      console.log(e);
-    },
-    //订单总量改变
-    change(val) {
+    // siginChange(val,id,sval) {
+    //   let CommodityId = id;
+    //   let Type = "";
+    //   if (val > sval) {
+    //     Type = 1;
+    //   } else {
+    //     Type = 2;
+    //   }
+    //   this.goodsList.map((item)=>{
+    //     if(item.Id === id ){
+    //     item.sval = val
+    //   }
+    //   return this.goodsList
+    //   })
+    //   this.svalNum = val;
+    //   let data = { CommodityId, Type, token: "071690289151821091qy" };
+    //   changeGoodsNum(data).then(res => {
+    //   // this.goodsList
+    //   });
+    //   },
+
+
+    // //订单总量改变
+    change(val, id, CId) {
       let _this = this;
-      let CommodityId = 1;
+      let initval = 0;
       let sval = 0;
       let Type = "";
       if (val > sval) {
@@ -280,9 +295,16 @@ export default {
         sval = val;
         Type = 2;
       }
-      _this.totalShopCar = _this.shopCarList[CommodityId - 1].Price * val;
-      // this.getShopCargoods();
-      let data = { CommodityId, Type, token: "071690289151821091qy" };
+      this.shopCarList.forEach(ele => {
+        if(ele.CommodityId == CId){
+          ele.ShopCount = val
+        }
+      })
+      this.shopCarList.forEach(ele => {
+        initval += ele.ShopCount * ele.Price
+      })
+      _this.totalShopCar = initval.toFixed(2);
+      let data = { CommodityId: id, Type, token: "071690289151821091qy" };
       changeGoodsNum(data).then(res => {
         console.log(res);
       });
@@ -299,9 +321,11 @@ export default {
     getGoodsLists(sindex) {
       let data = { commodityTypeId: sindex, page: 1, pageSize: 10 };
       getGoodsList(data).then(res => {
-        console.log(res.Data);
+        res.Data.forEach(ele => {
+        ele.siginValue = 0
+        });
         this.goodsList = res.Data;
-      });
+       });
     },
     //tab切换
     tab(index) {
