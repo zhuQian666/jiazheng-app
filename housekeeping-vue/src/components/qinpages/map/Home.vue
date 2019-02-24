@@ -30,13 +30,13 @@
                 </baidu-map>
             </template> -->
             <!-- <template> -->
-                <!-- <baidu-map class="map bm-view" @ready="handler" ak="z5tYi3doukTrHxSlaWOHcM5cFuzXkpy2">
+                <baidu-map class="map bm-view" @ready="handler" ak="z5tYi3doukTrHxSlaWOHcM5cFuzXkpy2">
                     <bm-geolocation anchor="BMAP_ANCHOR_BOTTOM_RIGHT" :showAddressBar="true" :autoLocation="true"
                     :locationIcon="{url: require('../../../assets/images/local.png'), size: {width: 27, height: 38}}" >
                     </bm-geolocation>
                     <bm-marker :position="autoLocationPoint" :icon="{url: require('../../../assets/images/local.png'), size: {width: 27, height: 38}}" v-if="initLocation">
                     </bm-marker>
-                </baidu-map> -->
+                </baidu-map>
             <!-- </template> -->
             <div class="chose-server" @click="goshop">选择服务</div>
 
@@ -56,23 +56,28 @@
 
 <script>
 import { Tab, TabItem } from 'vux';
-// import BaiduMap from 'vue-baidu-map/components/map/Map.vue';
+import myHd from "../header"
+import BaiduMap from 'vue-baidu-map/components/map/Map.vue';
 // import BaiduMap from 'vue-baidu-map';
 import { GetCommoditySeries } from "../../../axios/api.js";
 export default {
-    // components: {
-    //     BaiduMap
-    // },
+    components: {
+        BaiduMap
+    },
     data() {
         return {
-            msg: "Hello World!",
             clickCity: '北京市',
             headitem: null,
             ishasServer: false,
             center: {lng: 0, lat: 0},
             initLocation: false,
             num: 0, //tab切换序号
+            tit:"首页",
+            titOther:"管理"
         };
+    },
+    components: {
+        myHd
     },
     methods: {
         showtitle(){
@@ -88,7 +93,7 @@ export default {
         },
         //跳转到购物页面
         goshop(){
-            let s = this.num;
+            let s = this.num + 1;
             this.$router.push({
                 path: "/Index?id="+s
             });
@@ -117,6 +122,9 @@ export default {
 
 </script>
 <style scope>
+    .page{
+        margin-top: 0
+    }
     .chose-server{
         position: fixed;
         width: 6rem;

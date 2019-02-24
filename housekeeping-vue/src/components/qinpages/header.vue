@@ -1,8 +1,8 @@
 <template>
     <div class="header flex flex_sb aic">
     <x-icon type="ios-arrow-left" size="30" class="white" @click="$router.back(-1)"></x-icon>
-    <div class="header-tit">我是头部</div>
-    <div class="header-contral">管理</div>
+    <div class="header-tit">{{tit}}</div>
+    <div class="header-contral">{{titOther}}</div>
     </div>
 </template>
 
@@ -12,7 +12,9 @@ export default {
         return {
 
         }
-    }
+    },
+    props: ['tit','titOther']
+    
 }
 </script>
     
@@ -35,6 +37,7 @@ export default {
     }
     .header .header-contral{
         font-size: .426667rem;
+        width: 1.066667rem;
     }
     .white{
         fill: #fff;

@@ -1,5 +1,6 @@
 <template>
     <div class="certifi">
+        <myHd :tit="tit"></myHd>
         <div class="dispute-tit">
             <span class="dispute-tit-dage">*</span>请填写您的真实信息
         </div>
@@ -42,7 +43,7 @@
                 </grid-item>
              </grid>
          </div>
-         <div class="certifi_btn">
+         <div class="certifi_btn" @click="nowgoin">
              <div class="certifi_btn_item">认证</div>
          </div>
     </div>
@@ -51,9 +52,11 @@
 <script>
 import { GroupTitle, Group, Cell, PopupRadio, XInput, Selector, PopupPicker,  Grid, GridItem } from 'vux'
 import {PDUploadImage} from "../../../axios/api.js"
+import myHd from "../../qinpages/header.vue"
  export default {
     data(){
         return {
+          tit: '实名认证',
           options: ['男', '女'],
           optionVl:'男',
           images1:require('../../../assets/images/s1.png'),
@@ -72,9 +75,15 @@ import {PDUploadImage} from "../../../axios/api.js"
             Selector,
             PopupPicker,
             Grid,
-            GridItem
+            GridItem,
+            myHd
         },
         methods: {
+            nowgoin(){
+                // this.$router.push({
+                //     path: "/Index"
+                // });
+            },
             // 点击任意一张图片
             upload(type){
                switch(type){
@@ -127,6 +136,7 @@ import {PDUploadImage} from "../../../axios/api.js"
         width: 100%;
         box-sizing: border-box;
         padding-bottom: 1.6rem; 
+        padding-top: 1.28rem;
     }
   .dispute-tit{
     width: 100%;

@@ -1,17 +1,14 @@
 <template>
   <div class="page">
+    <myHd :tit="tit"></myHd>
     <!-- 订单详情状态 -->
     <div
-      class="detail-header flex flex_sb aic"
-      v-if="item.status"
-      v-for="(item, index) in detailStatus"
-      :key="index"
-    >
+      class="detail-header flex flex_sb aic">
       <div class="detail-status-img">
-        <img v-bind:src="item.images" alt>
+        <img v-bind:src="thisIcon" alt>
       </div>
-      <div class="detail-status-time">{{item.time}} 内上门服务</div>
-      <div class="detail-status-name">{{item.name}}</div>
+      <div class="detail-status-time" v-if="servertime">{{servertime}} 内上门服务</div>
+      <div class="detail-status-name">{{StateName}}</div>
     </div>
     <!-- 选择地址 -->
     <div class="chose-address flex aic flex_sb">
@@ -33,68 +30,77 @@
     <div class="order">
       <!-- 一个服务 -->
       <div class="order-cell">
-        <div class="order-cell-tit">保洁服务</div>
+        <div class="order-cell-tit">{{CommoditySeriesName}}</div>
         <div class="order-cell-box">
           <!-- 单个订单 -->
-          <div class="order-cell-list flex flex_sb aic">
+          <div class="order-cell-list flex flex_sb aic" v-for="item in orderarr" :id="item.Id">
             <div class="order-cell-list-img fg1">
-              <img src="../../../assets/images/serverDemo.jpg" alt>
+              <img v-bin:src="item.Img" alt>
             </div>
             <div class="order-cell-list-txt fg2">
-              <div class="order-cell-list-head">油烟机清洗</div>
-              <div class="order-cell-list-info ellipsis3">4小时/次/人，含擦玻璃和保洁。为了保障服务人员的生命安全，其中高层玻璃住...</div>
+              <div class="order-cell-list-head">{{item.Name}}</div>
+              <div class="order-cell-list-info ellipsis3">{{item.SubTitle}}</div>
             </div>
             <div class="order-cell-list-price fg1 flex flex_column flex_sb aib fs28 ml15 ass">
-              <div class="order-cell-list-unitprice tr red">￥89.00</div>
-              <div class="order-cell-list-times tr red">X1</div>
+              <div class="order-cell-list-unitprice tr red">￥{{item.Price}}/{{item.UnitName}}</div>
+              <div class="order-cell-list-times tr red">X{{item.Count}}</div>
             </div>
           </div>
-          <div class="unitprice tr">合计：￥178.00</div>
-          <div class="unittips">
+          <div class="unitprice tr">合计：￥{{AmountOne}}</div>
+          <div class="unittips" v-if="Remark">
             <div class="unittips-tit fs30">服务备注</div>
-            <textarea
-              class="unitarea"
-              name
-              id
-              cols="30"
-              rows="10"
-              placeholder="请填写您需要留言的内容,请填写您需要留言的内容请填写您需要留言的内容请填写您需要留言的内容"
-            ></textarea>
+            <textarea class="unitarea" cols="30" rows="10">{{Remark}}</textarea>
           </div>
         </div>
       </div>
     </div>
     <!-- 待服务，显示订单编号 -->
     <div class="order-number">
-      <div
-        class="order-number-list flex flex_sb aic"
-        v-if="item.status"
-        v-for="(item, index) in orderNumber"
-        :key="index"
-      >
-        <span>{{item.listName}}</span>
-        <span>{{item.listValue}}</span>
+      <div class="order-number-list flex flex_sb aic" v-if="Number">
+        <span>订单编号</span>
+        <span>{{Number}}</span>
+      </div>
+      <div class="order-number-list flex flex_sb aic" v-if="CreateTime">
+        <span>创建时间</span>
+        <span>{{CreateTime}}</span>
+      </div>
+      <div class="order-number-list flex flex_sb aic" v-if="PayTime">
+        <span>支付时间</span>
+        <span>{{PayTime}}</span>
+      </div>
+      <div class="order-number-list flex flex_sb aic" v-if="PayType">
+        <span>支付方式</span>
+        <span>{{PayType}}</span>
+      </div>
+      <div class="order-number-list flex flex_sb aic" v-if="GetTime">
+        <span>接单时间</span>
+        <span>{{GetTime}}</span>
+      </div>
+      <div class="order-number-list flex flex_sb aic" v-if="FinishTime">
+        <span>验收时间</span>
+        <span>{{FinishTime}}</span>
       </div>
     </div>
     <!-- 联系客服 -->
     <div class="flex flex_right flex_wrap">
-      <div class="tell-server">联系客服</div>
-      <!-- 待付款 -->
-      <div class="tell-server">取消订单</div>
-      <div class="tell-server">立即付款</div>
+      <!-- 待服务 -->
+      <div class="tell-server" v-if="thishowBtn == 1">联系客服</div>
+      <!-- 待支付 -->
+      <div class="tell-server" v-if="thishowBtn == 2">取消订单</div>
+      <div class="tell-server" v-if="thishowBtn == 2">立即付款</div>
       <!-- 待接单 -->
-      <div class="tell-server">联系客服</div>
-      <div class="tell-server">取消订单</div>
+      <div class="tell-server" v-if="thishowBtn == 3">联系客服</div>
+      <div class="tell-server" v-if="thishowBtn == 3">取消订单</div>
       <!-- 待评价 -->
-      <div class="tell-server" v-model="showHideOnBlur">评价服务</div>
+      <div class="tell-server" @click="showHideOnBlur=true" v-model="showHideOnBlur" v-if="thishowBtn == 4">评价服务</div>
       <!-- 服务中 -->
-      <div class="tell-server">延长服务</div>
-      <div class="tell-server">验收服务</div>
+      <div class="tell-server" v-if="thishowBtn == 5">延长服务</div>
+      <div class="tell-server" v-if="thishowBtn == 5">验收服务</div>
       <!-- 已退款 -->
-      <div class="tell-server">联系客服</div>
+      <div class="tell-server" v-if="thishowBtn == 6">联系客服</div>
       <!-- 已完成 -->
-      <div class="tell-server">再来一单</div>
-      <div class="tell-server">已评价</div>
+      <div class="tell-server" v-if="thishowBtn == 7">再来一单</div>
+      <div class="tell-server" v-if="thishowBtn == 7">已评价</div>
     </div>
 
     <div v-transfer-dom>
@@ -108,26 +114,26 @@
             <div class="server-type">
               <divider>{{ '保洁服务' }}</divider>
             </div>
-            <group>
+            <group @click.native="commendStar">
               <rater
                 v-model="data3"
                 star="★"
-                margin="10"
-                font-size="30"
+                :margin="10"
+                :font-size="30"
                 :max="5"
                 active-color="#3386ff"
               ></rater>
             </group>
-            <div class="user-tip flex flex_warp flex_left aic">
-              <div class="user-list-tip">你好
+            <div class="user-tip flex flex_warp flex_c aic">
+              <!-- <div class="user-list-tip">你好
                 <x-icon type="ios-heart" size="20" class="icon-blue"></x-icon>
-              </div>
-              <div class="user-list-tip active">手动阀好
+              </div> -->
+              <div class="user-list-tip active" v-for="item in signTip">{{item}}
                 <x-icon type="ios-heart" size="20" class="icon-blue"></x-icon>
               </div>
             </div>
-            <p class="advice">{{advice}}</p>
-            <div class="submit-commend">
+            <textarea  class="advice" name="" rows="5" @change="advices" placeholder="请填写您对本次服务的评价，您的意见或建议是我们前进的方向">{{advice}}</textarea>
+            <div class="submit-commend" @click="upostCommend">
               <x-button type="primary">提交</x-button>
             </div>
           </div>
@@ -143,8 +149,10 @@
   </div>
 </template>
 <script>
-import { Rater } from "vux";
+import myHd from "../header.vue";
+import { GetEvaluatemplates, orderdetail, PostEvaluate } from "../../../axios/api.js";
 import {
+  Rater,
   XDialog,
   XButton,
   Group,
@@ -152,107 +160,37 @@ import {
   TransferDomDirective as TransferDom,
   Divider
 } from "vux";
-import {orderdetail} from "../../../axios/api.js";
 export default {
   directives: {
     TransferDom
   },
   data() {
     return {
-      showHideOnBlur: true,
+      tit: '订单详情',
+      signTip: null,
+      showHideOnBlur: false,
       data3: "5",
+      orderShowCon: null,
+      orderarr: null,
+      StateName: '',    //订单状态
+      AmountOne: '0',   //总价
+      Remark: null, //评论
+      CommoditySeriesName: '',    //服务名称
+      Number: null,      //订单编号
+      CreateTime: null,    //订单创建时间
+      PayTime: null,      //支付时间
+      GetTime: null,     //接单时间
+      FinishTime: null,        //验收时间
+      PayType: null,        //支付方式
+      servertime: null,     //开始服务时间
       haslocal: false, //是否显示收货人
       acceptername: "qinhuansky", //收货人姓名
       accepttel: "111111", //收货人手机号
       accepteraddress: "安徽身合肥市", //收货人地址
       paytotal: 170, //总金额
-      advice: "请填写您对本次服务的评价，您的意见或建议是我们前进的方向", //建议
-      orderNumber: [
-        {
-          listName: "订单编号",
-          listValue: "123123123123123",
-          status: true
-        },
-        {
-          listName: "创建时间",
-          listValue: "2018.10.11 12:00",
-          status: true
-        },
-        {
-          listName: "支付时间",
-          listValue: "2018.10.11 12:00",
-          status: false
-        },
-        {
-          listName: "支付方式",
-          listValue: "微信支付",
-          status: false
-        },
-        {
-          listName: "退款时间",
-          listValue: "2018.10.11 12:00",
-          status: false
-        },
-        {
-          listName: "接单时间",
-          listValue: "2018.10.11 12:00",
-          status: false
-        },
-        {
-          listName: "退款时间",
-          listValue: "2018.10.11 12:00",
-          status: false
-        },
-        {
-          listName: "验收时间",
-          listValue: "2018.10.11 12:00",
-          status: false
-        }
-      ],
-      detailStatus: [
-        {
-          images: require("../../../assets/images/wait-server.png"),
-          time: "23:59:59",
-          name: "待服务",
-          status: true
-        },
-        {
-          images: require("../../../assets/images/wait-pay.png"),
-          name: "待付款",
-          time: "",
-          status: false
-        },
-        {
-          images: require("../../../assets/images/wait-order.png"),
-          name: "待接单",
-          time: "",
-          status: false
-        },
-        {
-          images: require("../../../assets/images/wait-comment.png"),
-          name: "待评价",
-          time: "",
-          status: false
-        },
-        {
-          images: require("../../../assets/images/servering.png"),
-          name: "服务中",
-          time: "",
-          status: false
-        },
-        {
-          images: require("../../../assets/images/refunded.png"),
-          name: "已退款",
-          time: "",
-          status: false
-        },
-        {
-          images: require("../../../assets/images/order-complete.png"),
-          name: "已完成",
-          time: "",
-          status: false
-        }
-      ]
+      advice: "", //建议
+      thisIcon: require("../../../assets/images/wait-server.png"),
+      thishowBtn: ''      //要显示的按钮
     };
   },
   components: {
@@ -260,7 +198,111 @@ export default {
     XDialog,
     XButton,
     Group,
-    Rater
+    Rater,
+    myHd
+  },
+  mounted: function(){
+    this.getOrderdetail();
+    this.commendStar();
+  },
+  methods: {
+    // 显示订单详情
+    getOrderdetail(){
+      let _this = this;
+      let OrderId = this.$route.query.id;
+      console.log(OrderId);
+      let data = {
+        token: localStorage.getItem('STORAGE_TOKEN'),
+        id: OrderId,
+      }
+      orderdetail(data).then(res =>{
+        console.log(res.Data);
+        if(res.Data){
+          _this.orderShowCon = res.Data;
+          _this.StateName = res.Data.StateName;
+          _this.orderarr = res.Data.CommodityDetailOne;
+          _this.AmountOne = res.Data.AmountOne;
+          _this.Remark = res.Data.Remark;
+          _this.CommoditySeriesName = res.Data.CommoditySeriesName;
+          _this.Number = res.Data.Number;
+          _this.CreateTime = res.Data.CreateTime;
+          _this.PayTime = res.Data.PayTime;
+          _this.GetTime = res.Data.GetTime;
+          _this.FinishTime = res.Data.FinishTime;
+          _this.PayType = res.Data.PayType;
+          _this.thisicon(res.Data.StateName);
+        }
+      })
+    },
+    // 显示头部
+    thisicon(StateNames){
+      let _this = this;
+      let thisicon = '';
+      switch (StateNames) {
+        case '待服务':
+          _this.thishowBtn = 1;
+          thisicon = require("../../../assets/images/wait-server.png")
+          break;
+        case '待支付':
+          _this.thishowBtn = 2;
+          thisicon = require("../../../assets/images/wait-pay.png")
+          break;
+        case '待接单':
+          _this.thishowBtn = 3;
+          thisicon = require("../../../assets/images/wait-order.png")
+          break;
+        case '待评价':
+          _this.thishowBtn = 4;
+          thisicon = require("../../../assets/images/wait-comment.png")
+          break;
+        case '服务中':
+          _this.thishowBtn = 5;
+          thisicon = require("../../../assets/images/servering.png")
+          break;
+        case '已退款':
+          _this.thishowBtn = 6;
+          thisicon = require("../../../assets/images/refunded.png")
+          break;
+        case '已完成':
+          _this.thishowBtn = 7;
+          thisicon = require("../../../assets/images/order-complete.png")
+          break;
+        default:
+          break;
+      }
+      this.thisIcon = thisicon;
+    },
+    
+    // 评价星星
+    commendStar(){
+      let _this =this;
+      let data = {level: _this.data3};
+      _this.signTip = null;
+      GetEvaluatemplates(data).then(res =>{
+        console.log(res.Data);
+        if(res.Data.length>0){
+          _this.signTip = res.Data
+        }
+      })
+    },
+    // 获取评论
+    advices(e){
+      this.advice = e.target.value
+    },
+    // 提交评论
+    upostCommend(){
+      let level = this.data3
+      let Title = this.signTip.toString();
+      let Content =  this.advice;
+      let OrderId = this.$route.query.id;
+      let token = localStorage.getItem('STORAGE_TOKEN');
+      let data = {
+        level,Title,Content,OrderId,token
+      }
+      PostEvaluate(data).then(res =>{
+        console.log(res.Data)
+      })
+    }
   }
 };
 </script>
@@ -338,6 +380,7 @@ export default {
   font-size: 0.32rem;
   text-align: justify;
   padding: 0 0.4rem;
+  width: 100%;
 }
 .detail-header {
   height: 1.026667rem;

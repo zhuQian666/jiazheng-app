@@ -79,7 +79,7 @@ export default {
                 if(Object.keys(res.Data).length){
                   localStorage.setItem('STORAGE_TOKEN',res.Data.Token);
                 this.$router.push({
-                  path:'/'
+                  path:'/Home'
                 })
                 }
             },1000)

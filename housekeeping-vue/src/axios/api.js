@@ -183,9 +183,27 @@ export function getorderlist(data){
 //订单详情
 export function orderdetail(data){
   return fetch({
-    url: BASEURL + 'api/User/OrderDetail',
+    url: BASEURL + '/api/User/OrderDetail',
     method: 'get',
     params: data
+  })
+}
+
+// 评价小星星
+export function GetEvaluatemplates(data){
+  return fetch({
+    url: BASEURL + '/api/User/GetEvaluatemplate',
+    method: 'get',
+    params: data
+  })
+}
+
+// 评价提交
+export function PostEvaluate(data){
+  return fetch({
+    url: BASEURL + '/api/User/PostEvaluate',
+    method: 'get',
+    data: data
   })
 }
 

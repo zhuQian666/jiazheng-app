@@ -1,5 +1,6 @@
 <template>
   <div class="page">
+    <myHd :tit="tit"></myHd>
     <div class="index-tip flex aic" v-show="!bottomBol">
       <div class="index-tip-img">
         <img v-bind:src="headtit.Img">
@@ -32,7 +33,7 @@
                   button-style="round"
                   :min="0"
                   :max="10"
-                  @on-change="siginChange(item.siginValue,item.Id)"
+                  @on-change="siginChange(item.siginValue,item.Id,item.sval)"
                 ></x-number>
               </div>
             </div>
@@ -47,7 +48,7 @@
           <span></span>
           <p class="home fs24 tc">首页</p>
         </div>
-        <div class="index-server flex flex_column flex_sa">
+        <div class="index-server flex flex_column flex_sa" @click="tellServer">
           <span></span>
           <p class="home fs24 tc">客服</p>
         </div>
@@ -75,7 +76,7 @@
                   button-style="round"
                   :min="0"
                   :max="99"
-                  @on-change="change(item.ShopCount, item.Id, item.CommodityId)"
+                  @on-change="change(item.ShopCount, item.Id, item.CommodityId, item.sval)"
                 ></x-number>
               </div>
             </div>
@@ -98,10 +99,10 @@
           <div style="background:#fff; padding:20px 15px">
             <p class="fs32 color9 tc mt30">请先完成实名认证流程哦！</p>
             <div class="flex flex_sb">
-              <div class="no-got-real-name">
+              <div class="no-got-real-name" @click="showHideOnBlur=false">
                 <x-button type="primary">暂不认证</x-button>
               </div>
-              <div class="nowget-got-real-name">
+              <div class="nowget-got-real-name" @click="gorealName">
                 <x-button type="primary">立即认证</x-button>
               </div>
             </div>
@@ -121,6 +122,7 @@
 
 <script>
 import MescrollVue from "mescroll.js/mescroll.vue";
+import myHd from "../header.vue";
 import {
   Alert,
   Popup,
@@ -153,6 +155,8 @@ export default {
   },
   data() {
     return {
+      tit:"保洁服务",
+      carid: '',    //购物测id集合
       name: "", //功能名称
       bottomBol: false, //是否滚动的底部
       showHideOnBlur: false,
@@ -189,27 +193,38 @@ export default {
     XButton,
     Group,
     XNumber,
-    MescrollVue
+    MescrollVue,
+    myHd
   },
   methods: {
     // 返回主页
     goUrlhome() {
       this.$router.push({
-        path: "/"
+        path: "/Home"
       });
     },
     // 立即下单
     goPostPage() {
       this.$router.push({
-        path: "postOrder"
+        path: "/postOrder?carid="+this.carid
       });
     },
     // 拨打客服
-    tellServer() {},
+    tellServer() {
+      this.$router.push({
+        path: "/CustomerService"
+      });
+    },
+    //立即跳转实名认证
+    gorealName(){
+      this.$router.push({
+        path: "/Certification"
+      });
+    },
     // 立即下单
     nowUpost() {
       let _this = this;
-      if (!_this.headtit.IsReal) {
+      if (_this.headtit.IsReal) {
         //如果认证了
         this.getShopCargoods();
       } else {
@@ -221,6 +236,7 @@ export default {
     getShopCargoods() {
       let _this = this;
       let tempTotalshop = new Number();
+      let carid = '';       //购物车id
       let data = { token: "071690289151821091qy" };
       getshopCar(data).then(res => {
         console.log(res);
@@ -228,9 +244,12 @@ export default {
           _this.show = true;
           for (let i = 0; i < res.Data.length; i++) {
             tempTotalshop += res.Data[i].Price * res.Data[i].ShopCount;
+            carid += res.Data[i].Id +',';
+            res.Data[i].sval = 0;
           }
           _this.totalShopCar = tempTotalshop.toFixed(2);
-          this.shopCarList = res.Data;
+          _this.shopCarList = res.Data;
+          _this.carid = carid;
         }else{
           this.$vux.loading.show({
             text: '尚未选择商品'
@@ -244,55 +263,36 @@ export default {
     },
 
     // 单个订单改变
-    siginChange(val, id) {
-      let sval = 0;
+    siginChange(val,id,sval) {
+      let CommodityId = id;
       let Type = "";
       if (val > sval) {
-        sval = val;
         Type = 1;
       } else {
-        sval = val;
         Type = 2;
       }
-      let data = { CommodityId: id, Type, token: "071690289151821091qy" };
+      this.goodsList.map((item)=>{
+        if(item.Id === id ){
+          item.sval = val
+        }
+        return this.goodsList
+      })
+      this.svalNum = val;
+      let data = { CommodityId, Type, token: "071690289151821091qy" };
       changeGoodsNum(data).then(res => {
-        console.log(res);
-        // this.goodsList
+      // this.goodsList
       });
     },
-    // siginChange(val,id,sval) {
-    //   let CommodityId = id;
-    //   let Type = "";
-    //   if (val > sval) {
-    //     Type = 1;
-    //   } else {
-    //     Type = 2;
-    //   }
-    //   this.goodsList.map((item)=>{
-    //     if(item.Id === id ){
-    //     item.sval = val
-    //   }
-    //   return this.goodsList
-    //   })
-    //   this.svalNum = val;
-    //   let data = { CommodityId, Type, token: "071690289151821091qy" };
-    //   changeGoodsNum(data).then(res => {
-    //   // this.goodsList
-    //   });
-    //   },
 
 
     // //订单总量改变
-    change(val, id, CId) {
+    change(val, id, CId, sval) {
       let _this = this;
       let initval = 0;
-      let sval = 0;
       let Type = "";
       if (val > sval) {
-        sval = val;
         Type = 1;
       } else {
-        sval = val;
         Type = 2;
       }
       this.shopCarList.forEach(ele => {
@@ -311,7 +311,8 @@ export default {
       console.log("change", val);
     },
     showtitle() {
-      let data = { commoditySeriesId: "1", token: "071690289151821091qy" };
+      let commoditySeriesId = this.$route.query.id;   //系列id
+      let data = { commoditySeriesId, token: "071690289151821091qy" };
       getGoodTitle(data).then(res => {
         console.log(res.Data);
         this.headtit = res.Data;
@@ -322,11 +323,13 @@ export default {
       let data = { commodityTypeId: sindex, page: 1, pageSize: 10 };
       getGoodsList(data).then(res => {
         res.Data.forEach(ele => {
-        ele.siginValue = 0
-        });
+        ele.siginValue = 0,
+        ele.sval = 0
+      });
         this.goodsList = res.Data;
-       });
+      });
     },
+
     //tab切换
     tab(index) {
       this.num = index;
@@ -378,6 +381,7 @@ export default {
     }
   },
   created: function() {
+    console.log(this.$route.query.id)
     let that = this;
     this.showtitle();
     // 初始化加载第一页数据

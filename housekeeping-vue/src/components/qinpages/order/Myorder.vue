@@ -1,5 +1,6 @@
 <template>
   <div class="page">
+    <myHd :tit="tit"></myHd>
     <ul class="order-title flex flex_sa aif">
       <li
         v-for="(item,index) in orderList"
@@ -7,18 +8,18 @@
         @click="tab(index)"
       >{{item}}</li>
     </ul>
-    <div class="tabCon">
+     <!-- 暂无订单 -->
+      <div class="nonow" v-if="isorder">
+            <div class="nonowpng">
+              <img src="../../../assets/images/nonoew.png" alt="">
+            </div>
+            <p class="nonowtxt">暂无订单!</p>
+      </div>
+    <div v-else class="tabCon">
       <mescroll-vue ref="mescroll" :up="mescrollUp" @init="mescrollInit" :down="mescrollDown">
       <!-- <div class="order-detail" v-for="(itemCon,index) in orderitem"  v-show="index == num"> -->
         <!-- 单个项目 -->
-        <div class="myorder-box" v-for="(item,sindex) in orderitem" :id="item.Id">
-          <!-- 暂无订单 -->
-          <div class="nonow" v-show="isorder">
-                <div class="nonowpng">
-                  <img src="../../../assets/images/nonoew.png" alt="">
-                </div>
-                <p class="nonowtxt">暂无订单!</p>
-          </div>
+        <div class="myorder-box" v-for="(item,sindex) in orderitem" :id="item.Id" :sid="sindex" @click="goOrderDetail(item.Id)">
           <div class="myorder-tit flex flex_sb aic">
             <span>{{item.CommoditySeriesName}}</span>
             <i>{{item.StateName}}</i>
@@ -30,7 +31,7 @@
               <div class="myorder-body-name fg2">{{oitem.Name}}</div>
               <div class="myorder-body-con fg1 flex flex_sb">
                 <div class="myorder-con-item">￥{{oitem.Price}}/{{oitem.UnitName}}</div>
-                <div class="myorder-con-mum">x{{oitem.totalCount}}</div>
+                <div class="myorder-con-mum">x{{oitem.Count}}</div>
               </div>
             </div>
           </div>
@@ -48,9 +49,11 @@
 <script>
 import { getorderlist } from "../../../axios/api.js";
 import MescrollVue from "mescroll.js/mescroll.vue";
+import myHd from "../header.vue"
 export default {
   data() {
     return {
+      tit: '我的订单',
       name: "", //功能名称
       bottomBol: false, //是否滚动的底部
       mescrollDown: {
@@ -118,18 +121,21 @@ export default {
     };
   },
   components: {
-    MescrollVue
+    MescrollVue,
+    myHd
   },
   methods: {
     tab(index) {
       this.num = index;
       this.orderitem.splice(0, this.orderitem.length);
       this.getorderlistshow(index + 1);
+      localStorage.setItem('indexTemp', index+1);
     },
     // 获取订单
     getorderlistshow(sindex){
+      let state = this.choseOrder(sindex)
       let _this = this;
-      let data = {token: '071690289151821091qy',state: '', page:1, pageSize: 10}
+      let data = {token: localStorage.getItem('STORAGE_TOKEN'),state, page:1, pageSize: 10}
       getorderlist(data).then(res => {
           console.log(res);
           if(res.Data.length > 0){
@@ -148,6 +154,39 @@ export default {
          
       })
     },
+    // 进入详情
+    goOrderDetail(id){
+      this.$router.push({
+          path:'/orderDetail',
+          query: {
+            id: id
+          }
+      })
+    },
+    // 选择订单状态
+    choseOrder(index){
+      let choseIndex ='';
+      switch (index) {
+        case 1:
+          choseIndex = ''   //全部
+          break;
+        case 2:
+          choseIndex = '1'   //代付款
+          break;
+        case 3:
+          choseIndex = '3'  //待服务
+          break;
+        case 4:
+          choseIndex = '4'  //服务中
+          break;
+        case 5:
+          choseIndex = '6'  //待评价
+          break;
+        default:
+          break;
+      }
+      return choseIndex
+    },
      // mescroll组件初始化的回调,可获取到mescroll对象
     mescrollInit(mescroll) {
       this.mescroll = mescroll;
@@ -163,36 +202,38 @@ export default {
       });
     },
     //上拉加载更多
-    upCallback(page, mescroll) {
-      let data = {
-        token: '071690289151821091qy',
-        state: '',
-        page: page.num,
-        pageSize: page.size
-      };
-      getorderlist(data)
-        .then(response => {
-          // 请求的列表数据
-          let arr = response.Data;
-          // 如果是第一页需手动制空列表
-          if (page.num === 1) this.goodsList = [];
-          // 把请求到的数据添加到列表
-          this.goodsList = this.goodsList.concat(arr);
-          // 数据渲染成功后,隐藏下拉刷新的状态
-          this.$nextTick(() => {
-            mescroll.endSuccess(arr.length);
-          });
-          console.log(res.Data);
-        })
-        .catch(e => {
-          // 联网失败的回调,隐藏下拉刷新和上拉加载的状态;
-          mescroll.endErr();
-        });
-    }
+    // upCallback(page, mescroll) {
+    //   let sindex = localStorage.getItem('indexTemp') || '1';
+    //   let state = this.choseOrder(sindex)
+    //   let data = {
+    //     token: '071690289151821091qy',
+    //     state,
+    //     page: page.num,
+    //     pageSize: page.size
+    //   };
+    //   getorderlist(data)
+    //     .then(response => {
+    //       // 请求的列表数据
+    //       let arr = response.Data;
+    //       // 如果是第一页需手动制空列表
+    //       if (page.num === 1) this.orderitem = [];
+    //       // 把请求到的数据添加到列表
+    //       this.orderitem = this.orderitem.concat(arr);
+    //       // 数据渲染成功后,隐藏下拉刷新的状态
+    //       this.$nextTick(() => {
+    //         mescroll.endSuccess(arr.length);
+    //       });
+    //       console.log(res.Data);
+    //     })
+    //     .catch(e => {
+    //       // 联网失败的回调,隐藏下拉刷新和上拉加载的状态;
+    //       mescroll.endErr();
+    //     });
+    // }
   },
   created: function (){
     // 获取订单
-    this.getorderlistshow()
+    this.getorderlistshow(1)
   }
 };
 </script>
@@ -267,6 +308,9 @@ export default {
 }
 .myorder-body {
   padding: 0.16rem 0;
+}
+.nonow{
+  padding-top: 1.6rem;
 }
 </style>
 

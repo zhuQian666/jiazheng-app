@@ -1,5 +1,6 @@
 <template>
     <div class="page">
+        <myHd :tit="tit"></myHd>
         <!-- 选择地址 -->
         <div class="chose-address flex aic flex_sb">
             <div class="flex aic ml15">
@@ -16,7 +17,7 @@
         <!-- 订单 -->
         <div class="order">
             <!-- 一个服务 -->
-            <div class="order-cell" v-for="(item, index) in serverKind" :key="index">
+            <div class="order-cell" v-for="(item, index) in serverKind" :key="index" :CommoditySeriesId = "item.CommoditySeriesId">
                 <div class="order-cell-tit">{{item.TypeName}}</div>
                 <div class="order-cell-box">
                     <!-- 单个订单 -->
@@ -36,7 +37,7 @@
                     <div class="unitprice tr">合计：￥{{item.Amount}}</div>
                     <div class="unittips">
                         <div class="unittips-tit fs30">服务备注</div>
-                        <textarea class="unitarea" name="" id="" cols="30" rows="10" placeholder="请填写您需要留言的内容,请填写您需要留言的内容请填写您需要留言的内容请填写您需要留言的内容"></textarea>
+                        <textarea class="unitarea" @change="advice" :sid="item.CommoditySeriesId" cols="30" rows="10" placeholder="请填写您需要留言的内容,请填写您需要留言的内容请填写您需要留言的内容请填写您需要留言的内容"></textarea>
                     </div>
                 </div>
             </div>
@@ -75,16 +76,19 @@
 </template>
 <script>
 import { postOrderList, CreatOrder } from "../../../axios/api.js";
+import myHd from "../header.vue";
 import { ColorPicker, Group, Cell, CheckIcon  } from 'vux';
 export default {
  components: {
     ColorPicker,
     Group,
     Cell,
-    CheckIcon 
+    CheckIcon,
+    myHd
   },
   data() {
     return {
+      tit: '确认订单',
       demo1: true,
       demo2: false,
       haslocal: false,      //是否显示收货人
@@ -98,14 +102,18 @@ export default {
   methods: {
     //   获取订单列表
       getOrderList(){
+        let caridstr = this.$route.query.carid.toString();
+        let ShopCartIds = caridstr.slice(0,caridstr.length-1);
         // 购物车id，跳过来时弹出框里的id
-        let data = {ShopCartIds:'39,40', token: "071690289151821091qy"}
+        let data = {ShopCartIds, token: localStorage.getItem('STORAGE_TOKEN')}
         postOrderList(data).then(res => {
+            let paytoaltemple = 0;
             console.log(res);
             this.serverKind = res.Data;
             for(let i=0; i<res.Data.length; i++){
-                this.paytotal += res.Data[i].Amount;
+                paytoaltemple += res.Data[i].Amount;
             }
+            this.paytotal = paytoaltemple.toFixed(0);
         })
       },
       change (val, label) {
@@ -126,6 +134,15 @@ export default {
     },
     clickradio(){
         this.demo1 = !this.demo2
+    },
+    // 服务备注
+    advice(e){
+        console.log(e.target.value)
+        this.serverKind.forEach(ele =>{
+            if(ele.CommoditySeriesId === e.target.attributes.sid){
+                ele.Remark = e.target.value || null
+            }
+        })
     },
 
     //   创建订单
@@ -149,17 +166,24 @@ export default {
         }else if(_demo2){
             var Type = 3
         }
-         
-        let data = {
-            "UserAddressId": 9,
-            "CreateOrderDetail": [{
-                "ShopSeriesId": 1,  //保洁系列tab切换
-                "ShopCartId": [39,40],
-                "Remark": ""
-                }],
-            "Type": 3,
-            "token": "071690289151821091qy"
+        let data = {};
+        let arr = new Array();
+        data.UserAddressId = 9;
+        data.CreateOrderDetail = arr;
+        data.Type = Type;
+        data.token = localStorage.getItem('STORAGE_TOKEN');
+        for(let i=0; i<_this.serverKind.length; i++){
+            let obj = {};
+            let sarr = [];
+            arr.push(obj);
+            obj.ShopCartId = sarr
+            obj.ShopSeriesId = _this.serverKind[i].CommoditySeriesId;
+            for(let j=0; j<_this.serverKind[i].Detail.length; j++){
+                sarr.push(_this.serverKind[i].Detail[j].Id)
+            }
+            obj.Remark = _this.serverKind[i].Remark || null;
         }
+        console.log(data)
         CreatOrder(data).then(res => {
             let channel=null; 
             let iap ='';
@@ -187,6 +211,7 @@ export default {
     }
   },
   created: function (){
+    console.log(this.$route.query.carid)
     this.getOrderList()
   }
 
@@ -196,6 +221,9 @@ export default {
     /* @import '../static/css/common.css'; */
     .zhifu-icon{
         font-size: .4rem;
+    }
+    .page{
+        padding-bottom: 2.666667rem;
     }
     .zhifu-icon img{
         width: .533333rem;
