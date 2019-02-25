@@ -50,8 +50,7 @@ export default {
     XDialog,
     XButton,
     Group,
-    XSwitch,
-    myHd
+    XSwitch
   },
   data() {
     return {
@@ -65,6 +64,9 @@ export default {
     GetAbout().then(res => {
       (this.tel = res.Data.KFTel), (this.code = res.Data.KFCode);
     });
+  },
+  components: {
+    myHd
   },
   methods: {
     clickbig() {

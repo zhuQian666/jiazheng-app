@@ -10,7 +10,7 @@
                     <x-icon type="ios-arrow-down" class="icon-white" size="10"></x-icon>
                 </div>
                 <div class="go-overview">
-                    <img src="../../../assets/images/overview.png" alt="" @click="goOrder">
+                    <img src="../../../assets/images/overview.png" alt="">
                 </div>
             </div>
             <!-- 头部导航 -->
@@ -62,7 +62,7 @@ import BaiduMap from 'vue-baidu-map/components/map/Map.vue';
 import { GetCommoditySeries } from "../../../axios/api.js";
 export default {
     components: {
-        BaiduMap, myHd
+        BaiduMap
     },
     data() {
         return {
@@ -76,6 +76,9 @@ export default {
             titOther:"管理"
         };
     },
+    components: {
+        myHd
+    },
     methods: {
         showtitle(){
             let data = {name: '常州市'}
@@ -87,11 +90,6 @@ export default {
         goMy(){
           this.$router.push({
               path:'/My'
-          }) 
-        },
-         goOrder(){
-          this.$router.push({
-              path:'/Myorder'
           }) 
         },
         //tab切换

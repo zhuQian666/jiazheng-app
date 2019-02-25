@@ -76,8 +76,7 @@ import myHd from "../../qinpages/header.vue"
             PopupPicker,
             Grid,
             GridItem,
-            myHd,
-            PopupRadio
+            myHd
         },
         methods: {
             nowgoin(){

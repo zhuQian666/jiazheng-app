@@ -20,7 +20,7 @@
         </div>
       </div>
     </div>
-    <div v-transfer-dom>
+    <div>
       <x-dialog v-model="showHideOnBlur" class="dialog-demo" hide-on-blur>
         <div class="img-box">
           <img src="../../../assets/images/code.png" style="max-width:100%">
@@ -50,8 +50,7 @@ export default {
     XDialog,
     XButton,
     Group,
-    XSwitch,
-    myHd
+    XSwitch
   },
   data() {
     return {
@@ -65,6 +64,9 @@ export default {
     GetAbout().then(res => {
       (this.tel = res.Data.KFTel), (this.code = res.Data.KFCode);
     });
+  },
+  components: {
+    myHd
   },
   methods: {
     clickbig() {
@@ -133,7 +135,6 @@ export default {
   width: 0.59rem;
   height: 0.59rem;
 }
-
 </style>
 
 

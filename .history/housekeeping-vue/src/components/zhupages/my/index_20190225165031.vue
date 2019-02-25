@@ -58,7 +58,7 @@
           <div class="enyet-cont-item">
             <img src="../../../assets/images/icon-code.png" alt class="enyet-cont-item-icon big_icon">
             <input type="text" v-model="codeval" class="enyet-cont-item-input" placeholder="验证码">
-            <div class="getcode" @click="getCode" v-if="btnBol">获取验证码</div>
+            <div class="getcode" @click="getCode" v-if="btnBol1">获取验证码</div>
             <div class="getcode" v-else>{{downTime}}秒</div>
           </div>
           <div class="enyet-cont-item">
@@ -114,28 +114,15 @@ methods: {
       this.showChangePhone = true
     },
     // 验证码倒计时
-    downTimeFn(val) {
-      this.btnBol = false;
+    downTimeFn(val,num) {
+      `this.btnBol${num}` = false;
       setTimeout(() => {
         val--;
         this.downTime = val;
         if (val > 0) {
           this.downTimeFn(val);
         } else {
-          this.btnBol = true 
-        }
-      }, 1000);
-    },
-        // 验证码倒计时
-    downTimeFn2(val) {
-      this.btnBol2 = false;
-      setTimeout(() => {
-        val--;
-        this.downTime = val;
-        if (val > 0) {
-          this.downTimeFn2(val);
-        } else {
-          this.btnBol2 = true 
+          `this.btnBol${num}` = true;
         }
       }, 1000);
     },
@@ -150,7 +137,7 @@ methods: {
             },1000)
             return;
           }
-        this.downTimeFn(60) 
+        this.downTimeFn(60,1) 
         let data = {
           tel:this.phoneval
         }
@@ -174,7 +161,7 @@ methods: {
             },1000)
             return;
           }
-        this.downTimeFn(60) 
+        this.downTimeFn(60,2) 
         let data = {
           tel:this.nwephoneval
         }

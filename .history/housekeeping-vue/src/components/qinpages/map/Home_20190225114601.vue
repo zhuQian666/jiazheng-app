@@ -62,7 +62,7 @@ import BaiduMap from 'vue-baidu-map/components/map/Map.vue';
 import { GetCommoditySeries } from "../../../axios/api.js";
 export default {
     components: {
-        BaiduMap, myHd
+        BaiduMap
     },
     data() {
         return {
@@ -75,6 +75,9 @@ export default {
             tit:"首页",
             titOther:"管理"
         };
+    },
+    components: {
+        myHd
     },
     methods: {
         showtitle(){

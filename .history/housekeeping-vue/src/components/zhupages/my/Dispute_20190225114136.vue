@@ -27,7 +27,7 @@
 </template>
 
 <script>
-  import { GroupTitle, Group, Cell, PopupRadio,CheckIcon, XInput, Selector, PopupPicker, ChinaAddressData, XAddress, XTextarea,XButton  } from 'vux'
+  import { GroupTitle, Group, Cell, PopupRadio,CheckIcon, XInput, Selector, PopupPicker, ChinaAddressData, XAddress, XTextarea } from 'vux'
   import {PostDispute} from "../../../axios/api.js"
   export default {
     components: {
@@ -40,7 +40,7 @@
       PopupPicker,
       XAddress,
       XTextarea,
-      XButton 
+      xButton
     },
     data () {
       return {

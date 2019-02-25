@@ -50,8 +50,7 @@ export default {
     XDialog,
     XButton,
     Group,
-    XSwitch,
-    myHd
+    XSwitch
   },
   data() {
     return {
@@ -66,6 +65,9 @@ export default {
       (this.tel = res.Data.KFTel), (this.code = res.Data.KFCode);
     });
   },
+  components: {
+    myHd
+  },
   methods: {
     clickbig() {
       this.showHideOnBlur = true;
@@ -74,6 +76,7 @@ export default {
 };
 </script>
 <style scoped>
+@import '~vux/src/styles/close';
 .weui-dialog {
   border-radius: 8px;
   padding-bottom: 8px;
@@ -133,6 +136,22 @@ export default {
   width: 0.59rem;
   height: 0.59rem;
 }
+  .weui-dialog{
+    border-radius: 8px;
+    padding-bottom: 8px;
+  }
+  .dialog-title {
+    line-height: 30px;
+    color: #666;
+  }
+  .img-box {
+    height: 350px;
+    overflow: hidden;
+  }
+  .vux-close {
+    margin-top: 8px;
+    margin-bottom: 8px;
+  }
 
 </style>
 

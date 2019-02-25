@@ -203,7 +203,7 @@ export function PostEvaluate(data){
   return fetch({
     url: BASEURL + '/api/User/PostEvaluate',
     method: 'get',
-    params: data
+    data: data
   })
 }
 // 更新用户头像
@@ -211,7 +211,7 @@ export function ChangeUserImg(data){
   return fetch({
     url: BASEURL + '/api/User/ChangeUserImg',
     method: 'get',
-    params: data
+    data: data
   })
 }
 

@@ -114,28 +114,15 @@ methods: {
       this.showChangePhone = true
     },
     // 验证码倒计时
-    downTimeFn(val) {
-      this.btnBol = false;
+    downTimeFn(val,num) {
+      num === 1 ? this.btnBol = false :this.btnBol2 = false
       setTimeout(() => {
         val--;
         this.downTime = val;
         if (val > 0) {
           this.downTimeFn(val);
         } else {
-          this.btnBol = true 
-        }
-      }, 1000);
-    },
-        // 验证码倒计时
-    downTimeFn2(val) {
-      this.btnBol2 = false;
-      setTimeout(() => {
-        val--;
-        this.downTime = val;
-        if (val > 0) {
-          this.downTimeFn2(val);
-        } else {
-          this.btnBol2 = true 
+          num === 1 ? this.btnBol = true :this.btnBol2 = true
         }
       }, 1000);
     },
@@ -150,7 +137,7 @@ methods: {
             },1000)
             return;
           }
-        this.downTimeFn(60) 
+        this.downTimeFn(60,1) 
         let data = {
           tel:this.phoneval
         }
@@ -174,7 +161,7 @@ methods: {
             },1000)
             return;
           }
-        this.downTimeFn(60) 
+        this.downTimeFn(60,t2) 
         let data = {
           tel:this.nwephoneval
         }

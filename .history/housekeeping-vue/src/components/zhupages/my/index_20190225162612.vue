@@ -79,7 +79,7 @@
 </template>
 <script>
 import { Cell, Group } from "vux";
-import { GetUserInfo,Sms } from "../../../axios/api.js";
+import { GetUserInfo } from "../../../axios/api.js";
 import photograph from "../component/photograph"
 export default {
 data() {
@@ -91,9 +91,9 @@ data() {
     codeval:'',//验证码
     newodeval:'',//新验证码
     downTime:60,//倒计时
-    btnBol:true,//显示倒计时
+    btnBol:'',//显示倒计时
     downTime2:60,//新倒计时
-    btnBol2:true,//新显示倒计时
+    btnBol2:'',//新显示倒计时
     showChangePhone:false,//是否更换手机
 
   };
@@ -114,28 +114,15 @@ methods: {
       this.showChangePhone = true
     },
     // 验证码倒计时
-    downTimeFn(val) {
-      this.btnBol = false;
+    downTimeFn(val,obj) {
+      obj = false;
       setTimeout(() => {
         val--;
         this.downTime = val;
         if (val > 0) {
           this.downTimeFn(val);
         } else {
-          this.btnBol = true 
-        }
-      }, 1000);
-    },
-        // 验证码倒计时
-    downTimeFn2(val) {
-      this.btnBol2 = false;
-      setTimeout(() => {
-        val--;
-        this.downTime = val;
-        if (val > 0) {
-          this.downTimeFn2(val);
-        } else {
-          this.btnBol2 = true 
+          obj = true;
         }
       }, 1000);
     },
@@ -150,7 +137,7 @@ methods: {
             },1000)
             return;
           }
-        this.downTimeFn(60) 
+        this.downTimeFn(60,this.btnBol) 
         let data = {
           tel:this.phoneval
         }
@@ -174,7 +161,7 @@ methods: {
             },1000)
             return;
           }
-        this.downTimeFn(60) 
+        this.downTimeFn(60,this.btnBol2) 
         let data = {
           tel:this.nwephoneval
         }

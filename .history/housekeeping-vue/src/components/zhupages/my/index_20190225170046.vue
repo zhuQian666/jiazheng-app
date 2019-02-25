@@ -150,7 +150,7 @@ methods: {
             },1000)
             return;
           }
-        this.downTimeFn(60) 
+        this.downTimeFn(60,1) 
         let data = {
           tel:this.phoneval
         }
@@ -174,7 +174,7 @@ methods: {
             },1000)
             return;
           }
-        this.downTimeFn(60) 
+        this.downTimeFn(60,2) 
         let data = {
           tel:this.nwephoneval
         }
