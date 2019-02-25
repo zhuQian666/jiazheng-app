@@ -153,7 +153,7 @@ export function getshopCar(data){
   })
 }
 
-// 获取订单列表
+// 创建订单列表
 export function postOrderList(data){
   return fetch({
     url: BASEURL + '/api/User/OrderShop',
@@ -170,4 +170,41 @@ export function CreatOrder(data){
     data: data
   })
 }
+
+// 获取订单列表
+export function getorderlist(data){
+  return fetch({
+    url: BASEURL + '/api/User/OrderList',
+    method: 'get',
+    params: data
+  })
+}
+
+//订单详情
+export function orderdetail(data){
+  return fetch({
+    url: BASEURL + '/api/User/OrderDetail',
+    method: 'get',
+    params: data
+  })
+}
+
+// 评价小星星
+export function GetEvaluatemplates(data){
+  return fetch({
+    url: BASEURL + '/api/User/GetEvaluatemplate',
+    method: 'get',
+    params: data
+  })
+}
+
+// 评价提交
+export function PostEvaluate(data){
+  return fetch({
+    url: BASEURL + '/api/User/PostEvaluate',
+    method: 'get',
+    data: data
+  })
+}
+
 

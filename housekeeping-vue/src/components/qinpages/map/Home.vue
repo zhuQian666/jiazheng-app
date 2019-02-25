@@ -59,6 +59,7 @@
 
 <script>
 import { Tab, TabItem } from 'vux';
+import myHd from "../header"
 import BaiduMap from 'vue-baidu-map/components/map/Map.vue';
 // import BaiduMap from 'vue-baidu-map';
 import { GetCommoditySeries } from "../../../axios/api.js";
@@ -68,14 +69,18 @@ export default {
     },
     data() {
         return {
-            msg: "Hello World!",
             clickCity: '北京市',
             headitem: null,
             ishasServer: false,
             center: {lng: 0, lat: 0},
             initLocation: false,
             num: 0, //tab切换序号
+            tit:"首页",
+            titOther:"管理"
         };
+    },
+    components: {
+        myHd
     },
     methods: {
         showtitle(){
@@ -91,7 +96,7 @@ export default {
         },
         //跳转到购物页面
         goshop(){
-            let s = this.num;
+            let s = this.num + 1;
             this.$router.push({
                 path: "/Index?id="+s
             });
@@ -120,12 +125,14 @@ export default {
 
 </script>
 <style scope>
+    .page{
+        margin-top: 0
+    }
     .chose-server{
         position: fixed;
         width: 6rem;
         height: 1.2rem;
         bottom: 2.266667rem;
-        left: 2rem;
         background: -moz-linear-gradient(left, #34acff 0%, #142af5 100%);
         background: -webkit-linear-gradient(left, #34acff 0%,#142af5 100%);
         background: -o-linear-gradient(left, #34acff 0%,#142af5 100%);
@@ -137,6 +144,8 @@ export default {
         text-align: center;
         line-height: 1.2rem;
         cursor: pointer;
+        left: 50%;
+        margin-left: -3rem;
     }
     .home-body{
         height: 80vh;

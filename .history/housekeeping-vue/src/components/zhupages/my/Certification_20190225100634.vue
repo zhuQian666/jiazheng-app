@@ -1,6 +1,9 @@
 <template>
     <div class="certifi">
+<<<<<<< HEAD
+=======
         <myHd :tit="tit"></myHd>
+>>>>>>> origin/featrue/20190101-view
         <div class="dispute-tit">
             <span class="dispute-tit-dage">*</span>请填写您的真实信息
         </div>

@@ -1,5 +1,6 @@
 <template>
     <div class="page">
+        <myHd :tit="tit"></myHd>
         <!-- 选择地址 -->
         <div class="chose-address flex aic flex_sb">
             <div class="flex aic ml15">
@@ -16,7 +17,7 @@
         <!-- 订单 -->
         <div class="order">
             <!-- 一个服务 -->
-            <div class="order-cell" v-for="(item, index) in serverKind" :key="index">
+            <div class="order-cell" v-for="(item, index) in serverKind" :key="index" :CommoditySeriesId = "item.CommoditySeriesId">
                 <div class="order-cell-tit">{{item.TypeName}}</div>
                 <div class="order-cell-box">
                     <!-- 单个订单 -->
@@ -36,12 +37,34 @@
                     <div class="unitprice tr">合计：￥{{item.Amount}}</div>
                     <div class="unittips">
                         <div class="unittips-tit fs30">服务备注</div>
-                        <textarea class="unitarea" name="" id="" cols="30" rows="10" placeholder="请填写您需要留言的内容,请填写您需要留言的内容请填写您需要留言的内容请填写您需要留言的内容"></textarea>
+                        <textarea class="unitarea" @change="advice" :sid="item.CommoditySeriesId" cols="30" rows="10" placeholder="请填写您需要留言的内容,请填写您需要留言的内容请填写您需要留言的内容请填写您需要留言的内容"></textarea>
                     </div>
                 </div>
             </div>
         </div>
-
+        <div class="order-cell">
+                <div class="order-cell-tit">支付方式</div>
+                <div class="order-cell-box">
+                   <div class="flex flex_sb aic zhifu">
+                       <label for="radioone" class="zhifu-icon fg1">
+                           <img src="../../../assets/images/weixin.png" alt="">
+                           微信支付
+                       </label>
+                       <div>
+                           <check-icon @click="clickradio" id="radioone" :value.sync="demo1"></check-icon>
+                       </div>
+                   </div>
+                   <div class="flex flex_sb aic zhifu">
+                       <label for="radiotwo" class="zhifu-icon fg1">
+                           <img src="../../../assets/images/zhifubao.png" alt="">
+                           支付宝支付</label>
+                       </label>
+                       <div>
+                           <check-icon @click="clickradio" id="radiotwo" :value.sync="demo2"></check-icon>
+                       </div>
+                   </div>
+                </div>
+            </div>
     <!-- 提交订单 -->
         <div class="pay-moeny flex flex_sb aif">
             <div class="pay-total fg1 red">
@@ -53,9 +76,21 @@
 </template>
 <script>
 import { postOrderList, CreatOrder } from "../../../axios/api.js";
+import myHd from "../header.vue";
+import { ColorPicker, Group, Cell, CheckIcon  } from 'vux';
 export default {
+ components: {
+    ColorPicker,
+    Group,
+    Cell,
+    CheckIcon,
+    myHd
+  },
   data() {
     return {
+      tit: '确认订单',
+      demo1: true,
+      demo2: false,
       haslocal: false,      //是否显示收货人
       acceptername: 'qinhuansky',   //收货人姓名
       accepttel: '111111',          //收货人手机号
@@ -67,42 +102,116 @@ export default {
   methods: {
     //   获取订单列表
       getOrderList(){
-        let data = {ShopCartIds:16, token: "071690289151821091qy"}
+        let caridstr = this.$route.query.carid.toString();
+        let ShopCartIds = caridstr.slice(0,caridstr.length-1);
+        // 购物车id，跳过来时弹出框里的id
+        let data = {ShopCartIds, token: localStorage.getItem('STORAGE_TOKEN')}
         postOrderList(data).then(res => {
+            let paytoaltemple = 0;
             console.log(res);
             this.serverKind = res.Data;
             for(let i=0; i<res.Data.length; i++){
-                this.paytotal += res.Data[i].Amount;
+                paytoaltemple += res.Data[i].Amount;
             }
+            this.paytotal = paytoaltemple.toFixed(0);
         })
       },
+      change (val, label) {
+      console.log('change', val, label)
+    },
+    //点击判断是否有plus环境
+    isplush(){
+        let _this =this;
+        if (window.plus) {  
+            setTimeout(function() { //解决callback与plusready事件的执行时机问题(典型案例:showWaiting,closeWaiting)  
+                _this.postOrder()
+            }, 0);  
+        } else {  
+            document.addEventListener("plusready", function() {  
+                _this.postOrder()
+            }, false);  
+        } 
+    },
+    clickradio(){
+        this.demo1 = !this.demo2
+    },
+    // 服务备注
+    advice(e){
+        console.log(e.target.value)
+        this.serverKind.forEach(ele =>{
+            if(ele.CommoditySeriesId === e.target.attributes.sid){
+                ele.Remark = e.target.value || null
+            }
+        })
+    },
 
     //   创建订单
     postOrder(){
+        let _this = this;
         let datarr = new Array();
         let dataDom = document.getElementsByClassName('order')[0];
         for(let i=0; i>dataDom.length; i++){
             
         }
-        let data = {
-            "UserAddressId": 9,
-            "CreateOrderDetail": [{
-                "ShopSeriesId": 1,
-                "ShopCartId": [16],
-                "Remark": "sample string 2"
-                }],
-            "Type": 3,
-            "token": "071690289151821091qy"
+        if(!_this.demo1 && !_this.demo2){
+            this.$vux.loading.show({
+            text: '请选择支付方式'
+          })
+          setTimeout(()=>{
+            _this.$vux.loading.hide()
+          },1000)
+          return
+        }else if(_this.demo1){
+            var Type = 1
+        }else if(_demo2){
+            var Type = 3
         }
+        let data = {};
+        let arr = new Array();
+        data.UserAddressId = 9;
+        data.CreateOrderDetail = arr;
+        data.Type = Type;
+        data.token = localStorage.getItem('STORAGE_TOKEN');
+        for(let i=0; i<_this.serverKind.length; i++){
+            let obj = {};
+            let sarr = [];
+            arr.push(obj);
+            obj.ShopCartId = sarr
+            obj.ShopSeriesId = _this.serverKind[i].CommoditySeriesId;
+            for(let j=0; j<_this.serverKind[i].Detail.length; j++){
+                sarr.push(_this.serverKind[i].Detail[j].Id)
+            }
+            obj.Remark = _this.serverKind[i].Remark || null;
+        }
+        console.log(data)
         CreatOrder(data).then(res => {
-            console.log(res);
-            const div = document.createElement('div')
-            div.innerHTML = res.Data;
-            document.body.appendChild(div)
-        })
+            let channel=null; 
+            let iap ='';
+            let sdata = res.Data;
+            // 获取支付通道  
+            plus.payment.getChannels(function(channels){  
+                for (let i in channels) {
+                    let channell = channels[i]
+                    if (channell.id === 'alipay') { 
+                        iap = channell
+                    }
+                }
+                plus.payment.request(iap, sdata,function(result){  
+                    plus.nativeUI.alert("支付成功！",function(){  
+                        // back();  
+                    });  
+                },function(error){  
+                    plus.nativeUI.alert("支付失败：" + error.code);  
+                });      
+                
+            },function(e){
+                alert("获取支付通道失败："+e.message);  
+            });       
+        })        
     }
   },
   created: function (){
+    console.log(this.$route.query.carid)
     this.getOrderList()
   }
 
@@ -110,6 +219,25 @@ export default {
 </script>
 <style scope>
     /* @import '../static/css/common.css'; */
+    .zhifu-icon{
+        font-size: .4rem;
+    }
+    .page{
+        padding-bottom: 2.666667rem;
+    }
+    .zhifu-icon img{
+        width: .533333rem;
+        height: .533333rem;
+        margin-right: 10px;
+    }
+    .order-cell-box .zhifu{
+        margin: 0 .266667rem;
+        margin-bottom: .266667rem;
+    }
+    .order-cell-box .zhifu:last-child{
+        padding: .266667rem 0;
+        border-top: 1px solid #eee;
+    }
     .pay-moeny{
         height: 1.2rem;
         width: 100%;

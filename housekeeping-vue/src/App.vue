@@ -17,4 +17,7 @@ export default {
 body {
   background-color: #fbf9fe;
 }
+.page{
+  margin-top: 1.173333rem;
+}
 </style>

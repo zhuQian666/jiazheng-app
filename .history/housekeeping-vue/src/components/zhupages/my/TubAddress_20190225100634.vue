@@ -28,7 +28,10 @@
 <script>
 import { CheckIcon } from 'vux'
 import {UserAddress} from "../../../axios/api.js"
+<<<<<<< HEAD
+=======
 // import myHd from
+>>>>>>> origin/featrue/20190101-view
 export default {
     data(){
         return {
