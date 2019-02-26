@@ -17,4 +17,8 @@ export default {
 body {
   background-color: #fbf9fe;
 }
+#app{
+  box-sizing: border-box;
+  padding-top: 1.17rem;
+}
 </style>

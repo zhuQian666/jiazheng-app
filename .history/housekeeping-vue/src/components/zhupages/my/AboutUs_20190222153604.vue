@@ -1,6 +1,5 @@
 <template>
     <div class="about-us">
-         <myHd :tit="tit"></myHd>
        <div class="about-us-top">
            <img src="../../../assets/images/mylogo.png" alt="" class="about-us-top-icon">
            <div class="about-us-top-tit">保时家政</div>
@@ -18,12 +17,10 @@
 </template>
 <script>
 import {GetAbout} from "../../../axios/api.js";
-import myHd from "../../qinpages/header"
 export default {
     data(){
         return {
            info:'',//关于我们内容
-           tit:"关于我们"
         }
     },
     created() {
@@ -33,9 +30,6 @@ export default {
     },
     methods: {
         
-    },
-    components: {
-        myHd
     }
 }
 </script>

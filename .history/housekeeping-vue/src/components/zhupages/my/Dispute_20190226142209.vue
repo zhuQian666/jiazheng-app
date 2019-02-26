@@ -42,8 +42,7 @@
       PopupPicker,
       XAddress,
       XTextarea,
-      XButton,
-      myHd 
+      XButton 
     },
     data () {
       return {
