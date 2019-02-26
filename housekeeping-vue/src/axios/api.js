@@ -189,6 +189,24 @@ export function orderdetail(data){
   })
 }
 
+//取消订单、
+export function DetateOrder(data){
+  return fetch({
+    url: BASEURL + '/api/User/DetateOrder',
+    method: 'get',
+    params: data
+  })
+}
+
+//延时订单
+export function RenewOrderDetail(data){
+  return fetch({
+    url: BASEURL + '/api/User/RenewOrderDetail/'+data.id,
+    method: 'get',
+    params: data
+  })
+}
+
 // 评价小星星
 export function GetEvaluatemplates(data){
   return fetch({
@@ -203,7 +221,7 @@ export function PostEvaluate(data){
   return fetch({
     url: BASEURL + '/api/User/PostEvaluate',
     method: 'get',
-    data: data
+    params: data
   })
 }
 

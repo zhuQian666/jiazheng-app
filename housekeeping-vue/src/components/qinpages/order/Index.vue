@@ -224,7 +224,7 @@ export default {
     // 立即下单
     nowUpost() {
       let _this = this;
-      if (_this.headtit.IsReal) {
+      if (!_this.headtit.IsReal) {
         //如果认证了
         this.getShopCargoods();
       } else {
