@@ -26,6 +26,7 @@
  const controlAddress = () => import('@/components/qinpages/address/controlAddress');
  const editAddress = () => import('@/components/qinpages/address/editAddress');
  const local = () => import('@/components/qinpages/address/local');
+ const delaytime = () => import('@/components/qinpages/order/delaytime');
 
  Vue.use(Router);
 
@@ -37,8 +38,8 @@
    },
 =======
      path: '/',
-     name:'Login',
-     component: Login
+     name:'Home',
+     component: Home
    },{
     path: '/Login',
     name:'Login',
@@ -129,7 +130,11 @@
      path: '/editAddress',
      name:'editAddress',
      component: editAddress
-   }
+   },{
+    path: '/delaytime',
+    name:'delaytime',
+    component: delaytime
+  }
  ];
 
  export default new Router({

@@ -170,7 +170,7 @@ export default {
         let arr = new Array();
         data.UserAddressId = 9;
         data.CreateOrderDetail = arr;
-        data.Type = Type;
+        data.Type = 3;
         data.token = localStorage.getItem('STORAGE_TOKEN');
         for(let i=0; i<_this.serverKind.length; i++){
             let obj = {};
@@ -188,6 +188,7 @@ export default {
             let channel=null; 
             let iap ='';
             let sdata = res.Data;
+            console.log(sdata)
             // 获取支付通道  
             plus.payment.getChannels(function(channels){  
                 for (let i in channels) {

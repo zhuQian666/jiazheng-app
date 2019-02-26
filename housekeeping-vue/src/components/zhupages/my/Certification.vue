@@ -91,7 +91,8 @@ import myHd from "../../qinpages/header.vue"
         methods: {
 =======
             GridItem,
-            myHd
+            myHd,
+            PopupRadio
         },
         methods: {
             nowgoin(){

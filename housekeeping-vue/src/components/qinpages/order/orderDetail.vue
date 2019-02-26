@@ -14,13 +14,13 @@
     <div class="chose-address flex aic flex_sb">
       <div class="flex aic ml15">
         <img class="local" src="../../../assets/images/local.png" alt>
-        <div class="fs28 color3 ml15" v-if="haslocal">请选择服务地址</div>
+        <div class="fs28 color3 ml15" v-if="!address">请选择服务地址</div>
         <div class="accepter ml20" v-else>
           <div class="flex flex_left">
-            <span class="accepter-name">{{acceptername}}</span>
-            <span class="accepter-tel ml30">{{accepttel}}</span>
+            <span class="accepter-name">{{address.Name}}</span>
+            <span class="accepter-tel ml30">{{address.Tel}}</span>
           </div>
-          <div class="accepter-address">{{accepteraddress}}</div>
+          <div class="accepter-address">{{address.Address}}</div>
         </div>
       </div>
       <x-icon type="ios-arrow-right" size="20"></x-icon>
@@ -84,20 +84,20 @@
     <!-- 联系客服 -->
     <div class="flex flex_right flex_wrap">
       <!-- 待服务 -->
-      <div class="tell-server" v-if="thishowBtn == 1">联系客服</div>
+      <div class="tell-server" v-if="thishowBtn == 1" @click="getserver">联系客服</div>
       <!-- 待支付 -->
-      <div class="tell-server" v-if="thishowBtn == 2">取消订单</div>
+      <div class="tell-server" v-if="thishowBtn == 2" @click="deleteOrderFun">取消订单</div>
       <div class="tell-server" v-if="thishowBtn == 2">立即付款</div>
       <!-- 待接单 -->
-      <div class="tell-server" v-if="thishowBtn == 3">联系客服</div>
-      <div class="tell-server" v-if="thishowBtn == 3">取消订单</div>
+      <div class="tell-server" v-if="thishowBtn == 3" @click="getserver">联系客服</div>
+      <div class="tell-server" v-if="thishowBtn == 3" @click="deleteOrderFun">取消订单</div>
       <!-- 待评价 -->
       <div class="tell-server" @click="showHideOnBlur=true" v-model="showHideOnBlur" v-if="thishowBtn == 4">评价服务</div>
       <!-- 服务中 -->
-      <div class="tell-server" v-if="thishowBtn == 5">延长服务</div>
+      <div class="tell-server" v-if="thishowBtn == 5" @click="delaytTime">延长服务</div>
       <div class="tell-server" v-if="thishowBtn == 5">验收服务</div>
       <!-- 已退款 -->
-      <div class="tell-server" v-if="thishowBtn == 6">联系客服</div>
+      <div class="tell-server" v-if="thishowBtn == 6" @click="getserver">联系客服</div>
       <!-- 已完成 -->
       <div class="tell-server" v-if="thishowBtn == 7">再来一单</div>
       <div class="tell-server" v-if="thishowBtn == 7">已评价</div>
@@ -150,7 +150,7 @@
 </template>
 <script>
 import myHd from "../header.vue";
-import { GetEvaluatemplates, orderdetail, PostEvaluate } from "../../../axios/api.js";
+import { GetEvaluatemplates, orderdetail, PostEvaluate, DetateOrder } from "../../../axios/api.js";
 import {
   Rater,
   XDialog,
@@ -172,6 +172,7 @@ export default {
       data3: "5",
       orderShowCon: null,
       orderarr: null,
+      address: null,
       StateName: '',    //订单状态
       AmountOne: '0',   //总价
       Remark: null, //评论
@@ -219,6 +220,7 @@ export default {
         console.log(res.Data);
         if(res.Data){
           _this.orderShowCon = res.Data;
+          _this.address = res.Data.UserAddressHelp;
           _this.StateName = res.Data.StateName;
           _this.orderarr = res.Data.CommodityDetailOne;
           _this.AmountOne = res.Data.AmountOne;
@@ -272,6 +274,35 @@ export default {
       }
       this.thisIcon = thisicon;
     },
+
+    //取消订单
+    deleteOrderFun(){
+      let that = this;
+      let token = localStorage.getItem('STORAGE_TOKEN');
+      let orderId = this.$route.query.id;
+      let data = {token, orderId}
+      DetateOrder(data).then(res =>{
+        console.log(res.data);
+        if(res.Code =='200'){
+          that.$router.go(-1)
+        }
+      })
+    },
+    getserver(){
+      this.$router.push({
+        path: "/CustomerService"
+      });
+    },
+    delaytTime(){
+      let orderid = this.$route.query.id;
+      this.$router.push({
+        path: "/delaytime",
+        query:{
+          id: orderid
+        }
+      });
+    },
+    
     
     // 评价星星
     commendStar(){
