@@ -43,7 +43,11 @@
                 </grid-item>
              </grid>
          </div>
+<<<<<<< HEAD
+         <div class="certifi_btn">
+=======
          <div class="certifi_btn" @click="nowgoin">
+>>>>>>> origin/featrue/20190101-view
              <div class="certifi_btn_item">认证</div>
          </div>
     </div>
@@ -75,6 +79,11 @@ import myHd from "../../qinpages/header.vue"
             Selector,
             PopupPicker,
             Grid,
+<<<<<<< HEAD
+            GridItem
+        },
+        methods: {
+=======
             GridItem,
             myHd,
             PopupRadio
@@ -85,6 +94,7 @@ import myHd from "../../qinpages/header.vue"
                 //     path: "/Index"
                 // });
             },
+>>>>>>> origin/featrue/20190101-view
             // 点击任意一张图片
             upload(type){
                switch(type){
@@ -137,7 +147,10 @@ import myHd from "../../qinpages/header.vue"
         width: 100%;
         box-sizing: border-box;
         padding-bottom: 1.6rem; 
+<<<<<<< HEAD
+=======
         padding-top: 1.28rem;
+>>>>>>> origin/featrue/20190101-view
     }
   .dispute-tit{
     width: 100%;
