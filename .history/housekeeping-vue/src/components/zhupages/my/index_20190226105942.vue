@@ -101,19 +101,18 @@ data() {
 created() {
   this.getUserInfoFn();
 },
-
+//获取用户信息
+getUserInfoFn(){
+  let data = {
+     token:localStorage.getItem('STORAGE_TOKEN')
+  }
+  GetUserInfo(data).then(res=>{
+    this.userInfo = res.Data;
+    this.phoneval = res.Data.Tel
+    localStorage.setItem('AVATAR',this.userInfo.Img)
+  })
+},
 methods: {
-  //获取用户信息
-  getUserInfoFn(){
-    let data = {
-      token:localStorage.getItem('STORAGE_TOKEN')
-    }
-    GetUserInfo(data).then(res=>{
-      this.userInfo = res.Data;
-      this.phoneval = res.Data.Tel
-      localStorage.setItem('AVATAR',this.userInfo.Img)
-    })
-  },
     //更换手机
     changePhoneFn(){
       this.showChangePhone = true
@@ -228,12 +227,6 @@ methods: {
          token:localStorage.getItem("STORAGE_TOKEN")
        }
        ChangeUserTel(data).then(res=>{
-         this.$vux.loading.show({
-           text: '修改成功'
-        })
-        setTimeout(()=>{
-          this.$vux.loading.hide()
-        },1000)
          this.getUserInfoFn();
          this.showChangePhone = false;
        })

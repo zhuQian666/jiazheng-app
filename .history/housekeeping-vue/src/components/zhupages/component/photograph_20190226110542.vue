@@ -13,7 +13,6 @@ export default {
       headerImage: '', // 展示头像
       avatarFile: '', // 头像
       defaultBg:'',
-      icon:'',
     };
   },
   mounted() {
@@ -31,9 +30,9 @@ export default {
       if (!files.length) return;
       this.avatarFile = files[0];
       this.imgPreview(this.avatarFile);
+      console.log('image', this.avatarFile);
     },
     imgPreview (file) {
-      this.icon = file.name;
       let self = this;
       let Orientation;
       // 去获取拍照时的信息，解决拍出来的照片旋转问题
@@ -69,11 +68,12 @@ export default {
     },
     postImg () {
       // 这里写接口
+      console.log(this.headerImage)
       this.$emit('input', this.headerImage);
       this.$refs.avatar.style.background = `url(${this.headerImage})no-repeat center/contain`;
       let data = {
         token:localStorage.getItem('STORAGE_TOKEN'),
-        Img:this.icon
+        Img:this.headerImage
       }
       ChangeUserImg(data).then(res=>{
         console.log(res)
@@ -140,6 +140,7 @@ export default {
       // 如果图片大于四百万像素，计算压缩比并将大小压至400万以下
       let ratio;
       if ((ratio = width * height / 4000000) > 1) {
+        console.log('大于400万像素');
         ratio = Math.sqrt(ratio);
         width /= ratio;
         height /= ratio;
@@ -154,6 +155,7 @@ export default {
       // 如果图片像素大于100万则使用瓦片绘制
       let count;
       if ((count = width * height / 1000000) > 1) {
+        console.log('超过100W像素');
         count = ~~(Math.sqrt(count) + 1); // 计算要分成多少块瓦片
         //            计算每块瓦片的宽和高
         let nw = ~~(width / count);
@@ -196,6 +198,11 @@ export default {
       }
       // 进行最小压缩
       let ndata = canvas.toDataURL('image/jpeg', 0.1);
+      console.log('压缩前：' + initSize);
+      console.log('压缩后：' + ndata.length);
+      console.log(
+        '压缩率：' + ~~(100 * (initSize - ndata.length) / initSize) + '%'
+      );
       tCanvas.width = tCanvas.height = canvas.width = canvas.height = 0;
       return ndata;
     }

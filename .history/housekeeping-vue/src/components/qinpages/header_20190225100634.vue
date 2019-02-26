@@ -1,8 +1,8 @@
 <template>
     <div class="header flex flex_sb aic">
-        <x-icon type="ios-arrow-left" size="30" class="white" @click="$router.back(-1)"></x-icon>
-        <div class="header-tit">{{tit}}</div>
-        <div class="header-contral">{{titOther}}</div>
+    <x-icon type="ios-arrow-left" size="30" class="white" @click="$router.back(-1)"></x-icon>
+    <div class="header-tit">{{tit}}</div>
+    <div class="header-contral">{{titOther}}</div>
     </div>
 </template>
 
@@ -20,7 +20,7 @@ export default {
     
 <style scope>
     .header{
-        height: 1.17rem;
+        height: 1.173333rem;
         width: 100%;
         box-shadow: 0 3px 5px #ddd;
         padding: 0 .266667rem;

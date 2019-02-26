@@ -1,6 +1,6 @@
 <template>
     <div class="page">
-        <myHd :tit="tit"></myHd>
+        <myHd tit="tit"></myHd>
         <div class="control-address">
             <div class="contaol-box flex flex_sb aic" 
             :class="index === 0 ?'mar-bot':''" 

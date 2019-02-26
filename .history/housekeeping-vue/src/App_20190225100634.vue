@@ -17,7 +17,7 @@ export default {
 body {
   background-color: #fbf9fe;
 }
-#app{
-  padding-top: 1.17rem;
+.page{
+  margin-top: 1.173333rem;
 }
 </style>

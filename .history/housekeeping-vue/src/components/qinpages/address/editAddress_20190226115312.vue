@@ -14,9 +14,8 @@
       <check-icon :value.sync="selectBol"> {{ '设为默认地址' }}</check-icon>
     </group>
     <div class="addaddress">
-        <x-button  @click.native="deleteFn" type="warn" class="btn_delete" v-if="deleteAddressBol">删除地址</x-button>
-        <x-button type="primary" @click.native="submitFn">确定</x-button>
-      </div>
+            <x-button type="primary" @click.native="submitFn">确定</x-button>
+        </div>
   </div>
   
  
@@ -24,7 +23,7 @@
 
 <script>
   import { GroupTitle, Group, Cell, PopupRadio,CheckIcon, XInput,XButton, Selector, PopupPicker, ChinaAddressData, XAddress, XTextarea } from 'vux'
-  import {ChangeAddress,GetUserAddress,DeleteAddress} from "../../../axios/api.js"
+  import {ChangeAddress,GetUserAddress} from "../../../axios/api.js"
   import myHd from "../header.vue"
   export default {
     components: {
@@ -56,26 +55,9 @@
         textVal:'',//详细地址
         addressArr:'',//地址信息
         tit:'',//头部标题
-        deleteAddressBol:false,//是否显示删除地址
       }
     },
     methods: {
-      //删除地址
-      deleteFn(){
-        let data = {
-          token:localStorage.getItem("STORAGE_TOKEN"),
-          userAddressId:this.id
-        }
-        DeleteAddress(data).then(res=>{
-             this.$vux.loading.show({
-                  text: '删除成功'
-                })
-              setTimeout(()=>{
-                this.$vux.loading.hide()
-                this.$router.back({})
-              },1000)
-        })
-      },
       submitFn(){
            if(!!!this.valuename){
                 this.$vux.loading.show({
@@ -130,12 +112,10 @@
       if(Object.keys(this.$route.query)){
           this.id = this.$route.query.id;
           if(this.id === 0) {
-            this.tit = "添加地址",
-            this.deleteAddressBol = false
+            this.tit = "添加地址"
             return;
           }
           this.tit = "编辑地址"
-          this.deleteAddressBol = true
           let data = {
             token:localStorage.getItem('STORAGE_TOKEN'),
             id:this.id
@@ -160,9 +140,6 @@
     width: 90%;
     left: 5%;
     bottom: .533333rem;
-}
-.btn_delete{
-  margin-bottom: .53rem;
 }
 .cell{
   border: 1px solid #868695;

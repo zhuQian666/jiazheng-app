@@ -67,13 +67,7 @@
           userAddressId:this.id
         }
         DeleteAddress(data).then(res=>{
-             this.$vux.loading.show({
-                  text: '删除成功'
-                })
-              setTimeout(()=>{
-                this.$vux.loading.hide()
-                this.$router.back({})
-              },1000)
+
         })
       },
       submitFn(){

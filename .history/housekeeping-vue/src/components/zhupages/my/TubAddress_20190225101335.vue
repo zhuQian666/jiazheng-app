@@ -1,6 +1,5 @@
 <template>
     <div class="page">
-        <myHd :tit="tit"></myHd>
         <div class="control-address">
             <div class="contaol-box flex flex_sb aic" 
             :class="index === 0 ?'mar-bot':''" 
@@ -29,16 +28,15 @@
 <script>
 import { CheckIcon } from 'vux'
 import {UserAddress} from "../../../axios/api.js"
-import myHd from "../../qinpages/header"
+// import myHd from
 export default {
     data(){
         return {
-            address: [],
-            tit:"管理"
+            address: []
         }
     },
     components: {
-        CheckIcon,myHd
+        CheckIcon
     },
     created() {
       this.getUserAddress();  

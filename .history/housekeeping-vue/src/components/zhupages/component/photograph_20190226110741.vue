@@ -13,7 +13,6 @@ export default {
       headerImage: '', // 展示头像
       avatarFile: '', // 头像
       defaultBg:'',
-      icon:'',
     };
   },
   mounted() {
@@ -33,7 +32,6 @@ export default {
       this.imgPreview(this.avatarFile);
     },
     imgPreview (file) {
-      this.icon = file.name;
       let self = this;
       let Orientation;
       // 去获取拍照时的信息，解决拍出来的照片旋转问题
@@ -69,11 +67,12 @@ export default {
     },
     postImg () {
       // 这里写接口
+      console.log(this.headerImage.data)
       this.$emit('input', this.headerImage);
       this.$refs.avatar.style.background = `url(${this.headerImage})no-repeat center/contain`;
       let data = {
         token:localStorage.getItem('STORAGE_TOKEN'),
-        Img:this.icon
+        Img:this.headerImage
       }
       ChangeUserImg(data).then(res=>{
         console.log(res)

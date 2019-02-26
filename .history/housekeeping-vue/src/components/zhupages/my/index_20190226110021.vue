@@ -228,12 +228,6 @@ methods: {
          token:localStorage.getItem("STORAGE_TOKEN")
        }
        ChangeUserTel(data).then(res=>{
-         this.$vux.loading.show({
-           text: '修改成功'
-        })
-        setTimeout(()=>{
-          this.$vux.loading.hide()
-        },1000)
          this.getUserInfoFn();
          this.showChangePhone = false;
        })

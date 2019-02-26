@@ -14,7 +14,7 @@
       <check-icon :value.sync="selectBol"> {{ '设为默认地址' }}</check-icon>
     </group>
     <div class="addaddress">
-        <x-button  @click.native="deleteFn" type="warn" class="btn_delete" v-if="deleteAddressBol">删除地址</x-button>
+        <x-button  @click.native="submitFn" type="warn" class="btn_delete">删除地址</x-button>
         <x-button type="primary" @click.native="submitFn">确定</x-button>
       </div>
   </div>
@@ -24,7 +24,7 @@
 
 <script>
   import { GroupTitle, Group, Cell, PopupRadio,CheckIcon, XInput,XButton, Selector, PopupPicker, ChinaAddressData, XAddress, XTextarea } from 'vux'
-  import {ChangeAddress,GetUserAddress,DeleteAddress} from "../../../axios/api.js"
+  import {ChangeAddress,GetUserAddress} from "../../../axios/api.js"
   import myHd from "../header.vue"
   export default {
     components: {
@@ -60,22 +60,6 @@
       }
     },
     methods: {
-      //删除地址
-      deleteFn(){
-        let data = {
-          token:localStorage.getItem("STORAGE_TOKEN"),
-          userAddressId:this.id
-        }
-        DeleteAddress(data).then(res=>{
-             this.$vux.loading.show({
-                  text: '删除成功'
-                })
-              setTimeout(()=>{
-                this.$vux.loading.hide()
-                this.$router.back({})
-              },1000)
-        })
-      },
       submitFn(){
            if(!!!this.valuename){
                 this.$vux.loading.show({
@@ -160,6 +144,7 @@
     width: 90%;
     left: 5%;
     bottom: .533333rem;
+    display: flex;
 }
 .btn_delete{
   margin-bottom: .53rem;
