@@ -21,7 +21,7 @@
                 <div class="order-cell-tit">保洁服务</div>
                 <div class="order-cell-box">
                     <!-- 单个订单 -->
-                    <div class="order-cell-list flex flex_sb ait" v-for="(item, index) in serverKind" :id="index" :data-CommodityType="item.CommodityType">
+                    <div class="order-cell-list flex flex_sb ait" v-for="(item, indexx) in serverKind" :sid= "item.OrderDetailId" :id="index" :data-CommodityType="item.CommodityType">
                         <div class="order-cell-list-img fg1">
                             <img v-bind:src="item.CommodityImg" alt="">
                         </div>
@@ -34,11 +34,11 @@
                             <div class="order-cell-list-unitprice tr red">￥{{item.CommodityPrice}}</div>
                             <div class="cheose-num">
                                 <x-number
-                                v-model="item.CommodityUnit"
+                                v-model="item.currentValue"
                                 button-style="round"
                                 :min="0"
                                 :max="10"
-                                @on-change="changesigin(item.CommodityUnit, index, item.sval)"
+                                @on-change="changesigin(item.currentValue, indexx, item.oldvalue)"
                                 ></x-number>
                             </div>
                             <!-- <div class="order-cell-list-times tr red">X{{sitem.Count}}</div> -->
@@ -55,22 +55,24 @@
         <div class="order-cell">
                 <div class="order-cell-tit">支付方式</div>
                 <div class="order-cell-box">
-                   <div class="flex flex_sb aic zhifu">
+                   <div class="flex flex_sb aic zhifu" @click="clickradio">
                        <label for="radioone" class="zhifu-icon fg1">
                            <img src="../../../assets/images/weixin.png" alt="">
                            微信支付
                        </label>
                        <div>
-                           <check-icon @click="clickradio" id="radioone" :value.sync="demo1"></check-icon>
+                           <input type="radio" id="radioone" name="pay" value="1">
+                           <!-- <check-icon @click="clickradio(1)" id="radioone" :value.sync="demo1"></check-icon> -->
                        </div>
                    </div>
-                   <div class="flex flex_sb aic zhifu">
+                   <div class="flex flex_sb aic zhifu" @click="clickradio">
                        <label for="radiotwo" class="zhifu-icon fg1">
                            <img src="../../../assets/images/zhifubao.png" alt="">
-                           支付宝支付</label>
+                           支付宝支付
                        </label>
                        <div>
-                           <check-icon @click="clickradio" id="radiotwo" :value.sync="demo2"></check-icon>
+                           <input id="radiotwo" type="radio" name="pay" checked value="3">
+                           <!-- <check-icon @click="clickradio(2)" id="radiotwo" :value.sync="demo2"></check-icon> -->
                        </div>
                    </div>
                 </div>
@@ -78,14 +80,14 @@
     <!-- 提交订单 -->
         <div class="pay-moeny flex flex_sb aif">
             <div class="pay-total fg1 red">
-                合计：<span class="ml2">￥{{paytotal}}</span>
+                合计：<span class="ml2">￥{{Amount}}</span>
             </div>
             <div class="post-order fg1" @click="postOrder">提交订单</div>
         </div>
     </div>
 </template>
 <script>
-import { RenewOrderDetail, CreatOrder } from "../../../axios/api.js";
+import { RenewOrderDetail, CreatOrder, changeGoodsNum, RenewOrderOne } from "../../../axios/api.js";
 import myHd from "../header.vue";
 import { ColorPicker, Group, Cell, CheckIcon, XNumber } from 'vux';
 export default {
@@ -109,6 +111,7 @@ export default {
       paytotal: 0,                    //总金额
       serverKind: null,                 //服务类型
       Amount: 0,    //合计
+      paytype: '3',
     };
   },
   methods: {
@@ -119,14 +122,34 @@ export default {
         let data = {token: localStorage.getItem('STORAGE_TOKEN'),id}
         RenewOrderDetail(data).then(res => {
             let paytoaltemple = 0;
-            res.Data.List.forEach(ele =>{
-                ele.sval = 0;
+            let amountemple = 0;
+            res.Data.List.forEach((ele, i) =>{
+                ele.currentValue = '0.5';
+                ele.oldvalue = '0.5';
+                ele.index = i;
+                amountemple = amountemple + ele.CommodityPrice * ele.currentValue
             });
             this.serverKind = res.Data.List;
+            this.Amount = amountemple;
         })
       },
-      changesigin(val, index, sval){
-          console.log(index)
+      changesigin(val, index, oldvalue){
+        let that = this;
+        let paytoaltemple = 0;
+        let amountemple = 0;
+        this.serverKind.forEach(ele =>{
+            if(index == ele.index){
+                let chatep = Number(val) - Number(oldvalue);
+                if(chatep > 0){
+                    amountemple = Number(that.Amount) + Number(ele.CommodityPrice) * chatep;
+                }else{
+                    amountemple = Number(that.Amount) -  Number(ele.CommodityPrice) * Math.abs(chatep);
+                }
+                ele.currentValue = val;
+                ele.oldvalue = val;
+            }
+        });
+        this.Amount = Number(amountemple).toFixed(2);
       },
       change (val, label) {
       console.log('change', val, label)
@@ -145,7 +168,8 @@ export default {
         } 
     },
     clickradio(){
-        this.demo1 = !this.demo2
+        this.paytype = this.getRadioValue("pay");
+        console.log(this.paytype)     
     },
     // 服务备注
     advice(e){
@@ -156,63 +180,76 @@ export default {
             }
         })
     },
+    getRadioValue(radioName){
+        let radios = document.getElementsByName(radioName);
+        let value;
+        for(let i=0;i<radios.length;i++){
+            if(radios[i].checked){
+                value = radios[i].value;
+                break;
+            }
+        }
+        return value;
+    },
 
     //   创建订单
     postOrder(){
         let _this = this;
-        let datarr = new Array();
-        let dataDom = document.getElementsByClassName('order')[0];
-        for(let i=0; i>dataDom.length; i++){
-            
-        }
-        if(!_this.demo1 && !_this.demo2){
-            this.$vux.loading.show({
+        if(!this.paytype){
+           this.$vux.loading.show({
             text: '请选择支付方式'
           })
           setTimeout(()=>{
             _this.$vux.loading.hide()
           },1000)
-          return
-        }else if(_this.demo1){
-            var Type = 1
-        }else if(_demo2){
-            var Type = 3
+          return 
         }
         let data = {};
         let arr = new Array();
-        data.UserAddressId = 9;
-        data.CreateOrderDetail = arr;
-        data.Type = Type;
+        data.List = arr;
+        data.Money = this.Amount;
+        data.OrderId = this.$route.query.sid;
+        data.Type = this.paytype;
         data.token = localStorage.getItem('STORAGE_TOKEN');
         for(let i=0; i<_this.serverKind.length; i++){
             let obj = {};
-            let sarr = [];
+            obj.OrderDetailId = _this.serverKind[i].OrderDetailId
+            obj.Count = _this.serverKind[i].currentValue;
             arr.push(obj);
-            obj.ShopCartId = sarr
-            obj.ShopSeriesId = _this.serverKind[i].CommoditySeriesId;
-            for(let j=0; j<_this.serverKind[i].Detail.length; j++){
-                sarr.push(_this.serverKind[i].Detail[j].Id)
-            }
-            obj.Remark = _this.serverKind[i].Remark || null;
         }
-        console.log(data)
-        CreatOrder(data).then(res => {
+        console.log('提交接口参数')
+        console.log(JSON.stringify(data))
+        RenewOrderOne(data).then(res => {
             let channel=null; 
             let iap ='';
             let sdata = res.Data;
+            console.log('接口返回参数')
+            console.log(JSON.stringify(JSON.stringify(sdata)))
             // 获取支付通道  
             plus.payment.getChannels(function(channels){  
                 for (let i in channels) {
                     let channell = channels[i]
-                    if (channell.id === 'alipay') { 
-                        iap = channell
+                    if(_this.paytype === '1'){
+                        if (channell.id === 'wxpay') { 
+                            iap = channell
+                        }
+                    }else if(_this.paytype === '3'){
+                        if (channell.id === 'alipay') { 
+                            iap = channell
+                        }
                     }
                 }
+                console.log('提交支付方式参数')
+                console.log(JSON.stringify(JSON.stringify(iap)))
                 plus.payment.request(iap, sdata,function(result){  
+                    console.log('提交支付成功')
+                    console.log(JSON.stringify(JSON.stringify(result)))
                     plus.nativeUI.alert("支付成功！",function(){  
                         // back();  
                     });  
                 },function(error){  
+                    console.log('提交支付失败')
+                    console.log(JSON.stringify(JSON.stringify(error)))
                     plus.nativeUI.alert("支付失败：" + error.code);  
                 });      
                 
@@ -361,6 +398,36 @@ export default {
         font-size: .32rem;
         color: #999;
         text-align: right
+    }
+    input[type=radio]{
+        position: relative;
+        
+    }
+    input[type=radio]::after{
+        position: absolute;
+        content: '';
+        display:block;
+        width: .666667rem;
+        height: .666667rem;
+        border-radius: 50%;
+        overflow: hidden;
+        border: 1px solid #ccc;
+        top: -2px;
+        left: -0.266667rem;
+        background-color: #fff;
+        z-index: 9;
+    }
+    input[type=radio]:checked:after{
+        background-color: #fff;
+        background: url(../../../assets/images/checed.png) no-repeat center center;
+        background-size: 100% 100%
+    }
+    .vux-number-round .vux-number-selector-sub, .vux-number-round .vux-number-selector-plus{
+        padding: 0!important;
+        border-color: #3498ff!important;
+    }
+    .vux-number-selector svg{
+        fill: #3498ff!important;
     }
     
 

@@ -10,15 +10,15 @@
      // Paths
      assetsSubDirectory: 'static',
      assetsPublicPath: '/',
-     proxyTable: {
-       '/apis': {
-         target: 'http://182.61.21.61:8077', // 通过本地服务器将你的请求转发到这个地址
-         changeOrigin: true, // 设置这个参数可以避免跨域
-         pathRewrite: {
-           '^/apis': ''
-         }
-       }
-     },
+    //  proxyTable: {
+    //    '/apis': {
+    //      target: 'http://182.61.21.61:8077', // 通过本地服务器将你的请求转发到这个地址
+    //      changeOrigin: true, // 设置这个参数可以避免跨域
+    //      pathRewrite: {
+    //        '^/apis': ''
+    //      }
+    //    }
+    //  },
 
      // Various Dev Server settings
      host: 'localhost', // can be overwritten by process.env.HOST
@@ -63,7 +63,7 @@
      // Paths
      assetsRoot: path.resolve(__dirname, '../dist'),
      assetsSubDirectory: 'static',
-     assetsPublicPath: '/',
+     assetsPublicPath: './',
 
      /**
       * Source Maps

@@ -25,7 +25,8 @@
       </div>
       <x-icon type="ios-arrow-right" size="20"></x-icon>
     </div>
-    <img class="lineBar" src="../../../assets/images/lineBar.jpg" alt>
+    <div class="lineBar"><img src="../../../assets/images/lineBar.png" alt></div>
+    <div class="linebars"></div>
     <!-- 订单 -->
     <div class="order">
       <!-- 一个服务 -->
@@ -35,7 +36,7 @@
           <!-- 单个订单 -->
           <div class="order-cell-list flex flex_sb aic" v-for="item in orderarr" :id="item.Id">
             <div class="order-cell-list-img fg1">
-              <img v-bin:src="item.Img" alt>
+              <img v-bind:src="item.Img" alt>
             </div>
             <div class="order-cell-list-txt fg2">
               <div class="order-cell-list-head">{{item.Name}}</div>
@@ -54,11 +55,12 @@
         </div>
       </div>
     </div>
+    <div class="linebars"></div>
     <!-- 待服务，显示订单编号 -->
     <div class="order-number">
-      <div class="order-number-list flex flex_sb aic" v-if="Number">
+      <div class="order-number-list flex flex_sb aic" v-if="Numbers">
         <span>订单编号</span>
-        <span>{{Number}}</span>
+        <span>{{ Numbers}}</span>
       </div>
       <div class="order-number-list flex flex_sb aic" v-if="CreateTime">
         <span>创建时间</span>
@@ -82,12 +84,12 @@
       </div>
     </div>
     <!-- 联系客服 -->
-    <div class="flex flex_right flex_wrap">
+    <div class="flex flex_c flex_wrap">
       <!-- 待服务 -->
       <div class="tell-server" v-if="thishowBtn == 1" @click="getserver">联系客服</div>
       <!-- 待支付 -->
       <div class="tell-server" v-if="thishowBtn == 2" @click="deleteOrderFun">取消订单</div>
-      <div class="tell-server" v-if="thishowBtn == 2">立即付款</div>
+      <div class="tell-server" v-if="thishowBtn == 2" @click="nowpaypre">立即付款</div>
       <!-- 待接单 -->
       <div class="tell-server" v-if="thishowBtn == 3" @click="getserver">联系客服</div>
       <div class="tell-server" v-if="thishowBtn == 3" @click="deleteOrderFun">取消订单</div>
@@ -95,12 +97,12 @@
       <div class="tell-server" @click="showHideOnBlur=true" v-model="showHideOnBlur" v-if="thishowBtn == 4">评价服务</div>
       <!-- 服务中 -->
       <div class="tell-server" v-if="thishowBtn == 5" @click="delaytTime">延长服务</div>
-      <div class="tell-server" v-if="thishowBtn == 5">验收服务</div>
+      <!-- <div class="tell-server" v-if="thishowBtn == 5">验收服务</div> -->
       <!-- 已退款 -->
       <div class="tell-server" v-if="thishowBtn == 6" @click="getserver">联系客服</div>
       <!-- 已完成 -->
-      <div class="tell-server" v-if="thishowBtn == 7">再来一单</div>
-      <div class="tell-server" v-if="thishowBtn == 7">已评价</div>
+      <div class="tell-server" v-if="thishowBtn == 7" @click="goindedx">再来一单</div>
+      <div class="tell-server" @click="showHideOnBlur=true" v-model="showHideOnBlur"  v-if="thishowBtn == 7">已评价</div>
     </div>
 
     <div v-transfer-dom>
@@ -146,11 +148,40 @@
         </div>
       </x-dialog>
     </div>
+
+    <!-- 支付弹框 -->
+      <div v-transfer-dom>
+          <popup v-model="show14" position="bottom" should-rerender-on-show>
+              <div class="order-cell-tit">支付方式</div>
+            <div class="order-cell-box" style="padding:10px">
+                <div class="flex flex_sb aic zhifu"  @click="nowpay">
+                    <label for="radioone" class="zhifu-icon fg1">
+                        <img src="../../../assets/images/weixin.png" alt="">
+                        微信支付
+                    </label>
+                    <div>
+                      <input id="radioone" type="radio" name="pay" value="1">
+                        <!-- <check-icon @click="nowpay" id="radioone" :value="demo1"></check-icon> -->
+                    </div>
+                </div>
+                <div class="flex flex_sb aic zhifu"  @click="nowpay">
+                    <label for="radiotwo" class="zhifu-icon fg1">
+                        <img src="../../../assets/images/zhifubao.png" alt="">
+                        支付宝支付
+                    </label>
+                    <div>
+                      <input id="radiotwo" type="radio" name="pay" checked value="3">
+                        <!-- <check-icon id="radiotwo" :value="!demo1"></check-icon> -->
+                    </div>
+                </div>
+            </div>
+          </popup>
+      </div>
   </div>
 </template>
 <script>
 import myHd from "../header.vue";
-import { GetEvaluatemplates, orderdetail, PostEvaluate, DetateOrder } from "../../../axios/api.js";
+import { GetEvaluatemplates, orderdetail, PostEvaluate, DetateOrder, CreatOrderOne } from "../../../axios/api.js";
 import {
   Rater,
   XDialog,
@@ -158,7 +189,9 @@ import {
   Group,
   XSwitch,
   TransferDomDirective as TransferDom,
-  Divider
+  Divider,
+  Popup,
+  CheckIcon
 } from "vux";
 export default {
   directives: {
@@ -167,9 +200,11 @@ export default {
   data() {
     return {
       tit: '订单详情',
+      demo1: true,
       signTip: null,
       showHideOnBlur: false,
       data3: "5",
+      show14: false,
       orderShowCon: null,
       orderarr: null,
       address: null,
@@ -177,7 +212,7 @@ export default {
       AmountOne: '0',   //总价
       Remark: null, //评论
       CommoditySeriesName: '',    //服务名称
-      Number: null,      //订单编号
+      Numbers: null,      //订单编号
       CreateTime: null,    //订单创建时间
       PayTime: null,      //支付时间
       GetTime: null,     //接单时间
@@ -191,7 +226,8 @@ export default {
       paytotal: 170, //总金额
       advice: "", //建议
       thisIcon: require("../../../assets/images/wait-server.png"),
-      thishowBtn: ''      //要显示的按钮
+      thishowBtn: '',      //要显示的按钮
+      paytypee: '3',
     };
   },
   components: {
@@ -200,7 +236,9 @@ export default {
     XButton,
     Group,
     Rater,
-    myHd
+    myHd,
+    Popup,
+    CheckIcon
   },
   mounted: function(){
     this.getOrderdetail();
@@ -226,7 +264,7 @@ export default {
           _this.AmountOne = res.Data.AmountOne;
           _this.Remark = res.Data.Remark;
           _this.CommoditySeriesName = res.Data.CommoditySeriesName;
-          _this.Number = res.Data.Number;
+          _this.Numbers = res.Data.Number;
           _this.CreateTime = res.Data.CreateTime;
           _this.PayTime = res.Data.PayTime;
           _this.GetTime = res.Data.GetTime;
@@ -253,7 +291,7 @@ export default {
           _this.thishowBtn = 3;
           thisicon = require("../../../assets/images/wait-order.png")
           break;
-        case '待评价':
+        case '已付款':
           _this.thishowBtn = 4;
           thisicon = require("../../../assets/images/wait-comment.png")
           break;
@@ -261,11 +299,11 @@ export default {
           _this.thishowBtn = 5;
           thisicon = require("../../../assets/images/servering.png")
           break;
-        case '已退款':
+        case '完成':
           _this.thishowBtn = 6;
           thisicon = require("../../../assets/images/refunded.png")
           break;
-        case '已完成':
+        case '评价完成':
           _this.thishowBtn = 7;
           thisicon = require("../../../assets/images/order-complete.png")
           break;
@@ -288,19 +326,104 @@ export default {
         }
       })
     },
+    // 联系客服
     getserver(){
       this.$router.push({
         path: "/CustomerService"
       });
     },
+    // 再来一单
+    goindedx(){
+      this.$router.push({
+        path: "/"
+      })
+    },
+    getRadioValue(radioName){
+        let radios = document.getElementsByName(radioName);
+        let value;
+        for(let i=0;i<radios.length;i++){
+            if(radios[i].checked){
+                value = radios[i].value;
+                break;
+            }
+        }
+        return value;
+    },
+    // 延时服务
     delaytTime(){
       let orderid = this.$route.query.id;
+      let sid = this.Numbers;
       this.$router.push({
         path: "/delaytime",
         query:{
-          id: orderid
+          id: orderid,
+          sid
         }
       });
+    },
+    nowpaypre(){
+      this.show14 = true;
+    },
+    // 立即支付
+    nowpay(){
+        this.show14 = false;
+        let _this = this;
+        this.paytypee = this.getRadioValue("pay");
+        if(!this.paytypee){
+            this.$vux.loading.show({
+            text: '请选择支付方式'
+          })
+          setTimeout(()=>{
+            _this.$vux.loading.hide()
+          },1000)
+          return
+        }
+        let data = {
+          Number: this.Numbers,
+          Type: this.paytypee,
+          token: localStorage.getItem('STORAGE_TOKEN')
+        }
+        console.log('提交接口参数')
+        console.log(JSON.stringify(data))
+        CreatOrderOne(data).then( res => {
+            let _this = this;
+            let channel=null; 
+            let iap ='';
+            let sdata = res.Data;
+            console.log('接口返回参数')
+            console.log(JSON.stringify(JSON.stringify(sdata)))
+            // 获取支付通道  
+            plus.payment.getChannels(function(channels){  
+                for (let i in channels) {
+                    let channell = channels[i]
+                    if(_this.paytypee === '1'){
+                        if (channell.id === 'wxpay') { 
+                            iap = channell
+                        }
+                    }else if(_this.paytypee === '3'){
+                        if (channell.id === 'alipay') { 
+                            iap = channell
+                        }
+                    }
+                }
+                console.log('提交支付方式参数')
+                console.log(JSON.stringify(JSON.stringify(iap)))
+                plus.payment.request(iap, sdata,function(result){  
+                    console.log('提交支付成功')
+                    console.log(JSON.stringify(JSON.stringify(result)))
+                    plus.nativeUI.alert("支付成功！",function(){  
+                        // back();  
+                    });  
+                },function(error){  
+                    console.log('提交支付失败')
+                    console.log(JSON.stringify(JSON.stringify(error)))
+                    plus.nativeUI.alert("支付失败：" + error.code);  
+                });      
+                
+            },function(e){
+                alert("获取支付通道失败："+e.message);  
+            });       
+        })        
     },
     
     
@@ -339,6 +462,18 @@ export default {
 </script>
 <style scope>
 /* @import '../static/css/common.css'; */
+.zhifu-icon{
+        font-size: .4rem;
+    }
+    .page{
+        padding-bottom: 2.666667rem;
+        background: #fff;
+    }
+    .zhifu-icon img{
+        width: .533333rem;
+        height: .533333rem;
+        margin-right: 10px;
+    }
 .weui-dialog {
   border-radius: 0.4rem;
   background: transparent !important;
@@ -449,7 +584,7 @@ export default {
   font-size: 0.32rem;
 }
 .chose-address {
-  padding: 0 0.4rem;
+  padding: 0 0.2rem;
   height: 1.866667rem;
   width: 100%;
   background: #fff;
@@ -461,8 +596,14 @@ export default {
 }
 .lineBar {
   width: 100%;
-  height: 0.32rem;
-  margin-top: -0.8rem;
+  height: 6px;
+  position: relative;
+}
+.lineBar>img{
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0
 }
 .accepter-name,
 .accepter-tel {
@@ -542,5 +683,28 @@ export default {
   margin-top: 8px;
   margin-bottom: 8px;
 }
+input[type=radio]{
+        position: relative;
+        
+    }
+    input[type=radio]::after{
+        position: absolute;
+        content: '';
+        display:block;
+        width: .666667rem;
+        height: .666667rem;
+        border-radius: 50%;
+        overflow: hidden;
+        border: 1px solid #ccc;
+        top: -2px;
+        left: -0.266667rem;
+        background-color: #fff;
+        z-index: 9;
+    }
+    input[type=radio]:checked:after{
+        background-color: #fff;
+        background: url(../../../assets/images/checed.png) no-repeat center center;
+        background-size: 100% 100%
+    }
 </style>
 

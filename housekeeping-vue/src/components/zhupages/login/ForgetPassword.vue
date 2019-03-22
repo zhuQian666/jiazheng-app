@@ -4,12 +4,12 @@
     <div class="enter-cont">
       <div class="enyet-cont-item">
         <img src="../../../assets/images/icon-phone.png" alt class="enyet-cont-item-icon">
-        <input type="text" v-model="phoneval" class="enyet-cont-item-input" placeholder="输入手机号">
+        <input type="tel" v-model="phoneval" maxlength="11" class="enyet-cont-item-input" placeholder="输入手机号">
       </div>
       <div class="enyet-cont-item">
         <img src="../../../assets/images/icon-code.png" alt class="enyet-cont-item-icon big_icon">
-        <input type="text" v-model="codeval" class="enyet-cont-item-input" placeholder="验证码">
-        <div class="getcode" @click="getCode" v-if="btnBol">获取验证码</div>
+        <input type="tel" style="width:120px" maxlength="6" v-model="codeval" class="enyet-cont-item-input" placeholder="验证码">
+        <div class="getcode" @click="getCode" style="width:40%" v-if="btnBol">获取验证码</div>
         <div class="getcode" v-else>{{downTime}}秒</div>
       </div>
       <div class="enyet-cont-item">
@@ -18,8 +18,8 @@
       </div>
       <div class="login_btn" @click="resetPasswordFn">确定</div>
       <div class="index-info">
-        <span @click="gologin">登录帐号</span> l
-        <span>忘记密码</span>
+        <span @click="goRegistered">注册账号</span> l
+        <span @click="gologin">登录账号</span>
       </div>
     </div>
     <div class="trademark">苏州保时科技有限公司</div>
@@ -45,6 +45,11 @@ export default {
       this.$router.push({
         path: "/Login"
       });
+    },
+    goRegistered(){
+      this.$router.push({
+        path: '/Registered'
+      })
     },
     // 验证码倒计时
     downTimeFn(val) {
@@ -123,9 +128,11 @@ export default {
           })
         setTimeout(()=>{
           this.$vux.loading.hide();
-           this.$router.push({
-            path: "/Login"
-          });
+           if(res.Code == '200'){
+             this.$router.push({
+              path: "/Login"
+            });
+           }
         },1000)
       })
     }
@@ -163,6 +170,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  border-bottom: 1px solid #eee
 }
 .enyet-cont-item-icon {
   width: 0.373333rem;
@@ -187,8 +195,8 @@ export default {
   font-family: "黑体";
 }
 .enyet-cont-item-checkbox {
-  width: 0.32rem;
-  height: 0.32rem;
+  width: .4rem;
+  height: .4rem;
   border-radius: 0;
   outline: none;
 }
@@ -225,7 +233,9 @@ export default {
   bottom: 0;
 }
 .getcode {
-  width: 1.866667rem;
+  /* width: 1.866667rem; */
+  width: 4rem;
+  text-align: center;
   height: 0.64rem;
   text-align: center;
   line-height: 0.64rem;

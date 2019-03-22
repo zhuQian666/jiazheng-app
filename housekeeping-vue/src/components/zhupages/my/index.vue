@@ -1,11 +1,20 @@
 <template>
   <div class="index">
     <div class="index-top">
+        <x-icon type="ios-arrow-left" size="30" class="gobackk" @click="$router.back(-1)"></x-icon>
         <div class="index-top-info">
         <div class="index-top-user">
-         <template>
+         <!-- <template>
            <photograph v-model="headImage"></photograph>
-         </template>
+         </template> -->
+         <!-- <form id="updata-form" enctype="multipart/form-data">
+           <input type="file" name="file" id="avatar" class="avatar-file" accept="image/*" @change="updataimg">  
+           <input type="file" name="" id="avatar" class="avatar-file" accept="image/*" @change="uploadFile">
+         </form> -->
+         <label for="avatar" @click="showActionSheet">
+           <img v-bind:src="userInfo.Img ? userInfo.Img : defaultImg" alt="">
+           <!-- <img v-bind:src="defaultImg" alt=""> -->
+         </label>
         </div>
        </div>
       <div class="index-top-user-name">{{userInfo.Name?userInfo.Name:'张三'}}</div>
@@ -14,7 +23,7 @@
     <div v-if="!showChangePhone">
        <div class="info">
         <group>
-          <cell is-link :value="userInfo.sReal?'已认证':'未认证'" @click.native="handelFn(1)">
+          <cell is-link :value="userInfo.IsReal?'已认证':'未认证'" @click.native="handelFn(1)">
             <span slot="title">
             <img src="../../../assets/images/003.png" alt class="info-icon">
             <span class="info-tit">实名认证</span>
@@ -46,7 +55,7 @@
           </cell>
         </group>
       </div>
-      <div class="login_btn" @click="signOut">退出登陆</div>
+      <div class="login_btn" @click="signOut">退出登录</div>
     </div>
     <!-- 更换手机号码 -->
     <div v-if="showChangePhone">
@@ -79,12 +88,15 @@
 </template>
 <script>
 import { Cell, Group } from "vux";
-import { GetUserInfo,Sms,ChangeUserTel } from "../../../axios/api.js";
+import { GetUserInfo,Sms,ChangeUserTel, ChangeUserImg, PreChangeUserImg, basePostImg } from "../../../axios/api.js";
 import photograph from "../component/photograph"
 export default {
+inject: ['reload'],
 data() {
   return {
+    reload: this.reload,
     userInfo:{},//用户信息
+    defaultImg: '',
     headImage:'',
     phoneval:'',//手机号
     nwephoneval:'',//新手机号
@@ -100,6 +112,13 @@ data() {
 },
 created() {
   this.getUserInfoFn();
+  this.reload();
+},
+mounted() {
+  this.$nextTick(function(){
+    let icon = this.userInfo.Img;
+    this.defaultImg = this.defaultImg !='null' ? icon : require('../../../assets/images/0014.png');
+  })
 },
 
 methods: {
@@ -192,6 +211,135 @@ methods: {
             },1000)
         })
     },
+
+    updataimg(){
+      var fileInput = document.getElementById('updata-form');
+      var formData = new FormData(fileInput);
+      PreChangeUserImg(formData).then(resa =>{
+        if(resa.Code == '200'){
+            this.userInfo.Img = resa.Data.fileWebPath[0];
+            this.defaultImg = resa.Data.fileWebPath[0];
+            let data = {
+              token:localStorage.getItem('STORAGE_TOKEN'),
+              Img:resa.Data.fileWebPath[0]
+            }
+          ChangeUserImg(data).then(res=>{
+            console.log(res)
+          })
+        }
+      })
+    },
+
+    //选取图片的来源，拍照和相册  
+        showActionSheet(){  
+            let that = this;
+            let actionbuttons=[{title:"拍照"},{title:"相册选取"}];  
+            let actionstyle={title:"上传图片",cancel:"取消",buttons:actionbuttons};  
+            plus.nativeUI.actionSheet(actionstyle, function(e){  
+                if(e.index==1){  
+                    that.getImage();  
+                }else if(e.index==2){  
+                    that.galleryImg();  
+                }  
+            });  
+        },
+        //相册选取图片  
+        galleryImg() {  
+          let that = this;
+          plus.gallery.pick(function(path){
+              let image = new Image();
+              image.setAttribute('crossOrigin', 'anonymous');
+              that.userInfo.Img = path;
+              image.src = path;
+              image.onload = function(){
+                let canvas = document.createElement("canvas");
+                canvas.width = image.width;
+                canvas.height = image.height;
+                let ctx = canvas.getContext("2d");
+                ctx.drawImage(image, 0, 0, image.width, image.height);
+                let ext = image.src.substring(image.src.lastIndexOf(".") + 1).toLowerCase();
+                let base64 = canvas.toDataURL("image/" + ext);
+                let data = {"Img": base64};
+                basePostImg(data).then(res =>{
+                    console.log('返回图片信息')
+                    console.log(JSON.stringify(res))
+                    that.userInfo.Img = JSON.parse(JSON.stringify(res.fileWebPath))
+                    that.defaultImg = JSON.parse(JSON.stringify(res.fileWebPath))
+                    let dataa = {
+                        "token":localStorage.getItem('STORAGE_TOKEN'),
+                        "Img": JSON.parse(JSON.stringify(res.fileWebPath))
+                      }
+                      console.log(JSON.stringify(dataa))
+                    ChangeUserImg(dataa).then(resa=>{
+                      console.log(resa)
+                    })
+                })
+              }
+          });
+        },
+         // 拍照  
+			getImage() {
+        let that = this;
+        // plus.camera.getCamera().captureImage(function(e){
+        //     plus.io.resolveLocalFileSystemURL(e, function(entry) { 
+        //         var path = entry.toLocalURL();
+        let cam = plus.camera.getCamera()
+        let Resolutions = cam.supportedImageResolutions[0]
+        // 字符串数组,摄像头支持的拍照文件格式
+        let Formats = cam.supportedImageFormats[0]
+        cam.captureImage(function (capturedfile) {
+        // 拍照成功
+        plus.io.resolveLocalFileSystemURL(capturedfile, function (entry) {
+                var path = entry.toLocalURL();
+                let image = new Image();
+                image.setAttribute('crossOrigin', 'anonymous');
+                that.userInfo.Img = path;
+                image.src = path;
+                image.onload = function(){
+                    let w = image.width
+                    let h = image.height
+                    let scale = w / h
+                    w = 200
+                    h = w / scale
+                    // 默认图片质量为0.7，quality值越小，所绘制出的图像越模糊
+                    let quality = 0.7
+                    // 生成canvas
+                    let canvas = document.createElement('canvas')
+                    let ctx = canvas.getContext('2d')
+                    // 创建属性节点
+                    let anw = document.createAttribute('width')
+                    anw.nodeValue = w
+                    let anh = document.createAttribute('height')
+                    anh.nodeValue = h
+                    canvas.width = w
+                    canvas.height = h
+                    ctx.drawImage(image, 0, 0, w, h)
+                    let ext = image.src.substring(image.src.lastIndexOf('.') + 1).toLowerCase()// 图片格式
+                    let base64 = canvas.toDataURL('image/' + ext, quality);
+                    let data = {"Img": base64};
+                    basePostImg(data).then(res =>{
+                        console.log('返回图片信息')
+                        console.log(JSON.stringify(res))
+                        that.userInfo.Img = JSON.parse(JSON.stringify(res.fileWebPath));
+                        that.defaultImg = JSON.parse(JSON.stringify(res.fileWebPath));
+                        let dataa = {
+                          token:localStorage.getItem('STORAGE_TOKEN'),
+                          Img: JSON.parse(JSON.stringify(res.fileWebPath))
+                        }
+                        ChangeUserImg(dataa).then(resa=>{
+                          console.log(JSON.stringify(resa))
+                        })
+                    })
+                }
+            },function(e) { 
+                plus.nativeUI.toast("读取拍照文件错误：" + e.message); 
+            }); 
+
+        });  
+    },
+
+
+
     //确定更换
     changeBtn(){
       if(!!!this.phoneval){
@@ -313,6 +461,7 @@ components: {
   height: 2.19rem;
   overflow: hidden;
   border-radius: 50%;
+  position: relative;
   }
 .index-top-user-icon {
   width: 100%;
@@ -354,7 +503,9 @@ components: {
   padding-right: 0.53rem;
   }
 .info /deep/ .weui-cell {
-  padding: 0.53rem 0.4rem;
+  padding: 0.53rem 0;
+  border-bottom: 1px solid #eee;
+  margin: 0 .4rem
   }
 .login_btn {
   width: 5.973333rem;
@@ -454,5 +605,21 @@ components: {
 }
 .big_icon {
   width: 0.42rem;
+}
+#updata-form input{
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 9;
+  opacity: 0;
+}
+.gobackk{
+  fill: #fff;
+  position: absolute;
+  left: 15px;
+  top: 10px;
+  z-index: 99;
 }
 </style>

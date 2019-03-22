@@ -2,18 +2,19 @@
     <div class="page">
         <myHd :tit="tit"></myHd>
         <!-- 选择地址 -->
-        <div class="chose-address flex aic flex_sb">
+        <div class="chose-address flex aic flex_sb" @click="chouseAddress">
             <div class="flex aic ml15">
                 <img class="local" src="../../../assets/images/local.png" alt="">
                 <div class="fs28 color3 ml15" v-if="haslocal">请选择服务地址</div>
-                <div class="accepter ml20" v-else>
-                    <div class="flex flex_left"><span class="accepter-name">{{acceptername}}</span><span class="accepter-tel ml30">{{accepttel}}</span></div>
-                    <div class="accepter-address">{{accepteraddress}}</div>
+                <div class="accepter ml20" :id="UserAddress.Id" v-else>
+                    <div class="flex flex_left"><span class="accepter-name">{{UserAddress.Contacts}}</span><span class="accepter-tel ml30">{{UserAddress.ContactsTel}}</span></div>
+                    <div class="accepter-address">{{UserAddress.Detail}}</div>
                 </div>
             </div>
             <x-icon type="ios-arrow-right" size="20"></x-icon>
         </div>
-        <img class="lineBar" src="../../../assets/images/lineBar.jpg" alt="">
+        <div class="lineBar"><img src="../../../assets/images/lineBar.png" alt></div>
+        <div class="linebars"></div>
         <!-- 订单 -->
         <div class="order">
             <!-- 一个服务 -->
@@ -21,7 +22,7 @@
                 <div class="order-cell-tit">{{item.TypeName}}</div>
                 <div class="order-cell-box">
                     <!-- 单个订单 -->
-                    <div class="order-cell-list flex flex_sb ait" v-for="sitem in item.Detail" data-id="sitem.Id">
+                    <div class="order-cell-list flex flex_sb ait" v-for="sitem in item.Detail" :id="sitem.Id">
                         <div class="order-cell-list-img fg1">
                             <img v-bind:src="sitem.ImgUrl" alt="">
                         </div>
@@ -43,31 +44,33 @@
             </div>
         </div>
         <div class="order-cell">
-                <div class="order-cell-tit">支付方式</div>
-                <div class="order-cell-box">
-                   <div class="flex flex_sb aic zhifu">
-                       <label for="radioone" class="zhifu-icon fg1">
-                           <img src="../../../assets/images/weixin.png" alt="">
-                           微信支付
-                       </label>
-                       <div>
-                           <check-icon @click="clickradio" id="radioone" :value.sync="demo1"></check-icon>
-                       </div>
-                   </div>
-                   <div class="flex flex_sb aic zhifu">
-                       <label for="radiotwo" class="zhifu-icon fg1">
-                           <img src="../../../assets/images/zhifubao.png" alt="">
-                           支付宝支付</label>
-                       </label>
-                       <div>
-                           <check-icon @click="clickradio" id="radiotwo" :value.sync="demo2"></check-icon>
-                       </div>
-                   </div>
+            <div class="order-cell-tit">支付方式</div>
+            <div class="order-cell-box">
+                <div class="flex flex_sb aic zhifu" @click="clickradio">
+                    <label for="radioone" class="zhifu-icon fg1">
+                        <img src="../../../assets/images/weixin.png" alt="">
+                        微信支付
+                    </label>
+                    <div>
+                        <input id="radioone" type="radio" name="pay" value="1">
+                        <!-- <check-icon @click="clickradio" id="radioone" :value.sync="demo1"></check-icon> -->
+                    </div>
+                </div>
+                <div class="flex flex_sb aic zhifu" @click="clickradio">
+                    <label for="radiotwo" class="zhifu-icon fg1">
+                        <img src="../../../assets/images/zhifubao.png" alt="">
+                        支付宝支付</label>
+                    </label>
+                    <div>
+                        <input id="radiotwo" type="radio" name="pay" checked value="3">
+                        <!-- <check-icon @click="clickradio" id="radiotwo" :value="!demo1"></check-icon> -->
+                    </div>
                 </div>
             </div>
+        </div>
     <!-- 提交订单 -->
         <div class="pay-moeny flex flex_sb aif">
-            <div class="pay-total fg1 red">
+            <div class="pay-total fg1 red tl">
                 合计：<span class="ml2">￥{{paytotal}}</span>
             </div>
             <div class="post-order fg1" @click="postOrder">提交订单</div>
@@ -75,9 +78,9 @@
     </div>
 </template>
 <script>
-import { postOrderList, CreatOrder } from "../../../axios/api.js";
+import { postOrderList, CreatOrder, UserAddress } from "../../../axios/api.js";
 import myHd from "../header.vue";
-import { ColorPicker, Group, Cell, CheckIcon  } from 'vux';
+import { ColorPicker, Group, Cell, CheckIcon } from 'vux';
 export default {
  components: {
     ColorPicker,
@@ -97,6 +100,8 @@ export default {
       accepteraddress: '安徽身合肥市',  //收货人地址
       paytotal: 0,                    //总金额
       serverKind: null,                 //服务类型
+      UserAddress: null,
+      paytype: '3',
     };
   },
   methods: {
@@ -109,14 +114,57 @@ export default {
         postOrderList(data).then(res => {
             let paytoaltemple = 0;
             console.log(res);
-            this.serverKind = res.Data;
-            for(let i=0; i<res.Data.length; i++){
-                paytoaltemple += res.Data[i].Amount;
+            this.serverKind = res.Data.List;
+            if(res.Data.List.length>0){
+                if(this.$route.query.ids){
+                    let datas = { "Token": localStorage.getItem('STORAGE_TOKEN') }
+                    UserAddress(datas).then(resa =>{
+                        resa.Data.forEach(ele =>{
+                            if(this.$route.query.ids === ele.Id){
+                                ele.Detail = ele.AddressDetail
+                                this.UserAddress = ele;
+                                return
+                            }
+                        })
+                        
+                    })
+                }else{
+                    this.UserAddress = res.Data.UserAddress;
+                }
+                this.haslocal = false;
+            }else{
+                this.haslocal = true;
             }
-            this.paytotal = paytoaltemple.toFixed(0);
+            
+            for(let i=0; i<res.Data.List.length; i++){
+                paytoaltemple += res.Data.List[i].Amount;
+            }
+            this.paytotal = paytoaltemple;
         })
+        
+        
       },
-      change (val, label) {
+    chouseAddress(){
+        let carid = this.$route.query.carid
+        if(!this.haslocal){
+            this.$router.push({
+                path:'/choseAddress',
+                query: {
+                    carid
+                }
+            })
+        }else{
+            this.$router.push({
+                path:'/editAddress',
+                query: {
+                    id: 0,
+                    carid
+                }
+            })
+        }
+        
+    },
+    change (val, label) {
       console.log('change', val, label)
     },
     //点击判断是否有plus环境
@@ -133,7 +181,8 @@ export default {
         } 
     },
     clickradio(){
-        this.demo1 = !this.demo2
+        this.paytype = this.getRadioValue("pay");
+        console.log(this.paytype)    
     },
     // 服务备注
     advice(e){
@@ -144,33 +193,36 @@ export default {
             }
         })
     },
+    getRadioValue(radioName){
+        let radios = document.getElementsByName(radioName);
+        let value;
+        for(let i=0;i<radios.length;i++){
+            if(radios[i].checked){
+                value = radios[i].value;
+                break;
+            }
+        }
+        return value;
+    },
 
     //   创建订单
     postOrder(){
         let _this = this;
-        let datarr = new Array();
-        let dataDom = document.getElementsByClassName('order')[0];
-        for(let i=0; i>dataDom.length; i++){
-            
-        }
-        if(!_this.demo1 && !_this.demo2){
-            this.$vux.loading.show({
+        var pays = {};
+        if(!this.paytype){
+         this.$vux.loading.show({
             text: '请选择支付方式'
           })
           setTimeout(()=>{
             _this.$vux.loading.hide()
           },1000)
           return
-        }else if(_this.demo1){
-            var Type = 1
-        }else if(_demo2){
-            var Type = 3
         }
         let data = {};
         let arr = new Array();
-        data.UserAddressId = 9;
+        data.UserAddressId = this.UserAddress.Id;
         data.CreateOrderDetail = arr;
-        data.Type = 3;
+        data.Type = this.paytype;
         data.token = localStorage.getItem('STORAGE_TOKEN');
         for(let i=0; i<_this.serverKind.length; i++){
             let obj = {};
@@ -183,26 +235,45 @@ export default {
             }
             obj.Remark = _this.serverKind[i].Remark || null;
         }
-        console.log(data)
+        console.log('订单参数');
+        console.log(JSON.stringify(data))
         CreatOrder(data).then(res => {
+            console.log(JSON.stringify(res))
             let channel=null; 
             let iap ='';
             let sdata = res.Data;
-            console.log(sdata)
             // 获取支付通道  
             plus.payment.getChannels(function(channels){  
                 for (let i in channels) {
-                    let channell = channels[i]
-                    if (channell.id === 'alipay') { 
-                        iap = channell
+                    let channell = channels[i];
+                    if(_this.paytype === '1'){
+                        if (channell.id === 'wxpay') { 
+                            iap = channell
+                        }
+                    }else if(_this.paytype === '3'){
+                        if (channell.id === 'alipay') { 
+                            iap = channell
+                        }
                     }
+                    
                 }
+                console.log('请求参数：');
+                console.log(JSON.stringify(iap));
+                console.log(JSON.stringify(sdata))
                 plus.payment.request(iap, sdata,function(result){  
+                    console.log('支付返回');
+                    console.log(JSON.stringify(result))
                     plus.nativeUI.alert("支付成功！",function(){  
                         // back();  
                     });  
                 },function(error){  
-                    plus.nativeUI.alert("支付失败：" + error.code);  
+                    console.log('失败');
+                    console.log(JSON.stringify(error))
+                    plus.nativeUI.alert("支付失败！", function(){
+                        _this.$router.push({
+                            path:'/Myorder'
+                        }) 
+                    }); 
                 });      
                 
             },function(e){
@@ -253,7 +324,8 @@ export default {
     }
     .pay-moeny .pay-total{
         font-size: .4rem;
-        text-align: center;
+        text-align: left;
+        padding-left: 10px;
     }
     .pay-moeny .post-order{
         text-align: center;
@@ -265,7 +337,7 @@ export default {
         background: linear-gradient(to top, #2674fb 0%,#33a9fe 100%);
     }
     .chose-address{
-        padding: 0 .4rem;
+        padding: 0 .2rem;
         height: 1.866667rem;
         width: 100%;
         background: #fff;
@@ -275,10 +347,16 @@ export default {
         height: .533333rem;
         flex: .373333rem 0 0;
     }
-    .lineBar{
+    .lineBar {
         width: 100%;
-        height: .32rem;
-        margin-top: -0.8rem;
+        height: 6px;
+        position: relative;
+    }
+    .lineBar>img{
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0
     }
     .accepter-name, .accepter-tel{
         font-size: .373333rem;
@@ -339,6 +417,30 @@ export default {
         padding-top: .266667rem;
         height: 1.333333rem
     }
+    input[type=radio]{
+        position: relative;
+        
+    }
+    input[type=radio]::after{
+        position: absolute;
+        content: '';
+        display:block;
+        width: .666667rem;
+        height: .666667rem;
+        border-radius: 50%;
+        overflow: hidden;
+        border: 1px solid #ccc;
+        top: -2px;
+        left: -0.266667rem;
+        background-color: #fff;
+        z-index: 9;
+    }
+    input[type=radio]:checked:after{
+        background-color: #fff;
+        background: url(../../../assets/images/checed.png) no-repeat center center;
+        background-size: 100% 100%
+    }
+
     
 
 </style>

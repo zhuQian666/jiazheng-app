@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="background: #fff">
     <div class="about-us">
       <myHd :tit="tit"></myHd>
       <div class="about-us-top">
@@ -9,7 +9,7 @@
       <div class="customer-info">
         <div class="customer-info-item">
           <span>客服热线</span>
-          <span>{{tel}}</span>
+          <a @click="gotell">{{tel}}</a> 
         </div>
         <div class="customer-info-item">
           <span>客服微信</span>
@@ -23,7 +23,7 @@
     <div v-transfer-dom>
       <x-dialog v-model="showHideOnBlur" class="dialog-demo" hide-on-blur>
         <div class="img-box">
-          <img src="../../../assets/images/code.png" style="max-width:100%">
+          <img v-bind:src="KFCodeUrl" style="max-width:100%">
         </div>
         <div @click="showHideOnBlur=false">
           <span class="vux-close"></span>
@@ -58,31 +58,44 @@ export default {
       tit: "客服中心",
       showHideOnBlur: false,
       tel: "",
-      code: ""
+      code: "",
+      KFCodeUrl: ''
     };
   },
   created() {
     GetAbout().then(res => {
+      this.KFCodeUrl = res.Data.KFCodeUrl;
       (this.tel = res.Data.KFTel), (this.code = res.Data.KFCode);
     });
   },
   methods: {
     clickbig() {
       this.showHideOnBlur = true;
+    },
+    gotell(){
+      window.location.href = 'tel://'+this.tel
     }
   }
 };
 </script>
 <style scoped>
+
 .weui-dialog {
   border-radius: 8px;
   padding-bottom: 8px;
+  width: 80%;
+  height: auto;
+}
+.img-box{
+  height: 7.2rem!important;
+  width: auto!important;
+  
 }
 .dialog-title {
   line-height: 30px;
   color: #666;
 }
-.img-box {
+.img-box { 
   height: 350px;
   overflow: hidden;
 }
@@ -124,10 +137,21 @@ export default {
   color: #999;
 }
 .customer-info-item {
+  position: relative;
   width: 100%;
   height: 1.6rem;
   display: flex;
   justify-content: space-between;
+}
+.customer-info-item::after{
+  display: block;
+  content: '';
+  width: 100%;
+  height: 1px;
+  background: #eee;
+  position: absolute;
+  left: 0;
+  bottom: .426667rem;
 }
 .code-icon {
   width: 0.59rem;

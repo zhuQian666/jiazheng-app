@@ -1,6 +1,6 @@
 *{ margin:0px; padding:0px; -webkit-box-sizing: border-box;	-moz-box-sizing: border-box; box-sizing: border-box;}
 *:before, *:after {	-webkit-box-sizing: border-box;	-moz-box-sizing: border-box; box-sizing: border-box;}
-body{font-size: .373333rem}
+body, html{font-size: .373333rem; background: #fff}
 ul,li{ list-style:none;}
 h1,h2,h3,h4,h5,h6,input,select,textarea,option,button{ font-weight:normal;}
 
@@ -162,4 +162,12 @@ dl,dd,dt{ text-align: left; }
 }
 button.weui-btn, input.weui-btn{
 	border-radius: 20px;
+}
+.weui-toast{
+	font-size: .48rem;
+}
+.linebars{
+	width: 100%;
+	height: 10px;
+	background: #f0eff5;
 }

@@ -2,7 +2,8 @@
  import {
    fetch
  } from './fetch';
- const BASEURL = '/apis';
+ const BASEURL = 'http://182.61.21.61:8077';
+//  const BASEURL = '/apis';
 //  登录
  export function login(data) {
    return fetch({
@@ -15,7 +16,7 @@
 //  地址列表
 export function getaddress(){
   return fetch({
-    url: BASEURL + '/api/User/GetProvince',
+    url: BASEURL + '/api/User/GetCityByProvinceId',
     method: 'get'
   })
 }
@@ -79,11 +80,12 @@ export function PostDispute(data) {
 // 图片上传
 export function PDUploadImage(data) {
   return fetch({
-    url: BASEURL + '/api/Upload/PDUploadImage',
+    url: BASEURL + '/UploadFileNew',
     method: 'POST',
     data: data
   });
 }
+
 //添加更新地址
 export function ChangeAddress(data) {
   return fetch({
@@ -207,6 +209,15 @@ export function RenewOrderDetail(data){
   })
 }
 
+//延时订单提交
+export function RenewOrderOne(data){
+  return fetch({
+    url: BASEURL + '/api/Order/RenewOrderOne',
+    method: 'post',
+    data: data
+  })
+}
+
 // 评价小星星
 export function GetEvaluatemplates(data){
   return fetch({
@@ -224,6 +235,15 @@ export function PostEvaluate(data){
     params: data
   })
 }
+//更换头像前，上传
+export function PreChangeUserImg(data){
+  return fetch({
+    url: BASEURL + '/UploadFileNew',
+    method: 'post',
+    data: data
+  })
+}
+
 // 更新用户头像
 export function ChangeUserImg(data){
   return fetch({
@@ -241,4 +261,41 @@ export function ChangeUserTel(data){
     data: data
   })
 }
+//  获取实名认证
+export function getrealName(data){
+  return fetch({
+    url: BASEURL + '/api/User/GetChangeUserReal',
+    method: 'get',
+    params: data
+  })
+}
+// 实名认证
+export function setrealName(data){
+  return fetch({
+    url: BASEURL + '/api/User/ChangeUserReal',
+    method: 'post',
+    data: data
+  })
+}
+
+// 订单列表待支付订单支付
+export function CreatOrderOne(data){
+  return fetch({
+    url: BASEURL + '/api/Order/CreatOrderOne',
+    method: 'post',
+    data: data
+  })
+}
+
+// 图片上传
+export function basePostImg(data){
+  return fetch({
+    url: BASEURL + '/api/Upload/Base64Img',
+    method: 'post',
+    data: data
+  })
+}
+
+
+
 

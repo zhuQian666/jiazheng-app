@@ -43,6 +43,7 @@ export default {
     .about-us{
        width: 100%;
         padding-bottom: 1.33rem;
+        background: #fff
     }
   .about-us-top{
       width: 100%;
@@ -81,7 +82,7 @@ export default {
       height: 1.33rem;
       position: fixed;
       left: 0;
-      bottom: 0;
+      bottom: .533333rem;
   }
 
 

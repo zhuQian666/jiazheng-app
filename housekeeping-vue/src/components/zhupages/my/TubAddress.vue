@@ -34,7 +34,7 @@ export default {
     data(){
         return {
             address: [],
-            tit:"管理"
+            tit:"管理地址"
         }
     },
     components: {

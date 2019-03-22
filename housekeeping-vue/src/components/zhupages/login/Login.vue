@@ -4,22 +4,23 @@
     <div class="enter-cont">
       <div class="enyet-cont-item">
         <img src="../../../assets/images/icon-phone.png" alt class="enyet-cont-item-icon">
-        <input type="text" v-model="phoneval" class="enyet-cont-item-input" placeholder="输入手机号">
+        <input type="tel" v-model="phoneval" class="enyet-cont-item-input" maxlength="11" placeholder="输入手机号">
       </div>
       <div class="enyet-cont-item">
         <img src="../../../assets/images/icon-code.png" alt class="enyet-cont-item-icon">
         <input type="password" v-model="codeval" class="enyet-cont-item-input" placeholder="输入密码">
       </div>
-      <div class="enyet-cont-item">
+      <div class="enyet-cont-item" style="border-bottom:none">
         <input
           type="checkbox"
           :checked="selectbol"
           class="enyet-cont-item-checkbox"
           id="checkbox-item"
+          style="zoom:20%;"
         >
-        <label for="checkbox-item" class="enyet-cont-item-label">记住帐号</label>
+        <label for="checkbox-item" class="enyet-cont-item-label" style="font-size:0.426667rem">记住帐号</label>
       </div>
-      <div class="login_btn" @click="loginFn">登陆</div>
+      <div class="login_btn" @click="loginFn">登录</div>
       <div class="index-info">
         <span @click="goRegistered">注册帐号</span> l
         <span @click="goForgetPassword">忘记密码</span>
@@ -119,6 +120,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  border-bottom: 1px solid #eee;
 }
 .enyet-cont-item-icon {
   width: 0.373333rem;
@@ -143,8 +145,8 @@ export default {
   font-family: "黑体";
 }
 .enyet-cont-item-checkbox {
-  width: 0.32rem;
-  height: 0.32rem;
+  width: .4rem;
+  height: .4rem;
   border-radius: 0;
   outline: none;
 }

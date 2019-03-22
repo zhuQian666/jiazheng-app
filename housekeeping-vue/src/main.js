@@ -17,10 +17,10 @@
 router.beforeEach((to,from,next)=>{
   let tokenVlaue = localStorage.getItem('STORAGE_TOKEN');
   if(!tokenVlaue){
-      if(to.name == 'Login'||to.name == 'Registered'||to.name == 'ForgetPassword'){
+      if(to.name == 'Login'||to.name == 'Registered'||to.name == 'ForgetPassword' || to.name == 'txt'){
           next();
       }else{
-          next({ path: '/Login' })
+        next({ path: '/Login' })
       }
   }else{
        next();

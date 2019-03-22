@@ -4,12 +4,12 @@
     <div class="enter-cont">
       <div class="enyet-cont-item">
         <img src="../../../assets/images/icon-phone.png" alt class="enyet-cont-item-icon">
-        <input type="text" v-model="phoneval" class="enyet-cont-item-input" placeholder="输入手机号">
+        <input type="tel" v-model="phoneval" class="enyet-cont-item-input" maxlength="11" placeholder="输入手机号">
       </div>
       <div class="enyet-cont-item">
         <img src="../../../assets/images/icon-code.png" alt class="enyet-cont-item-icon big_icon">
-        <input type="text" v-model="codeval" class="enyet-cont-item-input" placeholder="验证码">
-        <div class="getcode" @click="getCode" v-if="btnBol">获取验证码</div>
+        <input type="tel" v-model="codeval" class="enyet-cont-item-input" style="width:120px" maxlength="6" placeholder="验证码">
+        <div class="getcode" @click="getCode" style="width:40%" v-if="btnBol">获取验证码</div>
         <div class="getcode" v-else>{{downTime}}秒</div>
       </div>
       <div class="enyet-cont-item">
@@ -24,14 +24,14 @@
         >
         <input type="text" v-model="invitationCode" class="enyet-cont-item-input" placeholder="邀请码">
       </div>
-      <div class="enyet-cont-item">
+      <div class="enyet-cont-item" style="border-bottom:none">
         <input
           type="checkbox"
           :checked="agreebol"
           class="enyet-cont-item-checkbox"
           id="checkbox-item"
         >
-        <label for="checkbox-item" class="enyet-cont-item-label">同意《注册与使用协议》</label>
+        <label @click="gotxt" class="enyet-cont-item-label">同意《注册与使用协议》</label>
       </div>
       <div class="login_btn" @click="registerFn">注册</div>
       <div class="index-info">
@@ -70,6 +70,11 @@ export default {
     goForgetPassword() {
       this.$router.push({
         path: "/ForgetPassword"
+      });
+    },
+    gotxt(){
+      this.$router.push({
+        path: "/txt"
       });
     },
     // 验证码倒计时
@@ -202,6 +207,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  border-bottom: 1px solid #eee;
 }
 .enyet-cont-item-icon {
   width: 0.373333rem;
@@ -218,6 +224,7 @@ export default {
   border: none;
 }
 .enyet-cont-item-label {
+  display: block;
   flex: 1;
   box-sizing: border-box;
   padding: 0 0.533333rem;
@@ -226,8 +233,8 @@ export default {
   font-family: "黑体";
 }
 .enyet-cont-item-checkbox {
-  width: 0.32rem;
-  height: 0.32rem;
+  width: .4rem;
+  height: .4rem;
   border-radius: 0;
   outline: none;
 }
@@ -264,7 +271,7 @@ export default {
   bottom: 0;
 }
 .getcode {
-  width: 1.866667rem;
+  width: 4rem;
   height: 0.64rem;
   text-align: center;
   line-height: 0.64rem;

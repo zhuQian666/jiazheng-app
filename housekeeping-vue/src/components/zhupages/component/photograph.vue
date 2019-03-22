@@ -5,7 +5,7 @@
 </template>
 <script>
 import Exif from 'exif-js';
-import { ChangeUserImg } from "../../../axios/api.js";
+import { ChangeUserImg, PreChangeUserImg } from "../../../axios/api.js";
 export default {
   name: 'photograph',
   data () {
@@ -75,9 +75,14 @@ export default {
         token:localStorage.getItem('STORAGE_TOKEN'),
         Img:this.icon
       }
-      ChangeUserImg(data).then(res=>{
-        console.log(res)
+      PreChangeUserImg().then(resa =>{
+        if(resa.Code == '200'){
+          ChangeUserImg(data).then(res=>{
+            console.log(res)
+          })
+        }
       })
+      
     },
     rotateImg (img, direction, canvas) {
       // 最小与最大旋转方向，图片旋转4次后回到原方向

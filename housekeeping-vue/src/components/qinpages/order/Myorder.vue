@@ -28,8 +28,8 @@
             <div class="myorder-body-item flex flex_sb"
               v-for="(oitem,oindex) in item.CommodityDetailOne"
             >
-              <div class="myorder-body-name fg2">{{oitem.Name}}</div>
-              <div class="myorder-body-con fg1 flex flex_sb">
+              <div class="myorder-body-name">{{oitem.Name}}</div>
+              <div class="myorder-body-con fg1 flex flex_right">
                 <div class="myorder-con-item">￥{{oitem.Price}}/{{oitem.UnitName}}</div>
                 <div class="myorder-con-mum">x{{oitem.Count}}</div>
               </div>
@@ -202,34 +202,41 @@ export default {
       });
     },
     //上拉加载更多
-    // upCallback(page, mescroll) {
-    //   let sindex = localStorage.getItem('indexTemp') || '1';
-    //   let state = this.choseOrder(sindex)
-    //   let data = {
-    //     token: '071690289151821091qy',
-    //     state,
-    //     page: page.num,
-    //     pageSize: page.size
-    //   };
-    //   getorderlist(data)
-    //     .then(response => {
-    //       // 请求的列表数据
-    //       let arr = response.Data;
-    //       // 如果是第一页需手动制空列表
-    //       if (page.num === 1) this.orderitem = [];
-    //       // 把请求到的数据添加到列表
-    //       this.orderitem = this.orderitem.concat(arr);
-    //       // 数据渲染成功后,隐藏下拉刷新的状态
-    //       this.$nextTick(() => {
-    //         mescroll.endSuccess(arr.length);
-    //       });
-    //       console.log(res.Data);
-    //     })
-    //     .catch(e => {
-    //       // 联网失败的回调,隐藏下拉刷新和上拉加载的状态;
-    //       mescroll.endErr();
-    //     });
-    // }
+    upCallback(page, mescroll) {
+      let sindex = localStorage.getItem('indexTemp') || '1';
+      let state = this.choseOrder(sindex)
+      let data = {
+        token: localStorage.getItem('STORAGE_TOKEN'),
+        state,
+        page: page.num,
+        pageSize: page.size
+      };
+      getorderlist(data)
+        .then(response => {
+          // 请求的列表数据
+          let arr = response.Data;
+          // 如果是第一页需手动制空列表
+          if (page.num === 1) this.orderitem = [];
+          // 把请求到的数据添加到列表
+          this.orderitem = this.orderitem.concat(arr);
+          let temptaotal = 0
+          this.orderitem.forEach(element => {
+            element.CommodityDetailOne.forEach(ele => {
+              temptaotal +=ele.Price * ele.Count
+            })
+            element.orderTotal = temptaotal.toFixed(2)
+          });
+          // 数据渲染成功后,隐藏下拉刷新的状态
+          this.$nextTick(() => {
+            mescroll.endSuccess(arr.length);
+          });
+          console.log(res.Data);
+        })
+        .catch(e => {
+          // 联网失败的回调,隐藏下拉刷新和上拉加载的状态;
+          mescroll.endErr();
+        });
+    }
   },
   created: function (){
     // 获取订单
@@ -260,7 +267,7 @@ export default {
 }
 .tabCon {
   width: 100%;
-  margin-top: 2.533333rem;
+  margin-top: 1.333333rem;
   background: #fff;
   min-height: 100vh;
   overflow: hidden;
@@ -278,7 +285,7 @@ export default {
   text-align: center;
 }
 .myorder-box {
-  border-bottom: 0.266667rem solid #f5f5f5;
+  /* border-top: 0.266667rem solid #f5f5f5; */
   width: 100%;
 }
 .myorder-box .myorder-tit {
@@ -311,6 +318,14 @@ export default {
 }
 .nonow{
   padding-top: 1.6rem;
+}
+.myorder-body-name{
+  flex: 5rem 0 0;
+  text-overflow: ellipsis;
+  white-space:nowrap; overflow:hidden;
+}
+.myorder-con-item{
+  margin-right: .533333rem
 }
 </style>
 

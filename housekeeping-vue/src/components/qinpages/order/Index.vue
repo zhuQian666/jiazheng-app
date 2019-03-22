@@ -12,7 +12,7 @@
     </div>
     <!-- 切换 -->
     <div class="index-title flex flex_sa aic">
-      <div class="index-title-cell" v-for="(item, index) in headtit.List" :class="{active:index == num}" @click="tab(index)" :data-id="item.Id">{{item.Name}}</div>
+      <div class="index-title-cell" v-for="(item, index) in headtit.List" :class="{active:index == num}" @click="tab(index, item.Id)" :data-id="item.Id">{{item.Name}}</div>
     </div>
     <mescroll-vue ref="mescroll" :up="mescrollUp" @init="mescrollInit" :down="mescrollDown">
       <div class="index-body flex flex_sb flex_wrap">
@@ -33,7 +33,7 @@
                   button-style="round"
                   :min="0"
                   :max="10"
-                  @on-change="siginChange(item.siginValue,item.Id,item.sval)"
+                  @on-change="siginChange(item.siginValue,item.Id,item.Count)"
                 ></x-number>
               </div>
             </div>
@@ -68,15 +68,17 @@
             <div class="hr"></div>
             <!-- 购物车列表 -->
             <div class="bottom-popups-item flex flex_sb" v-for="(item, index) in shopCarList" :id="item.Id" :data-CommodityId ="item.CommodityId">
-              <span class="bottom-popups-item-tit">{{item.Name}}</span>
-              <span class="bottom-popups-mum">￥{{item.Price}}/{{item.UnitName}}</span>
-              <div class="cheose-num" style="margin-top:4px">
+              <div class="fuckk flex flex_sb">
+                <div class="ahaha bottom-popups-item-tit ellipsis">{{item.Name}}</div>
+                <div class="bottom-popups-mum ml1">￥{{item.Price}}/{{item.UnitName}}</div>
+              </div>
+              <div class="cheose-num fg1" style="margin-top:4px">
                 <x-number
-                  v-model="item.ShopCount"
+                  v-model="item.sval"
                   button-style="round"
                   :min="0"
                   :max="99"
-                  @on-change="change(item.ShopCount, item.Id, item.CommodityId, item.sval)"
+                  @on-change="change(item.sval, item.Id, item.CommodityId, item.ShopCount)"
                 ></x-number>
               </div>
             </div>
@@ -155,7 +157,7 @@ export default {
   },
   data() {
     return {
-      tit:"保洁服务",
+      tit:"",
       carid: '',    //购物测id集合
       name: "", //功能名称
       bottomBol: false, //是否滚动的底部
@@ -168,6 +170,7 @@ export default {
       shopCarList: null, //购物车列表
       totalShopCar: 0, //购物车总价
       num: 0,
+      cnum: 0,
       mescrollDown: {
         auto: true
       },
@@ -224,7 +227,7 @@ export default {
     // 立即下单
     nowUpost() {
       let _this = this;
-      if (!_this.headtit.IsReal) {
+      if (_this.headtit.IsReal) {
         //如果认证了
         this.getShopCargoods();
       } else {
@@ -237,7 +240,7 @@ export default {
       let _this = this;
       let tempTotalshop = new Number();
       let carid = '';       //购物车id
-      let data = { token: "071690289151821091qy" };
+      let data = { token: localStorage.getItem('STORAGE_TOKEN') };
       getshopCar(data).then(res => {
         console.log(res);
         if(res.Data.length>0){
@@ -245,9 +248,9 @@ export default {
           for (let i = 0; i < res.Data.length; i++) {
             tempTotalshop += res.Data[i].Price * res.Data[i].ShopCount;
             carid += res.Data[i].Id +',';
-            res.Data[i].sval = 0;
+            res.Data[i].sval = res.Data[i].ShopCount;
           }
-          _this.totalShopCar = tempTotalshop.toFixed(2);
+          _this.totalShopCar = tempTotalshop;
           _this.shopCarList = res.Data;
           _this.carid = carid;
         }else{
@@ -263,30 +266,33 @@ export default {
     },
 
     // 单个订单改变
-    siginChange(val,id,sval) {
+    siginChange(val,id,sval) { //val真值
+      console.log(val)
+      console.log(sval)
       let CommodityId = id;
       let Type = "";
-      if (val > sval) {
-        Type = 1;
-      } else {
+      if (val < sval) {
         Type = 2;
+      } else {
+        Type = 1;
       }
       this.goodsList.map((item)=>{
         if(item.Id === id ){
-          item.sval = val
+          item.Count = val
         }
         return this.goodsList
       })
+      
       this.svalNum = val;
-      let data = { CommodityId, Type, token: "071690289151821091qy" };
+      let data = { CommodityId, Type, token: localStorage.getItem("STORAGE_TOKEN") };
       changeGoodsNum(data).then(res => {
-      // this.goodsList
+        // this.goodsList
       });
     },
 
 
     // //订单总量改变
-    change(val, id, CId, sval) {
+    change(val, id, CId, sval) {//sval 真值 valinput值
       let _this = this;
       let initval = 0;
       let Type = "";
@@ -296,26 +302,35 @@ export default {
         Type = 2;
       }
       this.shopCarList.forEach(ele => {
-        if(ele.CommodityId == CId){
+        if(ele.Id == id){
           ele.ShopCount = val
         }
       })
+      // this.goodsList.map(item =>{
+      //   if(item.Id == CId){
+      //     item.Count = val;
+      //     _this.getGoodsList()
+      //   }
+      // })
       this.shopCarList.forEach(ele => {
         initval += ele.ShopCount * ele.Price
       })
-      _this.totalShopCar = initval.toFixed(2);
-      let data = { CommodityId: id, Type, token: "071690289151821091qy" };
+      _this.totalShopCar = initval;
+      let data = { CommodityId: CId, Type, token: localStorage.getItem('STORAGE_TOKEN')};
       changeGoodsNum(data).then(res => {
         console.log(res);
       });
-      console.log("change", val);
     },
     showtitle() {
       let commoditySeriesId = this.$route.query.id;   //系列id
-      let data = { commoditySeriesId, token: "071690289151821091qy" };
+      let data = { commoditySeriesId, token: localStorage.getItem('STORAGE_TOKEN') };
       getGoodTitle(data).then(res => {
         console.log(res.Data);
         this.headtit = res.Data;
+        this.tit = res.Data.Name;
+        console.log(res.Data.List[0].Id);
+        this.cnum = res.Data.List[0].Id;
+        this.getGoodsLists(res.Data.List[0].Id);
       });
     },
     // 获取商品列表
@@ -323,18 +338,19 @@ export default {
       let data = { commodityTypeId: sindex, page: 1, pageSize: 10 };
       getGoodsList(data).then(res => {
         res.Data.forEach(ele => {
-        ele.siginValue = 0,
-        ele.sval = 0
-      });
+          ele.siginValue = ele.Count,
+          ele.sval = ele.Count
+        });
         this.goodsList = res.Data;
       });
     },
 
     //tab切换
-    tab(index) {
+    tab(index, Id) {
       this.num = index;
+      this.cnum = Id;
       this.goodsList.splice(0, this.goodsList.length);
-      this.getGoodsLists(index + 1);
+      this.getGoodsLists(Id);
     },
     // mescroll组件初始化的回调,可获取到mescroll对象
     mescrollInit(mescroll) {
@@ -356,7 +372,7 @@ export default {
     //上拉加载更多
     upCallback(page, mescroll) {
       let data = {
-        commodityTypeId: this.num + 1,
+        commodityTypeId: this.cnum,
         page: page.num,
         pageSize: page.size
       };
@@ -381,7 +397,8 @@ export default {
     }
   },
   created: function() {
-    console.log(this.$route.query.id)
+    console.log(this.$route.query.id);
+    this.tit = this.$route.query.name || '服务';
     let that = this;
     this.showtitle();
     // 初始化加载第一页数据
@@ -567,5 +584,17 @@ export default {
 }
 .weui-cell {
   padding: 0 !important;
+}
+.vux-number-round .vux-number-input{
+  font-size: 14px;
+  width: 16px!important;
+}
+.fuckk{
+  flex: 6.666667rem 0 0;
+}
+.fuckk>.ahaha{
+  /* flex: 4rem 0 0; */
+  width: 4rem;
+  overflow: hidden;
 }
 </style>

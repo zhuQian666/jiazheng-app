@@ -5,16 +5,17 @@
         <span class="dispute-tit-dage">*</span>请填写处理争议的联系人信息
     </div>
     <div class="border"></div>
-    <group label-width="4.5em" label-margin-right="2em" label-align="right" class="group-item">
+    <group label-width="4.5em" label-margin-right="0" label-align="left" class="group-item">
       <x-input class="cell" title="真实姓名" v-model="valuename" placeholder="请输入真实姓名"></x-input>
-      <x-input class="cell" title="联系方式" v-model="valuetel" placeholder="请输入联系人的联系方式"></x-input>
+      <x-input class="cell" title="联系方式" type="tel" :max="11" v-model="valuetel" placeholder="请输入联系人的联系方式"></x-input>
       <x-input class="cell2" title="订单编号" v-model="orderNum" placeholder="请输入争议服务的订单编号"></x-input>
        <div class="dispute-tit">
             <span class="dispute-tit-dage">*</span>请填写争议的内容
         </div>
       <x-textarea class="cell2" v-model="textVal" :show-counter="false" :rows="3"></x-textarea>
     </group>
-    <div class="prompt-info">
+    <div style="background: #fff">
+      <div class="prompt-info">
       <div class="prompt-info-tit">提示及说明：</div>
       <div class="prompt-info-cont">1.为了能尽快解决您的问题，请如实描述您与提供服务人员的争议内容和产生争议的过程。</div>
       <div class="prompt-info-cont">2.如因非如实描述争议过程，产生的其他问题或责任由客户自行承担。</div>
@@ -22,6 +23,7 @@
     <div class="addaddress">
        <x-button type="primary" @click.native="determineFn">确定</x-button>
      </div>
+    </div>
   </div>
   
  
@@ -130,7 +132,7 @@
 
 }
 .cell{
-  border: 1px solid #868695;
+  border: 1px solid rgb(144, 144, 158);
   margin: .533333rem;
   border-radius: .266667rem;
 }
@@ -166,6 +168,7 @@
     line-height:1.33rem;
     box-sizing: border-box;
     padding: 0 .4rem;
+    background: #fff
 }
 .dispute-tit-dage{
     color: #ff0000;

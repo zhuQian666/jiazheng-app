@@ -28,9 +28,9 @@ export default {
     data() {
         return {
             show: true,
-            localCity: '北京市',
+            localCity: '常州市',
             cityArr: null,
-            cityCenter: '北京',
+            cityCenter: '合肥市',
             num: -1,
             position: 'default',
             showPositionValue: false
@@ -50,8 +50,12 @@ export default {
         // 选择地址
         choseCity(e){
             this.num = e.path[1].attributes[1].nodeValue;
-            this.cityCenter = e.path[0].value
-            console.log(e);
+            this.cityCenter = e.path[0].value;
+            // localStorage.setItem('city','e.path[0].value');
+            this.$router.push({
+                path: "/Home?city="+e.path[0].value
+            });
+
             // console.log(e.path[1].attributes[0].nodeValue);
             // console.log(e.path[1].attributes[1].nodeValue);
         },
@@ -79,6 +83,8 @@ export default {
     },
     created: function(){
         this.getcitylist()
+        this.cityCenter = this.$route.query.clickCity 
+
     }
 }
 </script>

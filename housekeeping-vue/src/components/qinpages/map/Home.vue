@@ -5,7 +5,7 @@
                 <div class="go-my" @click="goMy">
                     <img src="../../../assets/images/my.png" alt="">
                 </div>
-                <div class="chsoe-city">
+                <div class="chsoe-city" @click="gochoseCity">
                     <span class="city-name">{{clickCity}}</span>
                     <x-icon type="ios-arrow-down" class="icon-white" size="10"></x-icon>
                 </div>
@@ -15,7 +15,7 @@
             </div>
             <!-- 头部导航 -->
             <div class="home-tit flex flex_sa aif">
-                <div v-for="(item, index) in headitem" :key="index" @click="tab(index)" class="home-head-item flex flex_sb aic flex_column" :class="{active:index == num}">
+                <div v-for="(item, index) in headitem" :key="index" @click="tab(index,item.Id, item.Name)" class="home-head-item flex flex_sb aic flex_column" :class="{active:index == num}">
                     <div class="home-head-item-img">
                         <img v-bind:src="item.Img" alt="">
                     </div>
@@ -24,21 +24,8 @@
             </div>
         </div>
         <div class="home-body">
-            <!-- <template>
-                <baidu-map class="map" center="北京" @ready="handler">
-                    <bm-geolocation anchor="BMAP_ANCHOR_BOTTOM_RIGHT" :showAddressBar="true" :autoLocation="true"></bm-geolocation>
-                </baidu-map>
-            </template> -->
-            <!-- <template> -->
-                <baidu-map class="map bm-view" @ready="handler" ak="z5tYi3doukTrHxSlaWOHcM5cFuzXkpy2">
-                    <bm-geolocation anchor="BMAP_ANCHOR_BOTTOM_RIGHT" :showAddressBar="true" :autoLocation="true"
-                    :locationIcon="{url: require('../../../assets/images/local.png'), size: {width: 27, height: 38}}" >
-                    </bm-geolocation>
-                    <bm-marker :position="autoLocationPoint" :icon="{url: require('../../../assets/images/local.png'), size: {width: 27, height: 38}}" v-if="initLocation">
-                    </bm-marker>
-                </baidu-map>
-            <!-- </template> -->
-            <div class="chose-server" @click="goshop">选择服务</div>
+           
+            
 
             <div class="noserver" v-if="ishasServer">
                 <div class="noserver-img">
@@ -46,6 +33,13 @@
                 </div>
                 <p class="tc color9 fs32">地区未开放，敬请期待</p>
             </div>
+            <template v-else>
+                <baidu-map class="map bm-view" :center="clickCity" @ready="handler" ak="z5tYi3doukTrHxSlaWOHcM5cFuzXkpy2"> 
+                    <bm-marker :position="autoLocationPoint" :icon="{url: require('../../../assets/images/local.png'), size: {width: 27, height: 38}}">
+                    </bm-marker>
+                </baidu-map>
+            </template>
+            <div  v-if="!ishasServer" class="chose-server" @click="goshop">选择服务 <span class="pointt"></span></div>
             
         </div>
     </div>
@@ -58,30 +52,43 @@
 import { Tab, TabItem } from 'vux';
 import myHd from "../header"
 import BaiduMap from 'vue-baidu-map/components/map/Map.vue';
+import bmMarker from 'vue-baidu-map/components/overlays/marker.vue';
+import bmGeolocation from 'vue-baidu-map/components/controls/Geolocation.vue';
 // import BaiduMap from 'vue-baidu-map';
 import { GetCommoditySeries } from "../../../axios/api.js";
 export default {
     components: {
-        BaiduMap, myHd
+        BaiduMap,
+        myHd,
+        bmMarker,
+        bmGeolocation
     },
     data() {
         return {
-            clickCity: '北京市',
+            clickCity: '合肥市',
             headitem: null,
-            ishasServer: false,
+            ishasServer: true,
             center: {lng: 0, lat: 0},
             initLocation: false,
             num: 0, //tab切换序号
             tit:"首页",
-            titOther:"管理"
-        };
+            titOther:"管理",
+            autoLocationPoint:{},
+            tabId :'1',
+            tabName :''
+        }
     },
     methods: {
         showtitle(){
-            let data = {name: '常州市'}
+            let name = this.$route.query.city || this.clickCity;
+            let data = {name}
             GetCommoditySeries(data).then(res=>{
-                console.log(res.Data)
                 this.headitem  = res.Data
+                if(res.Data && res.Data.length>0){
+                    this.ishasServer = false
+                }else{
+                    this.ishasServer = true
+                }
             })
         },
         goMy(){
@@ -95,34 +102,51 @@ export default {
           }) 
         },
         //tab切换
-        tab(index){
+        tab(index, id, name){
             this.num = index;
+            this.tabId = id;
+            this.tabName = name;
         },
         //跳转到购物页面
         goshop(){
             let s = this.num + 1;
             this.$router.push({
-                path: "/Index?id="+s
+                path: "/Index",
+                query:{
+                    id: this.tabId,
+                    name: this.tabName
+                }
             });
         },
-        handler ({BMap, map}) {
+        gochoseCity(){
+            this.showtitle();
+            this.$router.push({
+                path: "/local",
+                query:{clickCity:this.clickCity}
+            });
+        },
+        handler ({BMap, map}) {      
             let _this = this;  // 设置一个临时变量指向vue实例，因为在百度地图回调里使用this，指向的不是vue实例；
             var geolocation = new BMap.Geolocation();
             geolocation.getCurrentPosition(function(r){
-                console.log(r);
-                _this.clickCity = r.address.city;
+                console.log(r)
+                if(_this.$route.query.city ===_this.clickCity){
+                    _this.clickCity = r.address.city;
+                }
                 _this.center = {lng: r.longitude, lat: r.latitude};   // 设置center属性值
-                _this.autoLocationPoint = {lng: r.longitude, lat: r.latitude};   // 自定义覆盖物
+                _this.$set(_this,'autoLocationPoint',{lng: r.longitude, lat: r.latitude});
                 _this.initLocation = true; 
-                console.log('center:', _this.center)  // 如果这里直接使用this是不行的
+                console.log(_this.autoLocationPoint);  // 如果这里直接使用this是不行的
             },{enableHighAccuracy: true})
+
+             
         },
-        // getLoctionSuccess(){
-        //     this.clickCity = 
-        // }
     },
     created:function() {
-        this.showtitle()
+        this.showtitle();
+        if(this.$route.query.city){
+           this.clickCity = this.$route.query.city;
+        }
     }
 
 }
@@ -150,6 +174,16 @@ export default {
         cursor: pointer;
         left: 50%;
         margin-left: -3rem;
+    }
+    .chose-server .pointt{
+        position: absolute;
+        right: 1.2rem;
+        top: .16rem;
+        display: block;
+        width: .72rem;
+        height: .853333rem;
+        background: url(../../../assets/images/point.png) no-repeat center center;
+        background-size: .4rem .533333rem;
     }
     .home-body{
         height: 80vh;
@@ -227,7 +261,7 @@ export default {
         color: #fffafa;
         font-size: .32rem; 
         padding-bottom: 5px;
-        /* margin-top: .4rem; */
+        margin-top: .4rem;
     }
     .home-tit .home-head-item{
         border-bottom-width: 2px;

@@ -1,18 +1,24 @@
 <template>
-  <div clas="bgwhite">
+  <div clas="bgwhite" style="background:#fff">
     <myHd :tit="tit"></myHd>
-    <group label-width="4.5em" label-margin-right="2em" label-align="right">
+    <div class="dispute-tit">
+          <span class="dispute-tit-dage">*</span>请填写需要家政服务的联系人信息
+      </div>
+      <div class="linebars"></div>
+    <group label-width="4.5em" label-margin-right="2em" label-align="left">
       <x-input class="cell" title="联系人员" v-model="valuename" placeholder="请输入联系人称呼"></x-input>
       <div class="cell">
           <popup-radio title="性别" :options="options" v-model="option"> </popup-radio>
         </div>
-      <x-input class="cell" title="联系方式" v-model="valuetel" placeholder="请输入联系人的联系方式"></x-input>
+      <x-input class="cell" title="联系方式" type="tel" :max="11" v-model="valuetel" placeholder="请输入联系人的联系方式"></x-input>
       <x-address class="cell" title="服务地址" v-model="addressValue" raw-value :list="addressData" value-text-align="left"></x-address>
       <x-textarea class="cell" placeholder="请输入详细地址" :show-counter="false" :rows="3" v-model="textVal"></x-textarea>
+      <check-icon class="ml2" :value.sync="selectBol"> {{ '设为默认地址' }}</check-icon>
     </group>
-     <group>
-      <check-icon :value.sync="selectBol"> {{ '设为默认地址' }}</check-icon>
-    </group>
+     <!-- <group>
+      
+    </group> -->
+    <div style="height:80px"></div>
     <div class="addaddress">
         <x-button  @click.native="deleteFn" type="warn" class="btn_delete" v-if="deleteAddressBol">删除地址</x-button>
         <x-button type="primary" @click.native="submitFn">确定</x-button>
@@ -27,6 +33,7 @@
   import {ChangeAddress,GetUserAddress,DeleteAddress} from "../../../axios/api.js"
   import myHd from "../header.vue"
   export default {
+    inject: ['reload'],
     components: {
       CheckIcon,
       Group,
@@ -44,6 +51,7 @@
     },
     data () {
       return {
+        reload: this.reload,
         agreeTxt: true,
         addressData: ChinaAddressData,
         addressValue: ['广东省', '深圳市', '南山区'],
@@ -68,10 +76,10 @@
         }
         DeleteAddress(data).then(res=>{
              this.$vux.loading.show({
-                  text: '删除成功'
-                })
+                text: '删除成功'
+              })
               setTimeout(()=>{
-                this.$vux.loading.hide()
+                this.$vux.loading.hide();
                 this.$router.back({})
               },1000)
         })
@@ -121,12 +129,22 @@
               })
               setTimeout(()=>{
                 this.$vux.loading.hide();
-                this.$router.back();
+                if(this.$route.query.carid){
+                  this.$router.push({
+                    path:'/postOrder',
+                    query: {
+                      carid:this.$route.query.carid
+                    }
+                  })
+                }else{
+                  this.$router.back();
+                }
               },1000)
         })
       }
     },
     created() {
+      this.reload();
       if(Object.keys(this.$route.query)){
           this.id = this.$route.query.id;
           if(this.id === 0) {
@@ -159,7 +177,7 @@
     position: fixed;
     width: 90%;
     left: 5%;
-    bottom: .533333rem;
+    bottom: .5rem!important;
 }
 .btn_delete{
   margin-bottom: .53rem;
@@ -182,4 +200,27 @@
   margin: .266667rem;
   color: #35acff!important
 }
+.vux-cell-box:not(:first-child):before{
+  border-top-color: #fff!important;
+}
+.weui-cells:after{
+  border-bottom: none!important;
+}
+.dispute-tit{
+    width: 100%;
+    height: 1.33rem;
+    font-size: .43rem;
+    color: #4c4c4c;
+    line-height:1.33rem;
+    box-sizing: border-box;
+    padding: 0 .4rem;
+    background: #fff;
+  }
+ .dispute-tit-dage{
+    color: #ff0000;
+    margin-right:.16rem;
+ }
+ .vux-radio-label{
+   font-size: .426667rem!important;
+ }
 </style>
